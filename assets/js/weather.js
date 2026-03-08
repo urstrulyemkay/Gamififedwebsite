@@ -23,17 +23,11 @@
         var indicator = document.getElementById("weather-indicator");
         var iconEl = document.getElementById("weather-icon");
         var labelEl = document.getElementById("weather-label");
+        var moodIconEl = document.getElementById("mood-toggle-icon");
+        var moodLabelEl = document.getElementById("mood-toggle-label");
         var _currentMoodId = null;
 
         // ========= UTILITIES =========
-
-        function getTimeOfDay() {
-            var h = new Date().getHours();
-            if (h >= 5 && h < 8) return "dawn";
-            if (h >= 8 && h < 17) return "day";
-            if (h >= 17 && h < 20) return "dusk";
-            return "night";
-        }
 
         // Scroll-based mood progression
         var SCROLL_MOODS = ["day", "dawn", "dusk", "night", "storm"];
@@ -74,6 +68,12 @@
             clearInterval(window._weatherBurstInterval); window._weatherBurstInterval = null;
             clearInterval(window._weatherRippleInterval); window._weatherRippleInterval = null;
             clearInterval(window._weatherShipInterval); window._weatherShipInterval = null;
+            clearInterval(window._weatherFormationInterval); window._weatherFormationInterval = null;
+            // Clear any pending shooting star timeouts
+            if (window._weatherShootTimeouts) {
+                window._weatherShootTimeouts.forEach(function(t) { clearTimeout(t); });
+                window._weatherShootTimeouts = [];
+            }
             document.body.classList.remove("weather-shaking");
         }
 
@@ -116,6 +116,7 @@
             document.body.appendChild(container);
             fadeIn(container);
 
+            if (!window._weatherShootTimeouts) window._weatherShootTimeouts = [];
             window._weatherShootingInterval = setInterval(function() {
                 var cont = document.querySelector(".weather-stars");
                 if (!cont) return;
@@ -124,7 +125,8 @@
                 shoot.style.left = rand(5, 45) + "%";
                 shoot.style.top = rand(2, 20) + "%";
                 cont.appendChild(shoot);
-                setTimeout(function() { shoot.remove(); }, 1500);
+                var tid = setTimeout(function() { shoot.remove(); }, 1500);
+                window._weatherShootTimeouts.push(tid);
             }, 4000 + Math.random() * 4000);
 
             addTint("linear-gradient(180deg, rgba(3,3,25,0.5) 0%, rgba(5,5,20,0.2) 40%, transparent 70%)");
@@ -767,7 +769,7 @@
             window._weatherShipInterval = setInterval(launchShip, rand(20000, 45000));
 
             // Occasionally launch a formation (2-3 ships staggered)
-            setInterval(function() {
+            window._weatherFormationInterval = setInterval(function() {
                 if (Math.random() < 0.3) {
                     launchShip();
                     setTimeout(launchShip, rand(1500, 3000));
@@ -805,10 +807,8 @@
                 indicator.style.borderColor = w.accent + "33";
                 labelEl.style.color = w.accent;
             }
-            var moodIcon = document.getElementById("mood-toggle-icon");
-            var moodLabel = document.getElementById("mood-toggle-label");
-            if (moodIcon) moodIcon.textContent = w.icon;
-            if (moodLabel) moodLabel.textContent = w.label;
+            if (moodIconEl) moodIconEl.textContent = w.icon;
+            if (moodLabelEl) moodLabelEl.textContent = w.label;
 
             // Smooth crossfade: fade out old, wait, build new
             // If already transitioning, cancel previous and start fresh
@@ -819,8 +819,9 @@
 
             clearIntervals();
 
-            // Get all current weather elements
-            var currentEls = document.querySelectorAll(WEATHER_SELECTORS.join(","));
+            // Get all current weather elements — cache selector string
+            var weatherSelector = WEATHER_SELECTORS.join(",");
+            var currentEls = document.querySelectorAll(weatherSelector);
             if (currentEls.length) {
                 currentEls.forEach(function(el) {
                     el.style.transition = "opacity 0.6s ease-out";
@@ -830,8 +831,9 @@
 
             window._weatherTransitionTimer = setTimeout(function() {
                 window._weatherTransitionTimer = null;
-                // Remove faded elements
-                document.querySelectorAll(WEATHER_SELECTORS.join(",")).forEach(function(el) { el.remove(); });
+                // Remove faded elements (reuse cached list where possible, re-query for stragglers)
+                currentEls.forEach(function(el) { if (el.parentNode) el.remove(); });
+                document.querySelectorAll(weatherSelector).forEach(function(el) { el.remove(); });
                 // Remove mood body classes
                 document.body.className = document.body.className.replace(/\bmood-\w+\b/g, "").trim();
                 // Apply new mood class

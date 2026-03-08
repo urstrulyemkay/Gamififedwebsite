@@ -107,6 +107,52 @@ function applyAccentColor(hex, rgb, save) {
     }
 }
 
+/* ============================================
+   CENTRALIZED SCROLL MANAGER — One listener, many subscribers
+   Throttles at ~60fps via rAF, avoids 12+ individual scroll listeners
+   ============================================ */
+const ScrollManager = (function() {
+    const subscribers = [];
+    let ticking = false;
+    let scrollY = 0;
+    let scrollPct = 0;
+    let docHeight = 1;
+
+    function update() {
+        scrollY = window.scrollY;
+        docHeight = document.documentElement.scrollHeight - window.innerHeight || 1;
+        scrollPct = scrollY / docHeight;
+        for (let i = 0; i < subscribers.length; i++) subscribers[i](scrollY, scrollPct);
+        ticking = false;
+    }
+
+    window.addEventListener("scroll", function() {
+        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+
+    return {
+        on: function(fn) { subscribers.push(fn); },
+        off: function(fn) { const i = subscribers.indexOf(fn); if (i > -1) subscribers.splice(i, 1); },
+        getScrollY: function() { return scrollY; },
+        getScrollPct: function() { return scrollPct; },
+        fire: function() { update(); }
+    };
+})();
+
+/* Shared DOM cache — queried once, reused everywhere */
+const DOMCache = {
+    _sectionCount: 0,
+    _discoveredCount: 0,
+    getSectionCount: function() {
+        if (!this._sectionCount) this._sectionCount = document.querySelectorAll(".section").length || 12;
+        return this._sectionCount;
+    },
+    getDiscoveredCount: function() {
+        return this._discoveredCount;
+    },
+    updateDiscovered: function(n) { this._discoveredCount = n; }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     const C = window.CONTENT;
     if (!C) { console.error("content.js not loaded"); return; }
@@ -479,11 +525,11 @@ function initResourceHUD() {
     // Intel increases as user reads (scroll time)
     let scrollTimer;
     let scrolling = false;
-    window.addEventListener("scroll", () => {
+    ScrollManager.on(function() {
         if (!scrolling) { scrolling = true; }
         clearTimeout(scrollTimer);
-        scrollTimer = setTimeout(() => { scrolling = false; }, 200);
-    }, { passive: true });
+        scrollTimer = setTimeout(function() { scrolling = false; }, 200);
+    });
 
     setInterval(() => {
         if (scrolling || document.hasFocus()) {
@@ -991,20 +1037,19 @@ function initLevelUpToasts() {
     const thresholds = [25, 50, 75, 100];
     const fired = new Set();
 
-    window.addEventListener("scroll", () => {
-        const progress = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
-        const level = Math.floor((progress / 100) * 9) + 1;
-
+    ScrollManager.on(function(scrollY, scrollPct) {
+        const progress = Math.round(scrollPct * 100);
+        const level = Math.floor(scrollPct * 9) + 1;
         thresholds.forEach(t => {
             if (progress >= t && !fired.has(t)) {
                 fired.add(t);
-                desc.textContent = `You reached LVL ${level}!`;
+                desc.textContent = "You reached LVL " + level + "!";
                 toast.classList.add("show");
                 playSound("levelup");
                 setTimeout(() => toast.classList.remove("show"), 3000);
             }
         });
-    }, { passive: true });
+    });
 }
 
 /* ============================================
@@ -1525,16 +1570,15 @@ function initSaveGame() {
         }
     }
 
-    // Save position periodically
+    // Save position periodically (debounced via ScrollManager + timeout)
     let saveTimer;
-    window.addEventListener("scroll", () => {
+    ScrollManager.on(function(scrollY, scrollPct) {
         clearTimeout(saveTimer);
-        saveTimer = setTimeout(() => {
-            const progress = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-            const level = Math.floor(progress * 9) + 1;
-            localStorage.setItem(key, JSON.stringify({ scroll: window.scrollY, level, time: Date.now() }));
+        saveTimer = setTimeout(function() {
+            var level = Math.floor(scrollPct * 9) + 1;
+            localStorage.setItem(key, JSON.stringify({ scroll: scrollY, level: level, time: Date.now() }));
         }, 1000);
-    }, { passive: true });
+    });
 }
 
 /* ============================================
@@ -1702,27 +1746,23 @@ function initXPBar(){
     const f=document.getElementById("xp-fill"),p=document.getElementById("xp-percent");
     const marker=document.getElementById("xp-bar-marker");
     const zonesEl=document.getElementById("xp-zones");
+    const le=document.getElementById("xp-level");
     if(!f||!p)return;
 
     let lastLevel = 1;
     const levelNames = ["Novice","Scout","Warrior","Knight","Champion","Master","Legend","Myth","Immortal","God"];
-    const totalSections = document.querySelectorAll("section[id]").length;
+    const totalSections = DOMCache.getSectionCount();
 
-    function u(){
-        const s=window.scrollY, d=document.documentElement.scrollHeight-window.innerHeight;
-        const pr=Math.min(Math.max(s/d,0),1), pc=Math.round(pr*100);
+    function u(scrollY, scrollPct){
+        const pr = typeof scrollPct === "number" ? Math.min(Math.max(scrollPct,0),1) : 0;
+        const pc = Math.round(pr*100);
         f.style.width=pc+"%";
         p.textContent=pc+"%";
-
-        // Marker position follows fill
         if(marker) marker.style.left = pc + "%";
 
-        // Level with name
         const l=Math.floor(pr*9)+1;
-        const le=document.getElementById("xp-level");
         if(le) {
             le.textContent="LVL "+l+" "+levelNames[l-1];
-            // Level-up animation
             if(l > lastLevel) {
                 le.classList.add("level-up");
                 setTimeout(() => le.classList.remove("level-up"), 500);
@@ -1730,14 +1770,12 @@ function initXPBar(){
             lastLevel = l;
         }
 
-        // Zones discovered count
         if(zonesEl) {
-            const discovered = document.querySelectorAll(".section.in-view").length;
-            zonesEl.textContent = discovered + "/" + totalSections;
+            zonesEl.textContent = DOMCache.getDiscoveredCount() + "/" + totalSections;
         }
     }
-    window.addEventListener("scroll",u,{passive:true});
-    u();
+    ScrollManager.on(u);
+    u(0, 0);
 }
 
 function initSkillBars(){const b=document.querySelectorAll(".skill-bar-fill");let soundPlayed=false;const o=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){const bar=en.target;bar.style.setProperty("--target-width",bar.getAttribute("data-width")+"%");const row=bar.closest(".skill-row");const all=[...document.querySelectorAll(".skill-row")];const idx=all.indexOf(row);setTimeout(()=>bar.classList.add("filled"),idx*60);if(!soundPlayed){soundPlayed=true;playSound("skillFill");}o.unobserve(bar);}});},{threshold:0.2,rootMargin:"-40px 0px"});b.forEach(bar=>o.observe(bar));}
@@ -1748,7 +1786,7 @@ function initHamburger(){const h=document.getElementById("hamburger"),m=document
 
 function initNavHighlight(){const s=document.querySelectorAll("section[id]"),n=document.querySelectorAll(".nav-link");const o=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){const id=en.target.id;n.forEach(l=>l.classList.toggle("active",l.getAttribute("href")==="#"+id));}});},{threshold:0.3,rootMargin:"-64px 0px -50% 0px"});s.forEach(sec=>o.observe(sec));}
 
-function initScrollHintFade(){const h=document.getElementById("scroll-hint");if(!h)return;let hid=false;window.addEventListener("scroll",()=>{if(!hid&&window.scrollY>100){h.style.opacity="0";hid=true;}},{passive:true});}
+function initScrollHintFade(){const h=document.getElementById("scroll-hint");if(!h)return;let hid=false;ScrollManager.on(function(scrollY){if(!hid&&scrollY>100){h.style.opacity="0";hid=true;}});}
 
 function initTiltCards(){document.querySelectorAll(".tilt-card").forEach(card=>{card.addEventListener("mousemove",e=>{const r=card.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;card.style.transform=`perspective(1000px) rotateX(${((y-r.height/2)/(r.height/2))*-3}deg) rotateY(${((x-r.width/2)/(r.width/2))*3}deg) translateY(-4px)`;});card.addEventListener("mouseleave",()=>{card.style.transform="perspective(1000px) rotateX(0) rotateY(0) translateY(0)";card.style.transition="transform 0.5s cubic-bezier(0.16,1,0.3,1)";});card.addEventListener("mouseenter",()=>{card.style.transition="transform 0.1s ease-out";});});}
 
@@ -1860,9 +1898,7 @@ function initSectionSounds() {
 function initBackToTop() {
     const btn = document.getElementById("back-to-top");
     if (!btn) return;
-    window.addEventListener("scroll", () => {
-        btn.classList.toggle("visible", window.scrollY > 600);
-    }, { passive: true });
+    ScrollManager.on(function(scrollY) { btn.classList.toggle("visible", scrollY > 600); });
     btn.addEventListener("click", () => {
         playSound("click");
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1875,9 +1911,7 @@ function initBackToTop() {
 function initScrollGlow() {
     const glow = document.getElementById("scroll-glow");
     if (!glow) return;
-    window.addEventListener("scroll", () => {
-        glow.classList.toggle("visible", window.scrollY > 200);
-    }, { passive: true });
+    ScrollManager.on(function(scrollY) { glow.classList.toggle("visible", scrollY > 200); });
 }
 
 /* ============================================
@@ -1902,23 +1936,14 @@ function initParallaxHero() {
     const glowPrimary = document.querySelector(".hero-glow");
     const card = document.getElementById("hero-card-wrapper");
     if (!hero) return;
-
-    let ticking = false;
-    window.addEventListener("scroll", () => {
-        if (!ticking) {
-            requestAnimationFrame(() => {
-                const scrollY = window.scrollY;
-                const heroH = hero.offsetHeight;
-                if (scrollY < heroH) {
-                    const ratio = scrollY / heroH;
-                    if (card) card.style.transform = `translateY(${scrollY * 0.15}px) scale(${1 - ratio * 0.05})`;
-                    if (glowPrimary) glowPrimary.style.transform = `translate(-50%,-50%) scale(${1 + ratio * 0.3})`;
-                }
-                ticking = false;
-            });
-            ticking = true;
+    const heroH = hero.offsetHeight || 800;
+    ScrollManager.on(function(scrollY) {
+        if (scrollY < heroH) {
+            const ratio = scrollY / heroH;
+            if (card) card.style.transform = "translateY(" + (scrollY * 0.15) + "px) scale(" + (1 - ratio * 0.05) + ")";
+            if (glowPrimary) glowPrimary.style.transform = "translate(-50%,-50%) scale(" + (1 + ratio * 0.3) + ")";
         }
-    }, { passive: true });
+    });
 }
 
 /* ============================================
@@ -1926,10 +1951,13 @@ function initParallaxHero() {
    ============================================ */
 function initSectionInView() {
     const sections = document.querySelectorAll(".section");
+    let discovered = 0;
     const observer = new IntersectionObserver(entries => {
         entries.forEach(en => {
             if (en.isIntersecting) {
                 en.target.classList.add("in-view");
+                discovered++;
+                DOMCache.updateDiscovered(discovered);
                 observer.unobserve(en.target);
             }
         });
@@ -2037,26 +2065,24 @@ function initInteractiveXPBar() {
     badge.appendChild(tooltip);
 
     badge.addEventListener("mouseenter", () => {
-        const progress = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
-        const level = Math.floor((progress / 100) * 9) + 1;
-        const sectionsVisited = document.querySelectorAll(".section.in-view").length;
-        const totalSections = document.querySelectorAll(".section").length;
-        tooltip.innerHTML = `<strong>LVL ${level}</strong> Explorer<br>${sectionsVisited}/${totalSections} zones discovered<br>${progress}% journey complete`;
+        var progress = Math.round(ScrollManager.getScrollPct() * 100);
+        var level = Math.floor((progress / 100) * 9) + 1;
+        tooltip.innerHTML = "<strong>LVL " + level + "</strong> Explorer<br>" + DOMCache.getDiscoveredCount() + "/" + DOMCache.getSectionCount() + " zones discovered<br>" + progress + "% journey complete";
         tooltip.classList.add("visible");
     });
     badge.addEventListener("mouseleave", () => tooltip.classList.remove("visible"));
 
     // Glow pulse on XP bar at milestones
     let lastMilestone = 0;
-    window.addEventListener("scroll", () => {
-        const progress = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
-        const milestone = Math.floor(progress / 10) * 10;
+    ScrollManager.on(function(scrollY, scrollPct) {
+        var progress = Math.round(scrollPct * 100);
+        var milestone = Math.floor(progress / 10) * 10;
         if (milestone > lastMilestone && milestone > 0) {
             lastMilestone = milestone;
             badge.classList.add("xp-milestone");
-            setTimeout(() => badge.classList.remove("xp-milestone"), 1000);
+            setTimeout(function() { badge.classList.remove("xp-milestone"); }, 1000);
         }
-    }, { passive: true });
+    });
 }
 
 /* ============================================
@@ -2195,10 +2221,10 @@ function initScrollStreak() {
     const countEl = streakEl.querySelector(".streak-count");
     const fireEl = streakEl.querySelector(".streak-fire");
 
-    window.addEventListener("scroll", () => {
-        const now = Date.now();
-        const delta = Math.abs(window.scrollY - lastScrollY);
-        const timeDiff = now - lastScrollTime;
+    ScrollManager.on(function(scrollY) {
+        var now = Date.now();
+        var delta = Math.abs(scrollY - lastScrollY);
+        var timeDiff = now - lastScrollTime;
 
         if (timeDiff < 200 && delta > 30) {
             streak++;
@@ -2218,7 +2244,7 @@ function initScrollStreak() {
             }
 
             clearTimeout(streakTimer);
-            streakTimer = setTimeout(() => {
+            streakTimer = setTimeout(function() {
                 if (streak >= 10) {
                     spawnFloater(window.innerWidth / 2, window.innerHeight / 2,
                         "SCROLL STREAK x" + streak + "!", "#FF5F57", 22);
@@ -2228,9 +2254,9 @@ function initScrollStreak() {
             }, 800);
         }
 
-        lastScrollY = window.scrollY;
+        lastScrollY = scrollY;
         lastScrollTime = now;
-    }, { passive: true });
+    });
 }
 
 /* ============================================
@@ -2446,7 +2472,6 @@ function initGenAISpellEffect() {
    ============================================ */
 function initVentureRocket() {
     document.querySelectorAll(".venture-card").forEach(card => {
-        const badges = card.querySelector(".quest-badges, .venture-badges");
         card.addEventListener("mouseenter", () => {
             card.classList.add("venture-launch");
         });
@@ -2775,7 +2800,7 @@ function initStoryBar(C) {
         });
     }
 
-    window.addEventListener("scroll", updateStoryBar, { passive: true });
+    ScrollManager.on(updateStoryBar);
     updateStoryBar();
 }
 
@@ -2819,7 +2844,7 @@ function initDynamicDifficulty() {
     }, 3000);
 
     // Update on scroll
-    window.addEventListener("scroll", () => { updateDifficulty(); }, { passive: true });
+    ScrollManager.on(updateDifficulty);
 }
 
 /* ============================================
@@ -3478,7 +3503,7 @@ function initParallaxStarField() {
     });
 
     let scrollY = 0;
-    window.addEventListener("scroll", () => { scrollY = window.scrollY; }, { passive: true });
+    ScrollManager.on(function(sy) { scrollY = sy; });
 
     function draw() {
         ctx.clearRect(0, 0, w, h);
@@ -3630,7 +3655,7 @@ function initCursorEvolution() {
         }
     }
 
-    window.addEventListener("scroll", checkTier, { passive: true });
+    ScrollManager.on(checkTier);
     checkTier();
 }
 

@@ -13,13 +13,8 @@
     font-family: 'Inter', sans-serif;
 }
 .card-arena.active { opacity: 1; visibility: visible; }
-.card-arena, .card-arena * { cursor: auto !important; }
-.card-arena .arena-card { cursor: pointer !important; }
-.card-arena button, .card-arena a { cursor: pointer !important; }
-.arena-identity, .arena-identity * { cursor: auto !important; }
-.arena-identity button, .arena-identity a { cursor: pointer !important; }
-.arena-draw-overlay, .arena-draw-overlay * { cursor: auto !important; }
-.arena-draw-overlay button, .arena-draw-overlay a { cursor: pointer !important; }
+.card-arena, .card-arena *, .arena-identity, .arena-identity *, .arena-draw-overlay, .arena-draw-overlay * { cursor: auto !important; }
+.card-arena .arena-card, .card-arena button, .card-arena a, .arena-identity button, .arena-identity a, .arena-draw-overlay button, .arena-draw-overlay a { cursor: pointer !important; }
 
 /* Atmospheric background layers */
 .arena-bg {
@@ -298,8 +293,7 @@
 .ac-desc {
     font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.6;
     flex: 1; overflow: hidden;
-    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4;
-    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3;
 }
 
 /* Card front — footer with power bar */

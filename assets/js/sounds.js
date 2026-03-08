@@ -37,8 +37,7 @@ const ELEMENT_SOUND_PROFILES = {
 };
 
 function getElementSoundProfile() {
-    const id = (typeof window !== "undefined" && window._currentElement) || "water";
-    return ELEMENT_SOUND_PROFILES[id] || ELEMENT_SOUND_PROFILES.water;
+    return ELEMENT_SOUND_PROFILES[window._currentElement || "water"] || ELEMENT_SOUND_PROFILES.water;
 }
 
 function playSound(type) {
