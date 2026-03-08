@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-template="title">Section | Mani Kumar Jami</title>
+    <meta name="description" data-template="description" content="">
+    <link rel="canonical" data-template="canonical" href="">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/page.css">
+    <link rel="stylesheet" href="../assets/css/weather.css">
+</head>
+<body class="section-page game-active">
+
+    <!-- MOOD / WEATHER SELECTOR -->
+    <div class="mood-selector" id="mood-selector">
+        <div class="mood-toggle" id="mood-toggle">
+            <span class="mood-toggle-icon" id="mood-toggle-icon"></span>
+            <span class="mood-toggle-label" id="mood-toggle-label"></span>
+        </div>
+        <div class="mood-dropdown" id="mood-dropdown"></div>
+    </div>
+
+    <!-- WEATHER INDICATOR (fallback) -->
+    <div class="weather-indicator" id="weather-indicator">
+        <span class="weather-icon" id="weather-icon"></span>
+        <span class="weather-label" id="weather-label"></span>
+    </div>
+
+    <!-- LIGHTNING FLASH OVERLAY -->
+    <div class="weather-lightning" id="weather-lightning"></div>
+
+    <!-- MASCOT — floating assistant -->
+    <div class="mascot" id="mascot">
+        <div class="mascot-body" id="mascot-body">
+            <div class="mascot-face">
+                <div class="mascot-eyes">
+                    <span class="mascot-eye left"></span>
+                    <span class="mascot-eye right"></span>
+                </div>
+                <div class="mascot-mouth"></div>
+            </div>
+            <div class="mascot-glow"></div>
+        </div>
+        <div class="mascot-bubble" id="mascot-bubble">
+            <span class="mascot-bubble-text" id="mascot-bubble-text"></span>
+        </div>
+    </div>
+
+    <!-- VOICE CHAT BAR -->
+    <div class="voice-chat-bar" id="voice-chat-bar">
+        <div class="voice-chat-inner">
+            <button class="voice-btn" id="voice-btn" aria-label="Voice input">
+                <span class="voice-icon" id="voice-icon">&#x1F3A4;</span>
+                <span class="voice-status" id="voice-status">Ask me anything</span>
+            </button>
+            <input type="text" class="voice-input" id="voice-input" placeholder="Type or speak a question about Mani..." autocomplete="off">
+            <button class="voice-send" id="voice-send" aria-label="Send">&#x27A1;&#xFE0F;</button>
+        </div>
+        <div class="voice-response" id="voice-response"></div>
+    </div>
+
+    <!-- NAV BAR (simplified for section pages) -->
+    <nav id="page-nav" class="page-nav">
+        <div class="nav-inner">
+            <div class="nav-left">
+                <a href="../index.html" class="nav-name" id="nav-back">&#x2190; MKJ</a>
+                <span class="page-section-tag" id="page-section-tag"></span>
+            </div>
+            <div class="nav-links" id="page-nav-links"></div>
+            <div class="nav-hamburger" id="page-hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="mobile-menu" id="page-mobile-menu"></div>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <header class="page-hero" id="page-hero">
+        <div class="page-hero-content">
+            <span class="page-tag" id="page-tag"></span>
+            <h1 class="page-title" id="page-title"></h1>
+            <p class="page-subtitle" id="page-subtitle"></p>
+        </div>
+        <div class="page-hero-glow"></div>
+    </header>
+
+    <!-- MAIN CONTENT — populated by section-specific JS -->
+    <main id="page-content" class="page-content">
+    </main>
+
+    <!-- SECTION NAVIGATION (prev/next) -->
+    <div class="section-nav" id="section-nav">
+        <a class="section-nav-btn prev" id="nav-prev" href="#">
+            <span class="snb-arrow">&#x2190;</span>
+            <span class="snb-label">PREVIOUS</span>
+            <span class="snb-name" id="nav-prev-name"></span>
+        </a>
+        <a class="section-nav-btn next" id="nav-next" href="#">
+            <span class="snb-arrow">&#x2192;</span>
+            <span class="snb-label">NEXT</span>
+            <span class="snb-name" id="nav-next-name"></span>
+        </a>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-top">
+            <span class="footer-copy">&copy; 2026 Mani Kumar Jami</span>
+            <span class="footer-craft">Crafted as an RPG adventure &#x2694;&#xFE0F;</span>
+        </div>
+    </footer>
+
+    <script src="../cms/content.js"></script>
+    <script src="../assets/js/page.js"></script>
+    <script src="../assets/js/weather.js"></script>
+</body>
+</html>
