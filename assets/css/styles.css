@@ -310,19 +310,31 @@ a { color: inherit; text-decoration: none; }
 /* ── ELEMENT ARENA — JS builds all UI inline, minimal CSS needed ── */
 
 /* Element re-select button (lives inside .nav-left) */
+/* Element reselect — pill with icon + element name, accent-bordered */
 .element-reselect {
-    display: flex; align-items: center; justify-content: center;
-    width: 32px; height: 32px; border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
-    cursor: pointer; font-size: 16px; color: #fff;
+    display: flex; align-items: center; gap: 5px;
+    padding: 5px 10px; border-radius: 16px;
+    background: rgba(var(--element-rgb, 228,255,26), 0.06);
+    border: 1px solid rgba(var(--element-rgb, 228,255,26), 0.25);
+    cursor: pointer; color: var(--accent);
     flex-shrink: 0;
-    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 .element-reselect:hover {
-    border-color: var(--accent);
-    box-shadow: 0 0 16px rgba(var(--element-rgb, 34,211,238),0.2);
-    transform: scale(1.1);
+    background: rgba(var(--element-rgb, 228,255,26), 0.1);
+    border-color: rgba(var(--element-rgb, 228,255,26), 0.45);
+    box-shadow: 0 0 14px rgba(var(--element-rgb, 228,255,26), 0.15);
+}
+.element-reselect-icon { font-size: 14px; line-height: 1; }
+.element-reselect-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--accent);
+}
+/* Thin separator between element pill and mood selector */
+.element-reselect + .mood-selector::before {
+    content: ""; display: block; width: 1px; height: 16px;
+    background: rgba(255,255,255,0.1); margin-right: 2px;
+    align-self: center; flex-shrink: 0;
 }
 
 /* Tablet boot screen */
@@ -1573,7 +1585,8 @@ a { color: inherit; text-decoration: none; }
     .nav-hamburger { display: flex; }
     .nav-inner { padding: 0 20px; }
     .nav-left { gap: 12px; }
-    .element-reselect { width: 28px; height: 28px; font-size: 14px; }
+    .element-reselect { padding: 4px 8px; }
+    .element-reselect-label { display: none; }
     .hero-section { padding: 90px 16px 50px; min-height: calc(100vh - 64px); min-height: calc(100dvh - 64px); }
     .hero-content { max-width: 100%; }
     .hero-card { border-radius: 16px; }
@@ -1645,7 +1658,7 @@ a { color: inherit; text-decoration: none; }
     .xp-badge { display: none; }
     .nav-left { gap: 10px; }
     .nav-name { font-size: 16px; }
-    .element-reselect { width: 26px; height: 26px; font-size: 13px; }
+    .element-reselect { padding: 3px 7px; }
     .quest-node { width: 12px; height: 12px; min-width: 12px; }
     .quest-line { left: 5px; }
     .badge { font-size: 9px; padding: 3px 8px; }
@@ -2805,25 +2818,35 @@ a { color: inherit; text-decoration: none; }
 .loot-flavor { font-size: 12px; color: var(--text-muted); font-style: italic; line-height: 1.4; }
 
 /* Loot Collection Panel */
+/* Loot bag — compact badge by default, expands on click */
 .loot-collection {
     position: fixed; bottom: 80px; left: 16px; z-index: 50;
-    background: rgba(10,10,10,0.9); border: 1px solid var(--border);
-    border-radius: 12px; padding: 12px; width: 200px;
-    backdrop-filter: blur(8px);
+    background: rgba(10,10,10,0.92); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 12px;
+    backdrop-filter: blur(12px);
     opacity: 0; animation: weatherFadeIn 1s 3s forwards;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, border-radius 0.3s, padding 0.3s;
+    cursor: pointer; user-select: none;
 }
 .loot-collection:hover { border-color: var(--border-hover); }
 .loot-collection-header {
     display: flex; align-items: center; gap: 6px;
-    margin-bottom: 8px; font-size: 11px; font-weight: 700;
+    font-size: 11px; font-weight: 700;
     letter-spacing: 0.1em; color: var(--text-muted);
+    white-space: nowrap;
 }
 .loot-collection-icon { font-size: 14px; }
-.loot-collection-count { margin-left: auto; color: var(--accent); font-size: 11px; }
+.loot-collection-count { color: var(--accent); font-size: 11px; }
+/* Grid hidden until expanded */
 .loot-collection-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+    display: none; grid-template-columns: repeat(4, 1fr); gap: 4px;
+    margin-top: 10px;
 }
+/* Expanded state */
+.loot-collection.expanded {
+    border-radius: 12px; padding: 12px; cursor: default;
+}
+.loot-collection.expanded .loot-collection-grid { display: grid; }
 .loot-slot {
     width: 100%; aspect-ratio: 1; border-radius: 6px;
     background: rgba(255,255,255,0.03); border: 1px solid var(--border);

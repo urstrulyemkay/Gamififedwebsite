@@ -126,5 +126,19 @@ function initLootDrops(C) {
     }, { passive: true });
 
     renderGrid();
+
+    // Click-to-expand/collapse the loot bag panel
+    const panel = document.getElementById("loot-collection");
+    if (panel) {
+        panel.addEventListener("click", (e) => {
+            // Don't toggle when clicking a slot tooltip or slot itself while expanded
+            if (panel.classList.contains("expanded") && e.target.closest(".loot-slot")) return;
+            panel.classList.toggle("expanded");
+        });
+        // Close on outside click
+        document.addEventListener("click", (e) => {
+            if (!panel.contains(e.target)) panel.classList.remove("expanded");
+        });
+    }
 }
 

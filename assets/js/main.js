@@ -3931,9 +3931,10 @@ function showElementArena(C, onDone) {
         localStorage.setItem("mkj_element", el.id);
         window._currentElement = el.id;
 
-        // Update reselect icon
-        const resIcon = document.getElementById("element-reselect-icon");
-        if (resIcon) resIcon.textContent = el.icon;
+        // Update reselect button icon + label
+        if (typeof window._updateElementReselectLabel === "function") {
+            window._updateElementReselectLabel(el.id);
+        }
 
         // Sync weather mood
         if (el.defaultMood && typeof window.applyElementMood === "function") {
@@ -4048,14 +4049,23 @@ function showElementArena(C, onDone) {
 function initElementReselectButton(C) {
     const btn = document.getElementById("element-reselect");
     const icon = document.getElementById("element-reselect-icon");
+    const label = document.getElementById("element-reselect-label");
     if (!btn || !icon) return;
     const elements = (C.boot && C.boot.elements) || [];
-    const saved = elements.find(e => e.id === (localStorage.getItem("mkj_element") || "water"));
-    icon.textContent = saved ? saved.icon : "\u2728";
+
+    function syncLabel(elementId) {
+        const el = elements.find(e => e.id === elementId);
+        icon.textContent = el ? el.icon : "\u2728";
+        if (label) label.textContent = el ? el.label.toUpperCase() : "ELEMENT";
+    }
+
+    syncLabel(localStorage.getItem("mkj_element") || "water");
+
+    // Expose for selectElement() to call after picking
+    window._updateElementReselectLabel = syncLabel;
+
     btn.addEventListener("click", () => {
-        if (typeof window._showElementArena === "function") {
-            window._showElementArena();
-        }
+        if (typeof window._showElementArena === "function") window._showElementArena();
     });
 }
 

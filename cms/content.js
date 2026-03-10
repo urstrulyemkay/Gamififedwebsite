@@ -679,7 +679,7 @@ const CONTENT = {
         { id: "auto",     label: "Auto",     icon: "\u{1F554}", desc: "Changes as you scroll" },
         { id: "storm",    label: "Storm",    icon: "\u26C8\uFE0F", desc: "Thunder & lightning" },
         { id: "chill",    label: "Chill",    icon: "\u2744\uFE0F",  desc: "Snow & frost" },
-        { id: "hype",     label: "Hype",     icon: "\u{1F525}",     desc: "Fire & explosions" },
+        { id: "hype",     label: "Hype",     icon: "\u26A1",        desc: "Fire & explosions" },
         { id: "zen",      label: "Zen",      icon: "\u{1F33F}",     desc: "Petals & ripples" },
         { id: "creative", label: "Creative", icon: "\u{1F308}",     desc: "Aurora & nebula" },
     ],
