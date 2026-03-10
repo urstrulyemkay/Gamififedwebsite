@@ -399,7 +399,7 @@ function initBootScreen(C, onComplete) {
     }
 
     // Type the mission title — min-height on CSS prevents layout shift
-    const titleText = "The Story of " + C.profile.name;
+    const titleText = "The Voyage of " + C.profile.name;
     const cursorSpan = document.createElement("span");
     cursorSpan.className = "typing-cursor";
     titleEl.textContent = "";
@@ -1932,16 +1932,28 @@ function initGenAICardLinks() {
    PARALLAX HERO — subtle depth on scroll
    ============================================ */
 function initParallaxHero() {
+    // Skip on mobile — reduces jank and parallax is hard to perceive on touch anyway
+    if (window.innerWidth < 768) return;
     const hero = document.querySelector(".hero-section");
     const glowPrimary = document.querySelector(".hero-glow");
     const card = document.getElementById("hero-card-wrapper");
     if (!hero) return;
     const heroH = hero.offsetHeight || 800;
+    // Wait for cardReveal animation to finish (0.5s delay + 1.2s duration = 1.7s)
+    // before attaching scroll-driven transforms to avoid fighting the keyframe animation
+    let ready = false;
+    setTimeout(function() { ready = true; }, 1800);
     ScrollManager.on(function(scrollY) {
+        if (!ready) return;
         if (scrollY < heroH) {
             const ratio = scrollY / heroH;
-            if (card) card.style.transform = "translateY(" + (scrollY * 0.15) + "px) scale(" + (1 - ratio * 0.05) + ")";
+            // translate3d forces GPU compositing, eliminating sub-pixel jitter
+            if (card) card.style.transform = "translate3d(0," + (scrollY * 0.12) + "px,0) scale(" + (1 - ratio * 0.04) + ")";
             if (glowPrimary) glowPrimary.style.transform = "translate(-50%,-50%) scale(" + (1 + ratio * 0.3) + ")";
+        } else {
+            // Reset when hero is out of view so re-entry looks clean
+            if (card) card.style.transform = "";
+            if (glowPrimary) glowPrimary.style.transform = "";
         }
     });
 }

@@ -38,7 +38,7 @@ The entire website is an RPG character sheet. The visitor is "inspecting" Mani's
 |-------|-----|------|
 | Void Black | #0A0A0A | Background |
 | Surface Dark | #141414 | Elevated surfaces |
-| Neon Lime | #E4FF1A | Primary accent |
+| Neon Lime | #E4FF1A | Primary accent (default/fallback) |
 | Pure White | #FFFFFF | Primary text |
 | Muted Gray | #A1A1A1 | Secondary text |
 | Border Gray | rgba(255,255,255,0.06) | Borders/dividers |
@@ -67,10 +67,11 @@ Each element transforms the entire UI — colors, particles, sounds, weather moo
 
 ### Element Selection Flow
 1. Boot screen → BEGIN EXPEDITION → **Element Arena** (fullscreen, every visit)
-2. 5 element cards with hover preview (desktop) / tap-to-preview (mobile)
-3. Click/tap to select → saves to localStorage, applies accent color + weather mood
-4. Reselect button lives in nav bar (`.nav-left`, between MKJ name and XP badge)
-5. `localStorage` keys: `mkj_element`, `mkj_accent_hex`, `mkj_accent_rgb`, `mkj_mood`, `mkj_mood_source`
+2. 5 element cards with hover preview (desktop) / tap-to-preview then tap-again-to-select (mobile)
+3. Mobile: 2-column CSS grid, 5th card centered, responsive card/font sizes
+4. Click/tap to select → saves to localStorage, applies accent color + weather mood
+5. Reselect button lives in nav bar (`.nav-left`, between MKJ name and mood selector)
+6. `localStorage` keys: `mkj_element`, `mkj_accent_hex`, `mkj_accent_rgb`, `mkj_mood`, `mkj_mood_source`
 
 ### Color System Architecture
 - `--accent` / `--user-accent` — CSS custom property set by `applyAccentColor()`
@@ -79,6 +80,12 @@ Each element transforms the entire UI — colors, particles, sounds, weather moo
 - All CSS uses `rgba(var(--element-rgb, 228,255,26),X)` with lime fallback
 - Canvas elements (radar chart, particles) read from `localStorage.getItem("mkj_accent_rgb")`
 - Sound system applies element profiles (freq/waveform/gain modifiers) via `ELEMENT_SOUND_PROFILES`
+
+### Mood Source Tracking
+- `mkj_mood_source` localStorage key: `"element"` vs `"manual"`
+- When element sets mood → source = "element" (can be overridden by next element change)
+- When user picks from mood dropdown → source = "manual" (element changes won't override)
+- `applyElementMood()` blocks only if source is "manual"
 
 ### Color Rules
 - **80/20**: 80% dark, 20% accent. Glow at 6-15% opacity, never solid accent backgrounds.
@@ -90,6 +97,7 @@ Each element transforms the entire UI — colors, particles, sounds, weather moo
 - **Typeface**: Inter (Google Fonts) + Press Start 2P (boot screen only)
 - **Section tags**: 17px, weight 700, letter-spacing +0.12em, uppercase
 - **Section titles**: clamp(56px, 10vw, 96px), weight 700
+- **Boss section title**: clamp(84px, 15vw, 144px) — 50% larger than default
 - **Nav links**: 16px, weight 500
 - **Nav name (MKJ)**: 18px, weight 700
 - **XP level/percent**: 14px, weight 800
@@ -100,22 +108,22 @@ Each element transforms the entire UI — colors, particles, sounds, weather moo
 ## Folder Structure
 ```
 personalwebsite/
-├── index.html                 # Main HTML shell (~500 lines)
+├── index.html                 # Main HTML shell (~530 lines)
 ├── CLAUDE.md                  # This file
 ├── cms/
-│   ├── content.js             # Single source of truth (~600 lines)
+│   ├── content.js             # Single source of truth (~750 lines)
 │   └── blog.js                # Blog fallback content
 ├── assets/
 │   ├── css/
-│   │   ├── styles.css         # Core design system (~2700 lines)
-│   │   ├── card-arena.css     # Card Arena TCG styles (~850 lines)
-│   │   ├── weather.css        # Weather/mood atmosphere (~980 lines)
+│   │   ├── styles.css         # Core design system (~2900 lines)
+│   │   ├── card-arena.css     # Card Arena TCG styles (~840 lines)
+│   │   ├── weather.css        # Weather/mood atmosphere (~990 lines)
 │   │   ├── page.css           # Section detail pages (~195 lines)
 │   │   └── blog.css           # Blog styles (~170 lines)
 │   ├── js/
 │   │   ├── sounds.js          # Sound system + 80 sound defs (~490 lines)
-│   │   ├── main.js            # RPG gamification engine (~3190 lines)
-│   │   ├── card-arena.js      # Trading Card Game system (~630 lines)
+│   │   ├── main.js            # RPG gamification engine (~4100 lines)
+│   │   ├── card-arena.js      # Trading Card Game system (~635 lines)
 │   │   ├── loot.js            # Loot drop collection (~130 lines)
 │   │   ├── weather.js         # Weather/mood atmosphere (~960 lines)
 │   │   ├── page.js            # Section page engine (~470 lines)
@@ -137,6 +145,20 @@ personalwebsite/
 
 ---
 
+## Nav Bar Layout (index.html `#xp-nav`)
+```
+nav-inner (flex, space-between)
+├── nav-left (flex, gap:20px)
+│   ├── nav-name "MKJ" (clickable — glitch + facts + boot return)
+│   ├── element-reselect button (32px circle, shows current element icon)
+│   ├── mood-selector (toggle + dropdown, icon-only on mobile)
+│   └── xp-badge (LVL + bar + % + zones)
+├── nav-links (desktop only, hidden <768px)
+└── nav-hamburger (mobile only, shown ≥768px)
+```
+
+---
+
 ## Multi-Page Architecture
 - `pages/template.html` — single template, loads any section via `?s=section-id`
 - `assets/js/page.js` — page engine: content builder, mascot, voice chat, prev/next nav
@@ -147,38 +169,38 @@ personalwebsite/
 
 ---
 
-## 45+ Gamification Systems (main.js)
+## 50+ Gamification Systems (main.js)
 
 ### Core Systems (1-13)
-1. **Boot Screen** — 5-element particle canvas, orbiting orbs, typed title (min-height prevents layout shift), Enter/click dismiss
+1. **Boot Screen** — 5-element particle canvas, orbiting orbs, typed title "The Voyage of Mani Kumar Jami" (min-height prevents layout shift), Enter/click dismiss
 2. **Territory HUD** — "Entering territory" banners, unique sound per section (`territory-{id}`)
 3. **Resource HUD** — INTEL/XP/ZONES counters, unique sound per section (`resource-{id}`)
-4. **Hero Character Card** — RPG card reveal, HP/mana bars, particle burst, parallax scroll
+4. **Hero Character Card** — RPG card reveal, HP/mana bars, particle burst, parallax scroll. **Tappable** — opens Card Arena TCG
 5. **Emoji Avatar Cursor** — per-section emoji+label, unique whoosh per section (`whoosh-{id}`)
 6. **Minimap** — vertically centered right side, connecting lines, tooltips, click-to-navigate
 7. **Combo Counter** — increments on section discovery
-8. **Sound System** — Web Audio API oscillators, 80+ unique sound definitions
+8. **Sound System** — Web Audio API oscillators, 80+ unique sound definitions, element-specific profiles
 9. **Level-Up Toasts** — fires at 25/50/75/100% scroll
 10. **Achievement Toasts** — unique sound per section (`toast-{id}`)
 11. **Fog of War** — sections hidden until scroll, unique sound per section (`fog-{id}`)
 12. **Dialogue Box CTA** — NPC conversation, keyboard shortcuts 1-4, typing effect
-13. **Boss Battles** — 2-col grid, enemy cards with name/learning/scar, HP bar animations, battle scars news ticker
+13. **Boss Battles** — 2-col grid, enemy cards with name/learning/scar, HP bar animations, battle scars news ticker. Double-init guard prevents content duplication.
 
 ### Advanced Systems (14-25)
-14. **Radar Chart** — animated Canvas hexagon for character stats
+14. **Radar Chart** — animated Canvas hexagon for character stats (reads accent from localStorage)
 15. **Inventory Grid** — hex-grid offset, rarity glow colors, magnetic hover
 16. **Easter Eggs** — Konami code + rapid click on MKJ logo
-17. **Save Game** — localStorage position save/resume
+17. **Save Game** — localStorage position save/resume (debounced via ScrollManager)
 18. **Quest Sounds** — separate professional/academic observers with unique sounds
 19. **Hover Sounds** — 9 distinct hover sound types (per card type)
 20. **Section Reveal Sounds** — 8 unique section-specific reveal sounds
 21. **Back to Top** — fixed button with click sound
-22. **Scroll Glow** — ambient lime gradient at top
+22. **Scroll Glow** — ambient gradient at top
 23. **GenAI Card Links** — full card clickable via data-url
-24. **Parallax Hero** — requestAnimationFrame depth on hero card
-25. **Section In-View** — smooth content fade-in
+24. **Parallax Hero** — rAF depth on hero card via ScrollManager
+25. **Section In-View** — smooth content fade-in, updates DOMCache discovered count
 
-### Fun Interaction Systems (26-41)
+### Fun Interaction Systems (26-42)
 26. **Interactive XP Bar** — click to jump, tooltip (level/zones/%), milestone glow pulse, level names (Novice to God), zones counter
 27. **Damage Numbers** — click anywhere for floating "+XP" text, every 7th click = CRITICAL HIT
 28. **Scroll Streak** — fast scrolling builds combo (3x/5x/10x with fire effects)
@@ -197,15 +219,43 @@ personalwebsite/
 41. **MKJ Logo Interaction** — particle burst, glitch effect, escalating sounds (5 levels), random facts, returns to boot screen
 42. **Idle Nudges** — 20s inactivity → contextual scroll prompts (10 rotating messages)
 
-### Atmosphere & Progression Systems (43-50)
+### Atmosphere & Progression Systems (43-51)
 43. **Dynamic Weather v2** — scroll-based atmosphere transitions: day -> dawn -> dusk -> night -> storm as visitor scrolls deeper. Body-level CSS mood classes shift entire page color grading. 30+ unique visual effects across 9 moods. Self-initializing standalone module (weather.js + weather.css)
-44. **Mood Selector** — dropdown (top-left) lets visitors override weather: Auto (scroll-based), Storm, Chill, Hype, Zen, Creative. Persists to localStorage, syncs across main + section pages
+44. **Mood Selector** — embedded in nav bar (between element reselect button and XP badge), dropdown lets visitors override weather: Auto (scroll-based), Storm, Chill, Hype, Zen, Creative. On mobile (768px) shows icon-only. Persists to localStorage, syncs across main + section pages. Source tracking (`mkj_mood_source`) separates "element" vs "manual" selections.
 45. **Loot Drops** — random collectible cards drop while scrolling (35% chance per ~1200px), 12 items with rarity tiers (legendary/epic/rare), weighted drops, toast notification with rarity glow + sound, Loot Bag panel tracks collection progress, persists to localStorage
-46. **Spaceship Flyovers** — SVG spaceships (carrier, fighter, dreadnought) cross the screen every 30-60s in any mood, random direction, fade in/out
+46. **Spaceship Flyovers** — SVG spaceships (carrier, fighter, dreadnought) cross the screen every 30-60s in any mood, random direction, fade in/out. Formation launches tracked for cleanup.
 47. **Thunder/Lightning** — multi-flash overlay + bolt with 2-3 branches + screen shake + sawtooth rumble sound, fires every 3-10s during Storm mood
 48. **Scroll Mood Transitions** — in Auto mode, weather morphs as visitors explore: top=Day, 25%=Dawn, 50%=Dusk, 75%=Night, bottom=Storm. Creates cinematic journey feeling
 49. **God Rays** — volumetric light beams from sun (Day mood), 5 angled rays with pulsing opacity
 50. **Burst Explosions** — periodic particle burst effects (Hype mood), 12 particles radiate outward with CSS custom properties for direction
+51. **Card Arena TCG** — Full trading card game accessed by tapping hero card. 16 cards across 4 suits (Product/Technology/Process/Psychology), pick 3-5 to reveal PM archetype. 12 archetypes including "The Voyage" (all-legendary). Particles, 3D tilt, holographic effects, random draw mode.
+
+---
+
+## Card Arena TCG System (card-arena.js)
+
+### Architecture
+- **Entry**: Tap hero card on main page → `.card-arena` overlay (`z-index: 100010`)
+- **Content**: 16 skill cards from `C.cardArena` (4 suits × 4 cards each)
+- **Suits**: Product (lime), Technology (cyan), Process (green), Psychology (violet)
+- **Rarities**: legendary, epic, rare — each with power cost and description
+- **Hand**: Pick 3-5 cards → reveals 1 of 12 PM archetypes based on suit distribution
+
+### 12 PM Archetypes
+| Type | Archetype | Trigger |
+|------|-----------|---------|
+| Single-suit (4) | Strategist, Technomancer, Commander, Empath | 3+ of same suit |
+| Two-suit (6) | Architect, Visionary, Engineer, Catalyst, Scaler, Innovator | Top 2 suits |
+| Special (2) | Polymath (balanced), The Voyage (all legendary) | Even spread / all legendary |
+
+### Features
+- Particle canvas background, cursor glow effect
+- 3D card tilt on hover, holographic shine
+- Suit filter tabs with animated stats reveal
+- Random draw mode (builds random hand)
+- Cards: power bars, cost badges, rarity indicators, front/back flip
+- Exit via ESC, back button, or return link
+- `window._openCardArena` exposed for programmatic access
 
 ---
 
@@ -241,6 +291,7 @@ Each mood applies `body.mood-{id}` with:
 
 ### Weather localStorage Keys
 - `mkj_mood` — selected mood ID ("auto"/"storm"/"chill"/etc.)
+- `mkj_mood_source` — who set the mood ("element"/"manual")
 - `mkj_loot_collection` — array of collected loot indices
 
 ---
@@ -249,6 +300,14 @@ Each mood applies `body.mood-{id}` with:
 
 ### CRITICAL RULE: No sound repetitions across sections
 Every section has its own unique sounds for ALL 5 per-section systems.
+
+### Element Sound Profiles
+Each element modifies base oscillator parameters via `ELEMENT_SOUND_PROFILES`:
+- **Fire**: triangle wave, +200Hz freq shift, 1.2x gain, +100 detune
+- **Water**: sine wave, -100Hz, 0.8x gain, -50 detune
+- **Earth**: square wave, -50Hz, 1.0x gain, 0 detune
+- **Air**: sine wave, +150Hz, 0.7x gain, +75 detune
+- **Ether**: triangle wave, +50Hz, 0.9x gain, +25 detune
 
 ### Per-Section Sound Systems (each section has unique sound for all 5):
 | System | Pattern | Count |
@@ -277,14 +336,14 @@ Every section has its own unique sounds for ALL 5 per-section systems.
 
 | Section | Unique Interactions |
 |---------|-------------------|
-| **Boot Screen** | 5-element orbs, particle canvas, progress loading, typed title (no layout shift), Enter dismiss |
-| **Hero** | Parallax depth, particle burst, HP/MANA bars, character card reveal |
+| **Boot Screen** | 5-element orbs, particle canvas, progress loading, typed title "The Voyage of...", Enter dismiss |
+| **Hero** | Parallax depth, particle burst, HP/MANA bars, character card reveal, **tap opens Card Arena** |
 | **Quest Log** | Alternating timeline, shimmer borders, card flip (dblclick), quest node pulse |
 | **Academic** | Violet accent, page-turn rotateY reveal, violet shimmer borders |
 | **Ventures** | 2-column grid, shimmer borders, rocket launch hover |
-| **Boss Battles** | 2-col grid, click-to-battle HP drain, shake/defeat, battle scars ticker, venture product hover sounds |
+| **Boss Battles** | 2-col grid, click-to-battle HP drain, shake/defeat, battle scars ticker, venture product hover sounds. 50% larger title. |
 | **Skill Tree** | Bar fill with stagger, XP counter tick-up, detail tooltips on hover |
-| **Stats** | Canvas radar chart animation |
+| **Stats** | Canvas radar chart animation (dynamic accent color) |
 | **GenAI** | Full-card clickable, spell cast icon effect |
 | **Portfolio** | Canva embeds with skeleton shimmer loaders |
 | **Inventory** | Hex-grid offset, magnetic cursor hover, rarity glow |
@@ -318,6 +377,7 @@ Every section has its own unique sounds for ALL 5 per-section systems.
 - Loot drop toast (rarity glow, icon bounce, slide-up)
 - Loot collection grid (slot hover scale, tooltip)
 - Spaceship flyover (SVG silhouettes, linear crossing animation)
+- Dynamic element theming: ~150+ `rgba(var(--element-rgb, 228,255,26),X)` conversions
 - Responsive: 1024px, 768px, 480px breakpoints
 
 ---
@@ -343,8 +403,58 @@ Single source of truth. ALL site text comes from this file.
 - **Frontend**: assets/js/blog.js fetches from Strapi API, falls back to cms/blog.js
 - **Bootstrap**: src/index.ts auto-grants public read permissions
 
-### Critical Init Order
-`initScrollReveal()` MUST run LAST in the boot callback — after all dynamic content builders (buildVentures, initBossBattles, etc.) so the IntersectionObserver can find dynamically created `.reveal` elements.
+---
+
+## Init Architecture & Boot Flow
+
+### Boot Sequence
+1. `DOMContentLoaded` → restore saved element/accent from localStorage
+2. `buildFromContent(C)` → build all HTML from cms/content.js
+3. `initBootScreen()` → particle canvas, typed title "The Voyage of Mani Kumar Jami"
+4. User clicks BEGIN EXPEDITION → `showElementArena()` (fullscreen, every visit)
+5. User selects element → `applyAccentColor()` + `applyElementMood()` + dismiss arena
+6. `startMainSite()` → initializes all 50+ game systems via `safeInit()`
+7. `initScrollReveal()` runs LAST (needs all dynamic content built first)
+
+### Critical Rules
+- `initScrollReveal()` MUST run LAST — after all dynamic content builders
+- All init functions wrapped in `safeInit()` — one failure never breaks the chain
+- Element arena sets `pointer-events:none` + `display:none` after dismissal
+- Card arena has its own z-index layer (100010) above element arena (10000)
+
+### Performance Architecture
+- **ScrollManager** — Single rAF-throttled scroll listener replaces 12+ individual `window.addEventListener("scroll")`. Subscribe via `ScrollManager.on(fn)`, receives `(scrollY, scrollPct)`. Defined at top of main.js, before DOMContentLoaded.
+- **DOMCache** — Shared cache for section counts. `DOMCache.getSectionCount()` queries once, `DOMCache.getDiscoveredCount()` updated by `initSectionInView()` IntersectionObserver. Avoids `querySelectorAll(".section.in-view")` on every scroll frame.
+- **safeInit(name, fn)** — All 50+ init functions wrapped in try/catch isolation. Errors logged as `[Init] {name} failed:` to console. Defined inside `startMainSite()`.
+- **Weather cleanup** — `clearIntervals()` tracks 7 interval types (shooting, splash, thunder, burst, ripple, ship, formation) + shooting star timeouts array. Mood toggle icon/label elements cached at init.
+
+### localStorage Keys Reference
+| Key | Purpose | Values |
+|-----|---------|--------|
+| `mkj_element` | Selected element | fire/water/earth/air/ether |
+| `mkj_accent_hex` | Accent color hex | e.g., #22D3EE |
+| `mkj_accent_rgb` | Accent color RGB | e.g., 34,211,238 |
+| `mkj_mood` | Current mood | auto/day/storm/chill/hype/zen/creative |
+| `mkj_mood_source` | Who set the mood | element/manual |
+| `mkj_save` | Save game state | {scroll, level, time} |
+| `mkj_loot_collection` | Collected loot | array of indices |
+
+---
+
+## Mobile Responsiveness
+
+### Breakpoints
+- **1024px**: Nav links gap reduced
+- **768px**: Nav links hidden, hamburger shown, mood selector icon-only (label hidden), element reselect 28px, nav gap 12px
+- **480px**: Nav name 16px, element reselect 26px, nav gap 10px, hero highlights single column, balloon CTA min-height auto
+
+### Element Arena (Mobile)
+- 2-column CSS grid (`grid-template-columns: repeat(2, 1fr)`)
+- 5th card centered: `gridColumn: "1 / -1"`, `maxWidth: "calc(50% - 5px)"`, `justifySelf: "center"`
+- Touch: tap-to-preview (first tap), tap-again-to-select (second tap)
+- `hasTouched` flag prevents double-fire of touch + click events
+- Hint text changes: "TAP TO PREVIEW · TAP AGAIN TO CHOOSE"
+- Smaller icons (28px vs 40px), labels (11px vs 13px), subtitle hidden
 
 ---
 
@@ -354,6 +464,8 @@ Single source of truth. ALL site text comes from this file.
 - Google Docs cannot be fetched via WebFetch (auth required)
 - Tablet/Phone Framer breakpoint nodes empty
 - Voice chat on section pages uses browser TTS (ElevenLabs integration pending)
+- card-arena.css still has ~21 hardcoded lime/cyan color values (not converted to CSS vars)
+- Some `@keyframes` in styles.css use hardcoded colors (CSS vars unreliable in keyframes)
 
 ---
 
