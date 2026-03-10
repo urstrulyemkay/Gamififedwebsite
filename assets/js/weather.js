@@ -58,7 +58,13 @@
             ".weather-cosmic-dust", ".weather-nebula",
             ".weather-paint-splash", ".weather-prism",
             ".weather-dust", ".weather-golden-mote", ".weather-tint",
-            ".weather-bird", ".weather-dusk-sky", ".weather-spaceship"
+            ".weather-bird", ".weather-dusk-sky", ".weather-spaceship",
+            // Extreme moods
+            ".weather-lava-drop", ".weather-ash", ".weather-lava-sky",
+            ".weather-blizzard-snow", ".weather-icicle", ".weather-freeze-corner",
+            ".weather-dust-cloud", ".weather-rock-debris",
+            ".weather-wind-streak", ".weather-debris-chunk", ".weather-vortex",
+            ".weather-meteor", ".weather-star-warp", ".weather-void-pulse"
         ];
 
         function clearIntervals() {
@@ -69,6 +75,10 @@
             clearInterval(window._weatherRippleInterval); window._weatherRippleInterval = null;
             clearInterval(window._weatherShipInterval); window._weatherShipInterval = null;
             clearInterval(window._weatherFormationInterval); window._weatherFormationInterval = null;
+            clearInterval(window._weatherEruptionInterval); window._weatherEruptionInterval = null;
+            clearInterval(window._weatherQuakeInterval); window._weatherQuakeInterval = null;
+            clearInterval(window._weatherMeteorInterval); window._weatherMeteorInterval = null;
+            document.body.classList.remove("weather-shaking", "weather-quaking");
             // Clear any pending shooting star timeouts
             if (window._weatherShootTimeouts) {
                 window._weatherShootTimeouts.forEach(function(t) { clearTimeout(t); });
@@ -716,6 +726,322 @@
 
         // ── SPACESHIPS ─────────────────────────
 
+        // ══════════════════════════════════════
+        // EXTREME ELEMENT WEATHER EFFECTS
+        // ══════════════════════════════════════
+
+        // ── VOLCANO (Fire) ─────────────────────
+        function buildLavaDrops() {
+            var count = 18;
+            for (var i = 0; i < count; i++) {
+                (function(i) {
+                    var drop = document.createElement("div");
+                    drop.className = "weather-lava-drop";
+                    var size = 8 + Math.random() * 18;
+                    var side = Math.random() > 0.5 ? "left" : "right";
+                    drop.style.cssText = [
+                        "position:fixed", "z-index:3", "pointer-events:none",
+                        "border-radius:" + (40 + Math.random() * 20) + "% 60% 60% 40%",
+                        "width:" + size + "px", "height:" + (size * 1.4) + "px",
+                        "background:radial-gradient(circle at 40% 30%, #FF8C00, #FF4500 50%, #8B0000)",
+                        "box-shadow:0 0 " + (size * 0.6) + "px rgba(255,69,0,0.6)",
+                        side + ":" + (Math.random() * 15) + "%",
+                        "top:-30px",
+                        "opacity:0",
+                        "animation:lavaFall " + (3 + Math.random() * 5) + "s " + (Math.random() * 8) + "s ease-in infinite"
+                    ].join(";");
+                    document.body.appendChild(drop);
+                })(i);
+            }
+        }
+
+        function buildAshFall() {
+            var count = 70;
+            for (var i = 0; i < count; i++) {
+                (function() {
+                    var ash = document.createElement("div");
+                    ash.className = "weather-ash";
+                    var size = 2 + Math.random() * 5;
+                    ash.style.cssText = [
+                        "position:fixed", "z-index:3", "pointer-events:none",
+                        "border-radius:50%",
+                        "width:" + size + "px", "height:" + size + "px",
+                        "background:rgba(" + [140 + Math.floor(Math.random()*40), 120 + Math.floor(Math.random()*20), 100 + Math.floor(Math.random()*20)].join(",") + ",0.7)",
+                        "left:" + (Math.random() * 100) + "%",
+                        "top:-10px",
+                        "animation:ashFall " + (4 + Math.random() * 6) + "s " + (Math.random() * 5) + "s linear infinite"
+                    ].join(";");
+                    document.body.appendChild(ash);
+                })();
+            }
+        }
+
+        function buildLavaSky() {
+            var sky = document.createElement("div");
+            sky.className = "weather-lava-sky";
+            sky.style.cssText = "position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 120%, rgba(255,69,0,0.18) 0%, rgba(139,0,0,0.08) 50%, transparent 70%);animation:lavaPulse 3s ease-in-out infinite;";
+            document.body.appendChild(sky);
+        }
+
+        function buildEruptionBurst() {
+            function burst() {
+                var flash = document.createElement("div");
+                flash.className = "weather-lava-sky";
+                flash.style.cssText = "position:fixed;inset:0;z-index:4;pointer-events:none;background:rgba(255,100,0,0.12);animation:eruptFlash 0.6s ease-out forwards;";
+                document.body.appendChild(flash);
+                // Spawn burst particles from bottom center
+                for (var i = 0; i < 16; i++) {
+                    (function(i) {
+                        var p = document.createElement("div");
+                        p.className = "weather-lava-drop";
+                        var size = 6 + Math.random() * 12;
+                        var angle = (Math.random() * 180) - 90; // -90 to 90 degrees upward
+                        var dist = 80 + Math.random() * 200;
+                        var dx = Math.sin(angle * Math.PI / 180) * dist;
+                        var dy = -Math.cos(angle * Math.PI / 180) * dist;
+                        p.style.cssText = "position:fixed;z-index:4;pointer-events:none;border-radius:50%;width:" + size + "px;height:" + size + "px;background:radial-gradient(circle, #FFA500, #FF4500);left:calc(50% + " + dx + "px);bottom:" + Math.max(0, -dy) + "px;opacity:0;animation:eruptParticle 1s " + (Math.random() * 0.3) + "s ease-out forwards;";
+                        document.body.appendChild(p);
+                        setTimeout(function() { p.remove(); }, 1400);
+                    })(i);
+                }
+                setTimeout(function() { if (flash.parentNode) flash.remove(); }, 700);
+            }
+            burst();
+            window._weatherEruptionInterval = setInterval(burst, 5000 + Math.random() * 5000);
+        }
+
+        // ── BLIZZARD (Water) ────────────────────
+        function buildBlizzardSnow() {
+            var count = 100;
+            for (var i = 0; i < count; i++) {
+                (function() {
+                    var flake = document.createElement("div");
+                    flake.className = "weather-blizzard-snow";
+                    var size = 2 + Math.random() * 5;
+                    var speed = 1.5 + Math.random() * 3;
+                    var drift = 60 + Math.random() * 80; // strong horizontal drift
+                    flake.style.cssText = [
+                        "position:fixed", "z-index:3", "pointer-events:none",
+                        "border-radius:50%",
+                        "width:" + size + "px", "height:" + size + "px",
+                        "background:rgba(220,240,255," + (0.5 + Math.random() * 0.5) + ")",
+                        "left:" + (Math.random() * 110 - 10) + "%",
+                        "top:" + (Math.random() * -20) + "px",
+                        "animation:blizzardFall " + speed + "s " + (Math.random() * 4) + "s linear infinite",
+                        "--drift:" + drift + "vw"
+                    ].join(";");
+                    document.body.appendChild(flake);
+                })();
+            }
+        }
+
+        function buildIcicles() {
+            var count = 14;
+            for (var i = 0; i < count; i++) {
+                var icicle = document.createElement("div");
+                icicle.className = "weather-icicle";
+                var h = 20 + Math.random() * 60;
+                icicle.style.cssText = [
+                    "position:fixed", "top:0", "z-index:3", "pointer-events:none",
+                    "left:" + (i / count * 95 + Math.random() * 5) + "%",
+                    "width:" + (4 + Math.random() * 8) + "px",
+                    "height:" + h + "px",
+                    "background:linear-gradient(to bottom, rgba(186,230,253,0.8), rgba(186,230,253,0.1))",
+                    "clip-path:polygon(30% 0%, 70% 0%, 100% 100%, 50% 85%, 0% 100%)",
+                    "animation:icicleGrow 2s " + (Math.random() * 3) + "s ease-out forwards",
+                    "transform:scaleY(0)", "transform-origin:top"
+                ].join(";");
+                document.body.appendChild(icicle);
+            }
+        }
+
+        function buildScreenFreeze() {
+            ["top-left","top-right","bottom-left","bottom-right"].forEach(function(pos, i) {
+                var frost = document.createElement("div");
+                frost.className = "weather-freeze-corner";
+                var isTop = pos.includes("top"), isLeft = pos.includes("left");
+                frost.style.cssText = "position:fixed;z-index:3;pointer-events:none;width:280px;height:280px;" +
+                    (isTop ? "top:0" : "bottom:0") + ";" + (isLeft ? "left:0" : "right:0") + ";" +
+                    "background:radial-gradient(circle at " + (isLeft?"0%":"100%") + " " + (isTop?"0%":"100%") + ", rgba(186,230,253,0.35) 0%, transparent 70%);" +
+                    "animation:freezeIn 3s " + (i * 0.5) + "s ease-out forwards;opacity:0;";
+                document.body.appendChild(frost);
+            });
+        }
+
+        function buildWhiteout() {
+            function flash() {
+                var w = document.createElement("div");
+                w.className = "weather-blizzard-snow";
+                w.style.cssText = "position:fixed;inset:0;z-index:4;pointer-events:none;background:rgba(220,240,255,0.15);animation:whiteoutFlash 1.2s ease-in-out forwards;";
+                document.body.appendChild(w);
+                setTimeout(function() { w.remove(); }, 1300);
+            }
+            setTimeout(flash, 2000);
+            window._weatherEruptionInterval = setInterval(flash, 8000 + Math.random() * 6000);
+        }
+
+        // ── EARTHQUAKE (Earth) ──────────────────
+        function buildGroundShake() {
+            function shake() {
+                document.body.classList.add("weather-quaking");
+                setTimeout(function() { document.body.classList.remove("weather-quaking"); }, 800);
+            }
+            shake();
+            window._weatherQuakeInterval = setInterval(shake, 4000 + Math.random() * 4000);
+        }
+
+        function buildDustCloud() {
+            var count = 40;
+            for (var i = 0; i < count; i++) {
+                (function() {
+                    var dust = document.createElement("div");
+                    dust.className = "weather-dust-cloud";
+                    var size = 20 + Math.random() * 60;
+                    dust.style.cssText = [
+                        "position:fixed", "z-index:3", "pointer-events:none",
+                        "border-radius:50%",
+                        "width:" + size + "px", "height:" + size + "px",
+                        "background:rgba(" + [160 + Math.floor(Math.random()*40), 130 + Math.floor(Math.random()*30), 80 + Math.floor(Math.random()*40)].join(",") + ",0.15)",
+                        "left:" + (Math.random() * 100) + "%",
+                        "bottom:-" + size + "px",
+                        "filter:blur(" + (4 + Math.random() * 8) + "px)",
+                        "animation:dustRise " + (4 + Math.random() * 5) + "s " + (Math.random() * 6) + "s ease-out infinite"
+                    ].join(";");
+                    document.body.appendChild(dust);
+                })();
+            }
+        }
+
+        function buildRockDebris() {
+            var count = 20;
+            for (var i = 0; i < count; i++) {
+                (function() {
+                    var rock = document.createElement("div");
+                    rock.className = "weather-rock-debris";
+                    var size = 4 + Math.random() * 10;
+                    rock.style.cssText = [
+                        "position:fixed", "z-index:4", "pointer-events:none",
+                        "border-radius:" + Math.floor(Math.random()*3 + 1) + "px",
+                        "width:" + size + "px", "height:" + (size * 0.7) + "px",
+                        "background:rgb(" + [100 + Math.floor(Math.random()*60), 80 + Math.floor(Math.random()*40), 50 + Math.floor(Math.random()*30)].join(",") + ")",
+                        "left:" + (Math.random() * 100) + "%",
+                        "top:-20px",
+                        "animation:debrisFall " + (1.5 + Math.random() * 3) + "s " + (Math.random() * 8) + "s ease-in infinite"
+                    ].join(";");
+                    document.body.appendChild(rock);
+                })();
+            }
+        }
+
+        // ── TORNADO (Air) ───────────────────────
+        function buildTornadoVortex() {
+            var vortex = document.createElement("div");
+            vortex.className = "weather-vortex";
+            vortex.style.cssText = "position:fixed;bottom:-60px;left:50%;transform:translateX(-50%);z-index:3;pointer-events:none;width:120px;height:400px;background:conic-gradient(from 0deg, transparent 0%, rgba(148,163,184,0.08) 25%, transparent 50%, rgba(148,163,184,0.06) 75%, transparent 100%);clip-path:polygon(40% 0%,60% 0%,85% 100%,15% 100%);animation:vortexSpin 2s linear infinite;filter:blur(2px);";
+            document.body.appendChild(vortex);
+        }
+
+        function buildExtremeWind() {
+            var count = 50;
+            for (var i = 0; i < count; i++) {
+                (function() {
+                    var streak = document.createElement("div");
+                    streak.className = "weather-wind-streak";
+                    var w = 40 + Math.random() * 120;
+                    streak.style.cssText = [
+                        "position:fixed", "z-index:3", "pointer-events:none",
+                        "height:1px",
+                        "width:" + w + "px",
+                        "background:linear-gradient(to right, transparent, rgba(200,210,230," + (0.15 + Math.random() * 0.2) + "), transparent)",
+                        "left:-" + w + "px",
+                        "top:" + (Math.random() * 100) + "%",
+                        "animation:windSlash " + (0.3 + Math.random() * 0.5) + "s " + (Math.random() * 4) + "s linear infinite"
+                    ].join(";");
+                    document.body.appendChild(streak);
+                })();
+            }
+        }
+
+        function buildFlyingDebris() {
+            var count = 20;
+            for (var i = 0; i < count; i++) {
+                (function() {
+                    var chunk = document.createElement("div");
+                    chunk.className = "weather-debris-chunk";
+                    var size = 3 + Math.random() * 8;
+                    chunk.style.cssText = [
+                        "position:fixed", "z-index:4", "pointer-events:none",
+                        "border-radius:2px",
+                        "width:" + size + "px", "height:" + size + "px",
+                        "background:rgba(180,190,200," + (0.4 + Math.random() * 0.4) + ")",
+                        "left:-20px",
+                        "top:" + (Math.random() * 100) + "%",
+                        "animation:debrisWind " + (0.8 + Math.random() * 1.2) + "s " + (Math.random() * 4) + "s linear infinite"
+                    ].join(";");
+                    document.body.appendChild(chunk);
+                })();
+            }
+        }
+
+        // ── COSMOS (Ether) ──────────────────────
+        function buildMeteorShower() {
+            function spawnMeteor() {
+                var meteor = document.createElement("div");
+                meteor.className = "weather-meteor";
+                var startX = 10 + Math.random() * 80;
+                var length = 80 + Math.random() * 120;
+                meteor.style.cssText = [
+                    "position:fixed", "z-index:3", "pointer-events:none",
+                    "left:" + startX + "%", "top:-20px",
+                    "width:" + length + "px", "height:1px",
+                    "background:linear-gradient(to right, transparent, rgba(196,181,253,0.9), white)",
+                    "transform:rotate(35deg)",
+                    "transform-origin:left center",
+                    "opacity:0",
+                    "animation:meteorFall 0.6s ease-in forwards"
+                ].join(";");
+                document.body.appendChild(meteor);
+                setTimeout(function() { if (meteor.parentNode) meteor.remove(); }, 700);
+            }
+            spawnMeteor();
+            window._weatherMeteorInterval = setInterval(function() {
+                var burst = 1 + Math.floor(Math.random() * 3);
+                for (var i = 0; i < burst; i++) {
+                    setTimeout(spawnMeteor, i * 150);
+                }
+            }, 1500 + Math.random() * 2000);
+        }
+
+        function buildStarWarp() {
+            var count = 60;
+            for (var i = 0; i < count; i++) {
+                (function() {
+                    var star = document.createElement("div");
+                    star.className = "weather-star-warp";
+                    var angle = Math.random() * 360;
+                    var dist = 10 + Math.random() * 50;
+                    var length = 20 + Math.random() * 80;
+                    star.style.cssText = [
+                        "position:fixed", "z-index:2", "pointer-events:none",
+                        "left:50%", "top:50%",
+                        "width:" + length + "px", "height:1px",
+                        "background:linear-gradient(to right, transparent, rgba(196,181,253," + (0.3 + Math.random() * 0.4) + "))",
+                        "transform-origin:left center",
+                        "transform:rotate(" + angle + "deg) translateX(" + dist + "vw)",
+                        "animation:starWarpPulse " + (2 + Math.random() * 3) + "s " + (Math.random() * 3) + "s ease-in-out infinite"
+                    ].join(";");
+                    document.body.appendChild(star);
+                })();
+            }
+        }
+
+        function buildVoidPulse() {
+            var pulse = document.createElement("div");
+            pulse.className = "weather-void-pulse";
+            pulse.style.cssText = "position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%, rgba(124,58,237,0.08) 0%, transparent 60%);animation:voidBreath 4s ease-in-out infinite;";
+            document.body.appendChild(pulse);
+        }
+
         function buildSpaceships() {
             var ships = [
                 // Large carrier
@@ -877,6 +1203,24 @@
                     paintSplashes: buildPaintSplashes,
                     prisms: buildPrisms,
                     duskSky: buildDuskSky,
+                    // Extreme element moods
+                    lavaDrops: buildLavaDrops,
+                    ashFall: buildAshFall,
+                    lavaSky: buildLavaSky,
+                    eruptionBurst: buildEruptionBurst,
+                    blizzardSnow: buildBlizzardSnow,
+                    icicles: buildIcicles,
+                    screenFreeze: buildScreenFreeze,
+                    whiteout: buildWhiteout,
+                    groundShake: buildGroundShake,
+                    dustCloud: buildDustCloud,
+                    rockDebris: buildRockDebris,
+                    tornadoVortex: buildTornadoVortex,
+                    extremeWind: buildExtremeWind,
+                    flyingDebris: buildFlyingDebris,
+                    meteorShower: buildMeteorShower,
+                    starWarp: buildStarWarp,
+                    voidPulse: buildVoidPulse,
                 };
 
                 (w.effects || []).forEach(function(fx) {
@@ -1004,7 +1348,7 @@
         var savedElement = localStorage.getItem("mkj_element");
         var moodSource = localStorage.getItem(MOOD_SOURCE_KEY);
         if (savedElement && moodSource !== "manual") {
-            var ELEMENT_MOODS = { fire: "hype", water: "chill", earth: "zen", air: "creative", ether: "night" };
+            var ELEMENT_MOODS = { fire: "volcano", water: "blizzard", earth: "earthquake", air: "tornado", ether: "cosmos" };
             var elMood = ELEMENT_MOODS[savedElement];
             if (elMood) {
                 currentMood = elMood;
