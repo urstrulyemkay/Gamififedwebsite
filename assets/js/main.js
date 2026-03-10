@@ -4285,80 +4285,53 @@ function initBalloonSounds() {
    Shows area name + lore text on first visit
    ============================================ */
 function initFogGates() {
-    // Lore content per section ID
-    const LORE = {
-        "about":        { area: "THE VOYAGE BEGINS",    lore: "A product leader steps into the unknown. The journey of ten thousand decisions starts here." },
-        "quest-log":    { area: "THE CHRONICLE",         lore: "Every role, a campaign. Every company, a battlefield. These are the battles that built the legend." },
-        "boss-battles": { area: "TREAD CAREFULLY",       lore: "Formidable adversaries lie ahead. Their hardships became the sharpest lessons." },
-        "skill-tree":   { area: "THE SKILL TREE",        lore: "Power forged through ten thousand hours of relentless craft. Each bar filled in blood and focus." },
-        "academic":     { area: "THE ARCHIVE",           lore: "Three degrees. One foundation. The knowledge from which all mastery was drawn." },
-        "ventures":     { area: "VENTURES UNLOCKED",     lore: "Built from nothing. Two startups. Infinite lessons. The entrepreneur's path never runs straight." },
-        "genai":        { area: "THE ARCANE ARTS",       lore: "Where artificial intelligence meets product intuition. These spells passed the Turing test." },
-        "achievements": { area: "TROPHY WALL",           lore: "Each trophy, a battle won. Proof carved into history. The wall of the legendary." },
-        "inventory":    { area: "ARSENAL",               lore: "The tools of war. Every weapon mastered through years of conflict and creation." },
-        "portfolio":    { area: "THE GALLERY",           lore: "Artifacts from the battlefield. Evidence of scale, impact, and relentless execution." },
-        "stats":        { area: "CHARACTER SHEET",       lore: "Raw data. Unfiltered numbers. The stats speak what words cannot." },
-        "contact":      { area: "MAKE CONTACT",          lore: "The expedition nears its end. Or perhaps, a new quest is about to begin." },
+    const AREAS = {
+        "quest-log":    "THE CHRONICLE",
+        "boss-battles": "TREAD CAREFULLY",
+        "skill-tree":   "THE SKILL TREE",
+        "academic":     "THE ARCHIVE",
+        "ventures":     "VENTURES UNLOCKED",
+        "genai":        "THE ARCANE ARTS",
+        "achievements": "TROPHY WALL",
+        "inventory":    "ARSENAL",
+        "portfolio":    "THE GALLERY",
+        "stats":        "CHARACTER SHEET",
+        "contact":      "MAKE CONTACT",
     };
 
-    // Build the overlay DOM (once)
+    // Build minimal toast DOM
     const gate = document.createElement("div");
     gate.className = "fog-gate";
     gate.innerHTML = `
-        <div class="fog-gate-curtain-left"></div>
-        <div class="fog-gate-curtain-right"></div>
-        <div class="fog-gate-vignette"></div>
-        <div class="fog-gate-text">
-            <span class="fog-gate-label">AREA DISCOVERED</span>
-            <span class="fog-gate-area"></span>
-            <div class="fog-gate-divider"></div>
-            <span class="fog-gate-lore"></span>
-        </div>
+        <div class="fog-gate-divider-top"></div>
+        <span class="fog-gate-area"></span>
+        <div class="fog-gate-divider-bottom"></div>
     `;
     document.body.appendChild(gate);
 
-    const areaEl   = gate.querySelector(".fog-gate-area");
-    const loreEl   = gate.querySelector(".fog-gate-lore");
-    const divider  = gate.querySelector(".fog-gate-divider");
-
+    const areaEl = gate.querySelector(".fog-gate-area");
     const seen = new Set();
     let busy = false;
 
     function showGate(sectionId) {
-        const data = LORE[sectionId];
-        if (!data || busy) return;
+        const area = AREAS[sectionId];
+        if (!area || busy) return;
         busy = true;
 
-        areaEl.textContent = data.area;
-        loreEl.textContent = data.lore;
-        divider.style.width = "0";
+        areaEl.textContent = area;
+        gate.classList.remove("fog-gate--show");
 
-        // Reset state
-        gate.classList.remove("fog-gate--in", "fog-gate--out");
-
-        // Trigger entrance
         requestAnimationFrame(() => {
-            gate.classList.add("fog-gate--in");
-            // Expand divider shortly after text appears
-            setTimeout(() => { divider.style.width = "200px"; }, 600);
-
-            // Play existing territory sound for this section
-            try { playSound("territory-" + sectionId); } catch(e) {}
-
-            // Hold then dismiss
-            setTimeout(() => {
-                gate.classList.remove("fog-gate--in");
-                gate.classList.add("fog-gate--out");
-                divider.style.width = "0";
+            requestAnimationFrame(() => {
+                gate.classList.add("fog-gate--show");
                 setTimeout(() => {
-                    gate.classList.remove("fog-gate--out");
+                    gate.classList.remove("fog-gate--show");
                     busy = false;
-                }, 550);
-            }, 2800);
+                }, 2600);
+            });
         });
     }
 
-    // Skip the first 2 sections (above fold — user already sees them)
     const sections = Array.from(document.querySelectorAll(".section"));
     const skipIds = new Set(sections.slice(0, 2).map(s => s.id));
 
@@ -4369,10 +4342,10 @@ function initFogGates() {
                 showGate(entry.target.id);
             }
         });
-    }, { threshold: 0.35 });
+    }, { threshold: 0.25 });
 
     sections.forEach(s => {
-        if (LORE[s.id]) observer.observe(s);
+        if (AREAS[s.id]) observer.observe(s);
     });
 }
 
