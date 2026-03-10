@@ -107,6 +107,15 @@ function applyAccentColor(hex, rgb, save) {
     }
 }
 
+/* Apply body class for element visual personality (elements.css) */
+function applyElementPersonality(elementId) {
+    const elements = ["fire", "water", "earth", "air", "ether"];
+    elements.forEach(e => document.body.classList.remove("element-" + e));
+    if (elementId && elements.includes(elementId)) {
+        document.body.classList.add("element-" + elementId);
+    }
+}
+
 /* ============================================
    CENTRALIZED SCROLL MANAGER — One listener, many subscribers
    Throttles at ~60fps via rAF, avoids 12+ individual scroll listeners
@@ -169,6 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Restore saved element + accent color before anything renders
     window._currentElement = localStorage.getItem("mkj_element") || "water";
+    applyElementPersonality(window._currentElement);
     const savedHex = localStorage.getItem("mkj_accent_hex");
     const savedRgb = localStorage.getItem("mkj_accent_rgb");
     if (savedHex && savedRgb) {
@@ -3916,6 +3926,7 @@ function showElementArena(C, onDone) {
 
         // Save
         applyAccentColor(el.color, el.rgb, true);
+        applyElementPersonality(el.id);
         localStorage.setItem("mkj_element", el.id);
         window._currentElement = el.id;
 
