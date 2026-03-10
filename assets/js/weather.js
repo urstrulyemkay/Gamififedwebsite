@@ -1403,7 +1403,7 @@
         var savedElement = localStorage.getItem("mkj_element");
         var moodSource = localStorage.getItem(MOOD_SOURCE_KEY);
         if (savedElement && moodSource !== "manual") {
-            var ELEMENT_MOODS = { fire: "hype", water: "blizzard", earth: "earthquake", air: "tornado", ether: "cosmos" };
+            var ELEMENT_MOODS = { fire: "volcano", water: "blizzard", earth: "earthquake", air: "tornado", ether: "cosmos" };
             var elMood = ELEMENT_MOODS[savedElement];
             if (elMood) {
                 currentMood = elMood;

@@ -259,7 +259,7 @@ const CONTENT = {
                 secondaryColor: "#FFB347", secondaryRgb: "255,179,71",
                 tagline: "BURN THROUGH LIMITS",
                 description: "You lead with intensity. Revenue targets, P&L ownership, scaling teams \u2014 fire bends to your will.",
-                defaultMood: "hype",
+                defaultMood: "volcano",
                 particleStyle: "ember",
                 particleColors: ["#FF6B35","#FF4500","#FFB347","#FF8C00","#FFA07A"],
                 soundProfile: { freqMult: 0.85, waveform: "sawtooth", attack: 0.01, decay: 0.15, detune: -50 },
@@ -674,7 +674,7 @@ const CONTENT = {
         zen:   { label: "Zen",    icon: "\u{1F33F}",     accent: "#4ADE80", effects: ["petals", "auroraRibbon", "ripples", "zenBreathe", "fireflies"] },
         creative: { label: "Creative", icon: "\u{1F308}", accent: "#A78BFA", effects: ["aurora", "cosmicDust", "nebula", "paintSplashes", "prisms"] },
         // ── EXTREME ELEMENT MOODS ───────────────
-        volcano:    { label: "Volcano",    icon: "\u{1F30B}", accent: "#FF4500", effects: ["lavaDrops", "ashFall", "eruptionBurst", "lavaSky"] },
+        volcano:    { label: "Volcano",    icon: "\u{1F30B}", accent: "#FF4500", effects: ["ashFall", "eruptionBurst", "lavaSky"] },
         blizzard:   { label: "Blizzard",   icon: "\u{1F328}\uFE0F", accent: "#BAE6FD", effects: ["blizzardSnow", "icicles", "screenFreeze", "whiteout"] },
         earthquake: { label: "Earthquake", icon: "\u{1F30D}", accent: "#A16207", effects: ["groundShake", "dustCloud", "rockDebris"] },
         tornado:    { label: "Tornado",    icon: "\u{1F32A}\uFE0F", accent: "#94A3B8", effects: ["tornadoVortex", "extremeWind", "flyingDebris"] },
