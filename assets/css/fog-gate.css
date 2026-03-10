@@ -1,0 +1,206 @@
+/* ============================================
+   FOG-GATE.CSS — Dark Souls area transition
+   Fires once per section on first discovery.
+   ============================================ */
+
+/* ── OVERLAY ─────────────────────────────── */
+.fog-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 9500;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    overflow: hidden;
+}
+
+/* ── FOG CURTAINS (sweep from left & right) ─ */
+.fog-gate-curtain-left,
+.fog-gate-curtain-right {
+    position: absolute;
+    top: 0;
+    width: 65%;
+    height: 100%;
+    opacity: 0;
+}
+
+.fog-gate-curtain-left {
+    left: 0;
+    background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.96) 0%,
+        rgba(0, 0, 0, 0.75) 65%,
+        transparent 100%
+    );
+    transform: translateX(-100%);
+}
+
+.fog-gate-curtain-right {
+    right: 0;
+    background: linear-gradient(
+        to left,
+        rgba(0, 0, 0, 0.96) 0%,
+        rgba(0, 0, 0, 0.75) 65%,
+        transparent 100%
+    );
+    transform: translateX(100%);
+}
+
+/* ── VIGNETTE (dark center pulse) ────────── */
+.fog-gate-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center,
+        transparent 30%,
+        rgba(0, 0, 0, 0.6) 100%
+    );
+    opacity: 0;
+}
+
+/* ── LORE TEXT BLOCK ─────────────────────── */
+.fog-gate-text {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(8px);
+    padding: 0 40px;
+}
+
+.fog-gate-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(var(--element-rgb, 228,255,26), 0.5);
+    margin-bottom: 18px;
+    display: block;
+}
+
+.fog-gate-area {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.92);
+    line-height: 1;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.fog-gate-divider {
+    width: 0;
+    height: 1px;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(var(--element-rgb, 228,255,26), 0.4) 50%,
+        transparent
+    );
+    margin: 0 auto 20px;
+    transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fog-gate-lore {
+    font-size: 13px;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+    max-width: 400px;
+    margin: 0 auto;
+    display: block;
+    opacity: 0;
+}
+
+/* ── ANIMATION STATES ────────────────────── */
+
+/* IN: curtains sweep in */
+@keyframes fogCurtainInLeft {
+    from { transform: translateX(-100%); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes fogCurtainInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to   { transform: translateX(0);   opacity: 1; }
+}
+/* OUT: curtains sweep out */
+@keyframes fogCurtainOutLeft {
+    from { transform: translateX(0);    opacity: 1; }
+    to   { transform: translateX(-100%); opacity: 0; }
+}
+@keyframes fogCurtainOutRight {
+    from { transform: translateX(0);   opacity: 1; }
+    to   { transform: translateX(100%); opacity: 0; }
+}
+
+@keyframes fogVignetteIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes fogVignetteOut {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+@keyframes fogTextIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fogTextOut {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-8px); }
+}
+
+@keyframes fogLoreIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes fogLoreOut {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* ── ACTIVE STATE (JS adds .fog-gate--in / .fog-gate--out) ── */
+
+.fog-gate--in .fog-gate-curtain-left {
+    animation: fogCurtainInLeft 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.fog-gate--in .fog-gate-curtain-right {
+    animation: fogCurtainInRight 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.fog-gate--in .fog-gate-vignette {
+    animation: fogVignetteIn 0.5s ease forwards;
+}
+.fog-gate--in .fog-gate-text {
+    animation: fogTextIn 0.5s 0.5s ease forwards;
+}
+.fog-gate--in .fog-gate-lore {
+    animation: fogLoreIn 0.5s 1.1s ease forwards;
+}
+
+.fog-gate--out .fog-gate-curtain-left {
+    animation: fogCurtainOutLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.fog-gate--out .fog-gate-curtain-right {
+    animation: fogCurtainOutRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.fog-gate--out .fog-gate-vignette {
+    animation: fogVignetteOut 0.5s ease forwards;
+}
+.fog-gate--out .fog-gate-text {
+    animation: fogTextOut 0.4s ease forwards;
+}
+.fog-gate--out .fog-gate-lore {
+    animation: fogLoreOut 0.3s ease forwards;
+}
+
+/* ── MOBILE ──────────────────────────────── */
+@media (max-width: 768px) {
+    .fog-gate-area { font-size: 22px; letter-spacing: 0.14em; }
+    .fog-gate-lore { font-size: 12px; padding: 0 20px; }
+    .fog-gate-curtain-left,
+    .fog-gate-curtain-right { width: 55%; }
+}
