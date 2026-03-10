@@ -259,7 +259,7 @@ const CONTENT = {
                 secondaryColor: "#FFB347", secondaryRgb: "255,179,71",
                 tagline: "BURN THROUGH LIMITS",
                 description: "You lead with intensity. Revenue targets, P&L ownership, scaling teams \u2014 fire bends to your will.",
-                defaultMood: "volcano",
+                defaultMood: "hype",
                 particleStyle: "ember",
                 particleColors: ["#FF6B35","#FF4500","#FFB347","#FF8C00","#FFA07A"],
                 soundProfile: { freqMult: 0.85, waveform: "sawtooth", attack: 0.01, decay: 0.15, detune: -50 },
