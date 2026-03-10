@@ -885,28 +885,31 @@
         function buildGroundShake() {
             function shake() {
                 document.body.classList.add("weather-quaking");
-                setTimeout(function() { document.body.classList.remove("weather-quaking"); }, 800);
+                setTimeout(function() { document.body.classList.remove("weather-quaking"); }, 600);
             }
-            shake();
-            window._weatherQuakeInterval = setInterval(shake, 4000 + Math.random() * 4000);
+            // First shake delayed 5s, then every 10-18s (subtle, occasional)
+            setTimeout(function() {
+                shake();
+                window._weatherQuakeInterval = setInterval(shake, 10000 + Math.random() * 8000);
+            }, 5000);
         }
 
         function buildDustCloud() {
-            var count = 40;
+            var count = 18;
             for (var i = 0; i < count; i++) {
                 (function() {
                     var dust = document.createElement("div");
                     dust.className = "weather-dust-cloud";
-                    var size = 20 + Math.random() * 60;
+                    var size = 30 + Math.random() * 50;
                     dust.style.cssText = [
                         "position:fixed", "z-index:3", "pointer-events:none",
                         "border-radius:50%",
                         "width:" + size + "px", "height:" + size + "px",
-                        "background:rgba(" + [160 + Math.floor(Math.random()*40), 130 + Math.floor(Math.random()*30), 80 + Math.floor(Math.random()*40)].join(",") + ",0.15)",
+                        "background:rgba(" + [160 + Math.floor(Math.random()*40), 130 + Math.floor(Math.random()*30), 80 + Math.floor(Math.random()*40)].join(",") + ",0.08)",
                         "left:" + (Math.random() * 100) + "%",
                         "bottom:-" + size + "px",
-                        "filter:blur(" + (4 + Math.random() * 8) + "px)",
-                        "animation:dustRise " + (4 + Math.random() * 5) + "s " + (Math.random() * 6) + "s ease-out infinite"
+                        "filter:blur(" + (8 + Math.random() * 10) + "px)",
+                        "animation:dustRise " + (7 + Math.random() * 6) + "s " + (Math.random() * 8) + "s ease-out infinite"
                     ].join(";");
                     document.body.appendChild(dust);
                 })();
@@ -914,12 +917,12 @@
         }
 
         function buildRockDebris() {
-            var count = 20;
+            var count = 8;
             for (var i = 0; i < count; i++) {
                 (function() {
                     var rock = document.createElement("div");
                     rock.className = "weather-rock-debris";
-                    var size = 4 + Math.random() * 10;
+                    var size = 3 + Math.random() * 7;
                     rock.style.cssText = [
                         "position:fixed", "z-index:4", "pointer-events:none",
                         "border-radius:" + Math.floor(Math.random()*3 + 1) + "px",
@@ -927,7 +930,7 @@
                         "background:rgb(" + [100 + Math.floor(Math.random()*60), 80 + Math.floor(Math.random()*40), 50 + Math.floor(Math.random()*30)].join(",") + ")",
                         "left:" + (Math.random() * 100) + "%",
                         "top:-20px",
-                        "animation:debrisFall " + (1.5 + Math.random() * 3) + "s " + (Math.random() * 8) + "s ease-in infinite"
+                        "animation:debrisFall " + (3 + Math.random() * 4) + "s " + (Math.random() * 12) + "s ease-in infinite"
                     ].join(";");
                     document.body.appendChild(rock);
                 })();
@@ -938,25 +941,25 @@
         function buildTornadoVortex() {
             var vortex = document.createElement("div");
             vortex.className = "weather-vortex";
-            vortex.style.cssText = "position:fixed;bottom:-60px;left:50%;transform:translateX(-50%);z-index:3;pointer-events:none;width:120px;height:400px;background:conic-gradient(from 0deg, transparent 0%, rgba(148,163,184,0.08) 25%, transparent 50%, rgba(148,163,184,0.06) 75%, transparent 100%);clip-path:polygon(40% 0%,60% 0%,85% 100%,15% 100%);animation:vortexSpin 2s linear infinite;filter:blur(2px);";
+            vortex.style.cssText = "position:fixed;bottom:-60px;left:50%;transform:translateX(-50%);z-index:3;pointer-events:none;width:80px;height:300px;background:conic-gradient(from 0deg, transparent 0%, rgba(148,163,184,0.05) 25%, transparent 50%, rgba(148,163,184,0.04) 75%, transparent 100%);clip-path:polygon(40% 0%,60% 0%,85% 100%,15% 100%);animation:vortexSpin 6s linear infinite;filter:blur(4px);opacity:0.6;";
             document.body.appendChild(vortex);
         }
 
         function buildExtremeWind() {
-            var count = 50;
+            var count = 22;
             for (var i = 0; i < count; i++) {
                 (function() {
                     var streak = document.createElement("div");
                     streak.className = "weather-wind-streak";
-                    var w = 40 + Math.random() * 120;
+                    var w = 50 + Math.random() * 100;
                     streak.style.cssText = [
                         "position:fixed", "z-index:3", "pointer-events:none",
                         "height:1px",
                         "width:" + w + "px",
-                        "background:linear-gradient(to right, transparent, rgba(200,210,230," + (0.15 + Math.random() * 0.2) + "), transparent)",
+                        "background:linear-gradient(to right, transparent, rgba(200,210,230," + (0.08 + Math.random() * 0.1) + "), transparent)",
                         "left:-" + w + "px",
                         "top:" + (Math.random() * 100) + "%",
-                        "animation:windSlash " + (0.3 + Math.random() * 0.5) + "s " + (Math.random() * 4) + "s linear infinite"
+                        "animation:windSlash " + (1.2 + Math.random() * 1.5) + "s " + (Math.random() * 6) + "s linear infinite"
                     ].join(";");
                     document.body.appendChild(streak);
                 })();
@@ -964,20 +967,20 @@
         }
 
         function buildFlyingDebris() {
-            var count = 20;
+            var count = 8;
             for (var i = 0; i < count; i++) {
                 (function() {
                     var chunk = document.createElement("div");
                     chunk.className = "weather-debris-chunk";
-                    var size = 3 + Math.random() * 8;
+                    var size = 2 + Math.random() * 5;
                     chunk.style.cssText = [
                         "position:fixed", "z-index:4", "pointer-events:none",
                         "border-radius:2px",
                         "width:" + size + "px", "height:" + size + "px",
-                        "background:rgba(180,190,200," + (0.4 + Math.random() * 0.4) + ")",
+                        "background:rgba(180,190,200," + (0.2 + Math.random() * 0.25) + ")",
                         "left:-20px",
                         "top:" + (Math.random() * 100) + "%",
-                        "animation:debrisWind " + (0.8 + Math.random() * 1.2) + "s " + (Math.random() * 4) + "s linear infinite"
+                        "animation:debrisWind " + (2.5 + Math.random() * 2.5) + "s " + (Math.random() * 6) + "s linear infinite"
                     ].join(";");
                     document.body.appendChild(chunk);
                 })();
