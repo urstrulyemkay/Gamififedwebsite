@@ -407,71 +407,76 @@ body.element-ether .mood-toggle {
    Each element icon gets a unique idle animation
    ============================================ */
 
-/* Base — all icons get transform-origin center */
+/* Base — GPU layer, no filter in keyframes (causes repaint jitter on hover) */
 .element-arena-icon {
     display: block;
     transform-origin: center;
+    will-change: transform;
+    isolation: isolate;
 }
 
 /* FIRE — flicker: rapid scale pulse + subtle rotation */
 @keyframes iconFire {
-    0%   { transform: scale(1)    rotate(0deg); filter: drop-shadow(0 0 6px rgba(255,107,53,0.5)); }
-    15%  { transform: scale(1.08) rotate(-2deg); filter: drop-shadow(0 0 12px rgba(255,107,53,0.8)); }
-    30%  { transform: scale(0.97) rotate(1deg);  filter: drop-shadow(0 0 4px rgba(255,107,53,0.4)); }
-    50%  { transform: scale(1.06) rotate(-1deg); filter: drop-shadow(0 0 10px rgba(255,107,53,0.7)); }
-    70%  { transform: scale(0.98) rotate(2deg);  filter: drop-shadow(0 0 5px rgba(255,107,53,0.5)); }
-    85%  { transform: scale(1.05) rotate(-1deg); filter: drop-shadow(0 0 9px rgba(255,107,53,0.6)); }
-    100% { transform: scale(1)    rotate(0deg);  filter: drop-shadow(0 0 6px rgba(255,107,53,0.5)); }
+    0%   { transform: scale(1)    rotate(0deg); }
+    15%  { transform: scale(1.08) rotate(-2deg); }
+    30%  { transform: scale(0.97) rotate(1deg); }
+    50%  { transform: scale(1.06) rotate(-1deg); }
+    70%  { transform: scale(0.98) rotate(2deg); }
+    85%  { transform: scale(1.05) rotate(-1deg); }
+    100% { transform: scale(1)    rotate(0deg); }
 }
 .element-arena-icon--fire {
     animation: iconFire 1.8s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(255,107,53,0.5));
 }
 
 /* WATER — slow rocking wave motion */
 @keyframes iconWater {
-    0%   { transform: rotate(-4deg) translateY(0);    filter: drop-shadow(0 4px 8px rgba(34,211,238,0.3)); }
-    25%  { transform: rotate(0deg)  translateY(-4px); filter: drop-shadow(0 6px 12px rgba(34,211,238,0.5)); }
-    50%  { transform: rotate(4deg)  translateY(0);    filter: drop-shadow(0 4px 8px rgba(34,211,238,0.3)); }
-    75%  { transform: rotate(0deg)  translateY(4px);  filter: drop-shadow(0 2px 4px rgba(34,211,238,0.2)); }
-    100% { transform: rotate(-4deg) translateY(0);    filter: drop-shadow(0 4px 8px rgba(34,211,238,0.3)); }
+    0%   { transform: rotate(-4deg) translateY(0); }
+    25%  { transform: rotate(0deg)  translateY(-4px); }
+    50%  { transform: rotate(4deg)  translateY(0); }
+    75%  { transform: rotate(0deg)  translateY(4px); }
+    100% { transform: rotate(-4deg) translateY(0); }
 }
 .element-arena-icon--water {
     animation: iconWater 3.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    filter: drop-shadow(0 4px 10px rgba(34,211,238,0.35));
 }
 
 /* EARTH — slow breathing pulse, very grounded */
 @keyframes iconEarth {
-    0%   { transform: scale(1)    translateY(0);   filter: drop-shadow(0 6px 10px rgba(74,222,128,0.25)); }
-    40%  { transform: scale(1.06) translateY(-3px); filter: drop-shadow(0 8px 14px rgba(74,222,128,0.4)); }
-    60%  { transform: scale(1.06) translateY(-3px); filter: drop-shadow(0 8px 14px rgba(74,222,128,0.4)); }
-    100% { transform: scale(1)    translateY(0);   filter: drop-shadow(0 6px 10px rgba(74,222,128,0.25)); }
+    0%   { transform: scale(1)    translateY(0); }
+    40%  { transform: scale(1.06) translateY(-3px); }
+    60%  { transform: scale(1.06) translateY(-3px); }
+    100% { transform: scale(1)    translateY(0); }
 }
 .element-arena-icon--earth {
     animation: iconEarth 4s ease-in-out infinite;
+    filter: drop-shadow(0 6px 10px rgba(74,222,128,0.3));
 }
 
-/* AIR — light float + gentle spin drift */
+/* AIR — light float + gentle drift */
 @keyframes iconAir {
-    0%   { transform: translateY(0)   rotate(0deg);   filter: drop-shadow(0 2px 8px rgba(224,231,255,0.2)); }
-    30%  { transform: translateY(-8px) rotate(3deg);  filter: drop-shadow(0 6px 14px rgba(224,231,255,0.4)); }
-    60%  { transform: translateY(-4px) rotate(-2deg); filter: drop-shadow(0 4px 10px rgba(224,231,255,0.3)); }
-    80%  { transform: translateY(-9px) rotate(1deg);  filter: drop-shadow(0 7px 16px rgba(224,231,255,0.5)); }
-    100% { transform: translateY(0)   rotate(0deg);   filter: drop-shadow(0 2px 8px rgba(224,231,255,0.2)); }
+    0%   { transform: translateY(0);   }
+    30%  { transform: translateY(-8px) rotate(3deg); }
+    60%  { transform: translateY(-4px) rotate(-2deg); }
+    80%  { transform: translateY(-9px) rotate(1deg); }
+    100% { transform: translateY(0);   }
 }
 .element-arena-icon--air {
     animation: iconAir 5s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(224,231,255,0.35));
 }
 
-/* ETHER — slow spin + cosmic sparkle pulse */
+/* ETHER — continuous spin */
 @keyframes iconEther {
-    0%   { transform: scale(1)    rotate(0deg);   filter: drop-shadow(0 0 8px rgba(167,139,250,0.4)); }
-    25%  { transform: scale(1.1)  rotate(90deg);  filter: drop-shadow(0 0 20px rgba(167,139,250,0.8)); }
-    50%  { transform: scale(0.95) rotate(180deg); filter: drop-shadow(0 0 6px rgba(167,139,250,0.3)); }
-    75%  { transform: scale(1.08) rotate(270deg); filter: drop-shadow(0 0 18px rgba(167,139,250,0.7)); }
-    100% { transform: scale(1)    rotate(360deg); filter: drop-shadow(0 0 8px rgba(167,139,250,0.4)); }
+    from { transform: rotate(0deg) scale(1); }
+    50%  { transform: rotate(180deg) scale(1.08); }
+    to   { transform: rotate(360deg) scale(1); }
 }
 .element-arena-icon--ether {
     animation: iconEther 6s linear infinite;
+    filter: drop-shadow(0 0 12px rgba(167,139,250,0.5));
 }
 
 /* ============================================
