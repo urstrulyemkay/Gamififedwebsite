@@ -64,7 +64,8 @@
             ".weather-blizzard-snow", ".weather-icicle", ".weather-freeze-corner",
             ".weather-dust-cloud", ".weather-rock-debris",
             ".weather-wind-streak", ".weather-debris-chunk", ".weather-vortex",
-            ".weather-meteor", ".weather-star-warp", ".weather-void-pulse"
+            ".weather-meteor", ".weather-star-warp", ".weather-void-pulse",
+            ".weather-star", ".weather-cosmic-meteor", ".weather-nebula", ".weather-galaxy-ring"
         ];
 
         function clearIntervals() {
@@ -984,62 +985,110 @@
         }
 
         // ── COSMOS (Ether) ──────────────────────
-        function buildMeteorShower() {
-            function spawnMeteor() {
-                var meteor = document.createElement("div");
-                meteor.className = "weather-meteor";
-                var startX = 10 + Math.random() * 80;
-                var length = 80 + Math.random() * 120;
-                meteor.style.cssText = [
-                    "position:fixed", "z-index:3", "pointer-events:none",
-                    "left:" + startX + "%", "top:-20px",
-                    "width:" + length + "px", "height:1px",
-                    "background:linear-gradient(to right, transparent, rgba(196,181,253,0.9), white)",
-                    "transform:rotate(35deg)",
-                    "transform-origin:left center",
-                    "opacity:0",
-                    "animation:meteorFall 0.6s ease-in forwards"
+        // Deep starfield — fixed star dots scattered across viewport
+        function buildDeepStarfield() {
+            var count = 180;
+            for (var i = 0; i < count; i++) {
+                var star = document.createElement("div");
+                star.className = "weather-star";
+                var size = Math.random() < 0.15 ? (2 + Math.random() * 2) : (1 + Math.random());
+                var opacity = 0.3 + Math.random() * 0.7;
+                var dur = 2 + Math.random() * 4;
+                var delay = Math.random() * 5;
+                var hue = Math.random() < 0.3 ? "rgba(196,181,253," : (Math.random() < 0.5 ? "rgba(255,255,255," : "rgba(167,139,250,");
+                star.style.cssText = [
+                    "position:fixed", "z-index:1", "pointer-events:none",
+                    "border-radius:50%",
+                    "width:" + size + "px", "height:" + size + "px",
+                    "left:" + (Math.random() * 100) + "%",
+                    "top:" + (Math.random() * 100) + "%",
+                    "background:" + hue + opacity + ")",
+                    "animation:cosmicStarTwinkle " + dur + "s " + delay + "s ease-in-out infinite alternate"
                 ].join(";");
-                document.body.appendChild(meteor);
-                setTimeout(function() { if (meteor.parentNode) meteor.remove(); }, 700);
+                document.body.appendChild(star);
+            }
+        }
+
+        // Diagonal meteor streaks — proper diagonal movement via left+top offset
+        function buildCosmicMeteors() {
+            function spawnMeteor() {
+                var wrap = document.createElement("div");
+                wrap.className = "weather-cosmic-meteor";
+                var startX = -10 + Math.random() * 80; // start left side to center
+                var length = 100 + Math.random() * 150;
+                var speed = 0.5 + Math.random() * 0.5;
+                var opacity = 0.6 + Math.random() * 0.4;
+                wrap.style.cssText = [
+                    "position:fixed", "z-index:4", "pointer-events:none",
+                    "left:" + startX + "%", "top:-5%",
+                    "width:" + length + "px", "height:2px",
+                    "background:linear-gradient(to right, transparent, rgba(196,181,253," + opacity + "), rgba(255,255,255,0.95))",
+                    "transform:rotate(30deg)",
+                    "transform-origin:left center",
+                    "border-radius:2px",
+                    "filter:drop-shadow(0 0 3px rgba(167,139,250,0.8))",
+                    "animation:cosmicMeteorFly " + speed + "s ease-in forwards"
+                ].join(";");
+                document.body.appendChild(wrap);
+                setTimeout(function() { if (wrap.parentNode) wrap.remove(); }, (speed + 0.1) * 1000);
             }
             spawnMeteor();
             window._weatherMeteorInterval = setInterval(function() {
-                var burst = 1 + Math.floor(Math.random() * 3);
+                var burst = 1 + Math.floor(Math.random() * 4);
                 for (var i = 0; i < burst; i++) {
-                    setTimeout(spawnMeteor, i * 150);
+                    setTimeout(spawnMeteor, i * 120);
                 }
-            }, 1500 + Math.random() * 2000);
+            }, 800 + Math.random() * 1500);
         }
 
-        function buildStarWarp() {
-            var count = 60;
-            for (var i = 0; i < count; i++) {
-                (function() {
-                    var star = document.createElement("div");
-                    star.className = "weather-star-warp";
-                    var angle = Math.random() * 360;
-                    var dist = 10 + Math.random() * 50;
-                    var length = 20 + Math.random() * 80;
-                    star.style.cssText = [
-                        "position:fixed", "z-index:2", "pointer-events:none",
-                        "left:50%", "top:50%",
-                        "width:" + length + "px", "height:1px",
-                        "background:linear-gradient(to right, transparent, rgba(196,181,253," + (0.3 + Math.random() * 0.4) + "))",
-                        "transform-origin:left center",
-                        "transform:rotate(" + angle + "deg) translateX(" + dist + "vw)",
-                        "animation:starWarpPulse " + (2 + Math.random() * 3) + "s " + (Math.random() * 3) + "s ease-in-out infinite"
-                    ].join(";");
-                    document.body.appendChild(star);
-                })();
+        // Nebula void — floating blurred color blobs + breathing overlay
+        function buildNebulaVoid() {
+            // Breathing deep-space overlay
+            var overlay = document.createElement("div");
+            overlay.className = "weather-nebula";
+            overlay.style.cssText = "position:fixed;inset:0;z-index:0;pointer-events:none;" +
+                "background:radial-gradient(ellipse at 20% 30%, rgba(124,58,237,0.12) 0%, transparent 40%)," +
+                "radial-gradient(ellipse at 80% 70%, rgba(139,92,246,0.1) 0%, transparent 40%)," +
+                "radial-gradient(ellipse at 50% 50%, rgba(30,0,60,0.3) 0%, transparent 65%);" +
+                "animation:nebulaBreath 8s ease-in-out infinite alternate;";
+            document.body.appendChild(overlay);
+
+            // Floating nebula blobs
+            var colors = ["rgba(124,58,237,", "rgba(139,92,246,", "rgba(196,181,253,", "rgba(67,56,202,"];
+            for (var i = 0; i < 5; i++) {
+                var blob = document.createElement("div");
+                blob.className = "weather-nebula";
+                var size = 120 + Math.random() * 200;
+                var col = colors[Math.floor(Math.random() * colors.length)];
+                blob.style.cssText = [
+                    "position:fixed", "z-index:1", "pointer-events:none",
+                    "border-radius:50%",
+                    "width:" + size + "px", "height:" + (size * 0.6) + "px",
+                    "left:" + (Math.random() * 90) + "%",
+                    "top:" + (Math.random() * 90) + "%",
+                    "background:radial-gradient(ellipse, " + col + "0.12) 0%, transparent 70%)",
+                    "filter:blur(30px)",
+                    "animation:nebulaFloat " + (12 + Math.random() * 10) + "s " + (Math.random() * 5) + "s ease-in-out infinite alternate"
+                ].join(";");
+                document.body.appendChild(blob);
             }
         }
 
-        function buildVoidPulse() {
-            var pulse = document.createElement("div");
-            pulse.className = "weather-void-pulse";
-            pulse.style.cssText = "position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%, rgba(124,58,237,0.08) 0%, transparent 60%);animation:voidBreath 4s ease-in-out infinite;";
-            document.body.appendChild(pulse);
+        // Galaxy ring — slow rotating conic gradient ring
+        function buildGalaxyRing() {
+            var ring = document.createElement("div");
+            ring.className = "weather-galaxy-ring";
+            ring.style.cssText = [
+                "position:fixed", "z-index:1", "pointer-events:none",
+                "width:600px", "height:600px",
+                "left:50%", "top:50%",
+                "transform:translate(-50%,-50%)",
+                "border-radius:50%",
+                "background:conic-gradient(from 0deg, transparent 0%, rgba(124,58,237,0.06) 15%, rgba(196,181,253,0.08) 30%, transparent 50%, rgba(139,92,246,0.05) 65%, rgba(124,58,237,0.07) 80%, transparent 100%)",
+                "filter:blur(20px)",
+                "animation:galaxyRotate 60s linear infinite"
+            ].join(";");
+            document.body.appendChild(ring);
         }
 
         function buildSpaceships() {
@@ -1218,9 +1267,15 @@
                     tornadoVortex: buildTornadoVortex,
                     extremeWind: buildExtremeWind,
                     flyingDebris: buildFlyingDebris,
-                    meteorShower: buildMeteorShower,
-                    starWarp: buildStarWarp,
-                    voidPulse: buildVoidPulse,
+                    // old (removed)
+                    meteorShower: buildCosmicMeteors,
+                    starWarp: buildDeepStarfield,
+                    voidPulse: buildNebulaVoid,
+                    // new cosmos
+                    deepStarfield: buildDeepStarfield,
+                    cosmicMeteors: buildCosmicMeteors,
+                    nebulaVoid: buildNebulaVoid,
+                    galaxyRing: buildGalaxyRing,
                 };
 
                 (w.effects || []).forEach(function(fx) {

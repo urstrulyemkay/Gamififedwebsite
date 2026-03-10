@@ -678,7 +678,7 @@ const CONTENT = {
         blizzard:   { label: "Blizzard",   icon: "\u{1F328}\uFE0F", accent: "#BAE6FD", effects: ["blizzardSnow", "icicles", "screenFreeze", "whiteout"] },
         earthquake: { label: "Earthquake", icon: "\u{1F30D}", accent: "#A16207", effects: ["groundShake", "dustCloud", "rockDebris"] },
         tornado:    { label: "Tornado",    icon: "\u{1F32A}\uFE0F", accent: "#94A3B8", effects: ["tornadoVortex", "extremeWind", "flyingDebris"] },
-        cosmos:     { label: "Cosmos",     icon: "\u{1F30C}", accent: "#7C3AED", effects: ["meteorShower", "starWarp", "voidPulse"] },
+        cosmos:     { label: "Cosmos",     icon: "\u{1F30C}", accent: "#7C3AED", effects: ["deepStarfield", "cosmicMeteors", "nebulaVoid", "galaxyRing"] },
     },
     // ── MOOD SELECTOR — visitor picks vibe ──────
     moods: [

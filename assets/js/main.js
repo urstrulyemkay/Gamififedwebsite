@@ -3936,7 +3936,8 @@ function showElementArena(C, onDone) {
             window._updateElementReselectLabel(el.id);
         }
 
-        // Sync weather mood
+        // Sync weather mood — element selection always overrides manual picks
+        localStorage.setItem("mkj_mood_source", "element");
         if (el.defaultMood && typeof window.applyElementMood === "function") {
             window.applyElementMood(el.defaultMood);
         }

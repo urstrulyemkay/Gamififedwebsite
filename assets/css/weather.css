@@ -1226,52 +1226,63 @@ body.mood-tornado::before {
 body.mood-cosmos::before {
     content: "";
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background: radial-gradient(ellipse at 30% 40%, rgba(124,58,237,0.3) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 60%, rgba(139,92,246,0.2) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(30,0,60,0.5) 0%, transparent 80%);
-    animation: cosmosPulse 8s ease-in-out infinite;
+    background: radial-gradient(ellipse at 25% 35%, rgba(124,58,237,0.2) 0%, transparent 45%),
+                radial-gradient(ellipse at 75% 65%, rgba(99,102,241,0.15) 0%, transparent 45%),
+                radial-gradient(ellipse at 50% 50%, rgba(10,0,30,0.7) 0%, transparent 75%);
+    animation: cosmosPulse 10s ease-in-out infinite alternate;
 }
 @keyframes cosmosPulse {
-    0%, 100% { opacity: 0.8; }
-    50%       { opacity: 1; }
+    0%   { opacity: 0.7; }
+    100% { opacity: 1; }
 }
 
-.weather-meteor {
-    position: fixed; pointer-events: none; z-index: 3;
-    width: 3px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(167,139,250,0.4), transparent);
+/* Twinkling stars */
+.weather-star {
+    position: fixed; pointer-events: none;
+}
+@keyframes cosmicStarTwinkle {
+    0%   { opacity: 0.2; transform: scale(0.8); }
+    100% { opacity: 1;   transform: scale(1.2); }
+}
+
+/* Diagonal meteor streaks — use clip-path + translate so rotation is preserved */
+.weather-cosmic-meteor {
+    position: fixed; pointer-events: none; z-index: 4;
     border-radius: 2px;
-    filter: drop-shadow(0 0 3px rgba(167,139,250,0.8));
-    animation: meteorFall linear forwards;
+    filter: drop-shadow(0 0 4px rgba(196,181,253,0.9));
+    animation: cosmicMeteorFly linear forwards;
 }
-@keyframes meteorFall {
-    0%   { transform: translateY(0) translateX(0); opacity: 1; }
-    100% { transform: translateY(var(--dy, 80vh)) translateX(var(--dx, 30px)); opacity: 0; }
-}
-
-.weather-star-warp {
-    position: fixed; pointer-events: none; z-index: 2;
-    width: 2px; height: 2px;
-    border-radius: 50%;
-    background: rgba(220,200,255,0.9);
-    filter: drop-shadow(0 0 2px rgba(167,139,250,0.8));
-    animation: starWarpPulse linear infinite;
-}
-@keyframes starWarpPulse {
-    0%   { transform: scale(1) translateX(0); opacity: 0.8; }
-    50%  { transform: scale(1.5) translateX(var(--dx, 5px)); opacity: 1; }
-    100% { transform: scale(1) translateX(0); opacity: 0.8; }
+@keyframes cosmicMeteorFly {
+    0%   { opacity: 0; transform: translate(0, 0); }
+    10%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(60vw, 70vh); }
 }
 
-.weather-void-pulse {
+/* Nebula blobs and overlay */
+.weather-nebula {
+    position: fixed; pointer-events: none;
+}
+@keyframes nebulaBreath {
+    0%   { opacity: 0.5; transform: scale(1); }
+    100% { opacity: 1;   transform: scale(1.05); }
+}
+@keyframes nebulaFloat {
+    0%   { transform: translate(0, 0) scale(1); opacity: 0.6; }
+    100% { transform: translate(30px, -20px) scale(1.1); opacity: 0.9; }
+}
+
+/* Galaxy rotating ring */
+.weather-galaxy-ring {
     position: fixed; pointer-events: none; z-index: 1;
+    width: 700px; height: 700px;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
     border-radius: 50%;
-    border: 1px solid rgba(124,58,237,0.5);
-    animation: voidBreath ease-out forwards;
+    filter: blur(25px);
 }
-@keyframes voidBreath {
-    0%   { transform: scale(0.2); opacity: 0.9; }
-    100% { transform: scale(var(--max-scale, 4)); opacity: 0; }
+@keyframes galaxyRotate {
+    0%   { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 /* ── RESPONSIVE (EXTREME MOODS) ──────────── */
