@@ -3964,7 +3964,7 @@ function showElementArena(C, onDone) {
                transition:transform 0.3s ease,border-color 0.3s,background 0.3s,box-shadow 0.3s,opacity 0.4s;
                opacity:0;transform:translateY(20px);`;
         card.innerHTML = `
-            <span style="font-size:${iconSize};line-height:1;display:block;">${el.icon}</span>
+            <span class="element-arena-icon element-arena-icon--${el.id}" style="font-size:${iconSize};line-height:1;display:block;">${el.icon}</span>
             <span style="font-size:${labelSize};font-weight:800;letter-spacing:0.12em;color:${el.color};">${el.label}</span>
             <span style="font-size:10px;font-weight:500;color:rgba(255,255,255,0.35);letter-spacing:0.05em;display:${subtitleDisplay};">${subtitle}</span>
         `;
