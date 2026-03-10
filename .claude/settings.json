@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__mcp-unframer-co__searchFonts",
+      "mcp__mcp-unframer-co__updateXmlForNode"
+    ]
+  }
+}
