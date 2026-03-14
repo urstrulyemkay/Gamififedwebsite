@@ -1,0 +1,1300 @@
+/* ============================================
+   WEATHER.CSS — Atmospheric Effects System v2
+   Dramatic, immersive, unmistakable per-mood
+   visual signatures with body-level atmosphere.
+   ============================================ */
+
+/* ── BODY-LEVEL MOOD ATMOSPHERE ─────────────
+   Each mood applies a class to <body> that
+   shifts the entire page color grading.
+   ──────────────────────────────────────────── */
+body.mood-night {
+    --mood-accent: #22D3EE;
+    --mood-glow: rgba(34,211,238,0.06);
+}
+body.mood-storm {
+    --mood-accent: #60A5FA;
+    --mood-glow: rgba(96,165,250,0.06);
+}
+body.mood-day {
+    --mood-accent: #E4FF1A;
+    --mood-glow: rgba(228,255,26,0.06);
+}
+body.mood-dawn {
+    --mood-accent: #F59E0B;
+    --mood-glow: rgba(245,158,11,0.06);
+}
+body.mood-dusk {
+    --mood-accent: #A78BFA;
+    --mood-glow: rgba(167,139,250,0.06);
+}
+body.mood-chill {
+    --mood-accent: #94A3B8;
+    --mood-glow: rgba(148,163,184,0.06);
+}
+body.mood-hype {
+    --mood-accent: #EF4444;
+    --mood-glow: rgba(239,68,68,0.06);
+}
+body.mood-zen {
+    --mood-accent: #4ADE80;
+    --mood-glow: rgba(74,222,128,0.06);
+}
+body.mood-creative {
+    --mood-accent: #A78BFA;
+    --mood-glow: rgba(167,139,250,0.06);
+}
+
+/* Ambient background shift per mood */
+body.mood-night::before,
+body.mood-storm::before,
+body.mood-day::before,
+body.mood-dawn::before,
+body.mood-dusk::before,
+body.mood-chill::before,
+body.mood-hype::before,
+body.mood-zen::before,
+body.mood-creative::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: -1;
+    transition: background 2s ease, opacity 2s ease;
+    opacity: 1;
+}
+body.mood-night::before {
+    background: linear-gradient(180deg, rgba(5,5,30,0.6) 0%, rgba(10,10,30,0.3) 40%, rgba(10,10,10,0) 100%);
+}
+body.mood-storm::before {
+    background: linear-gradient(180deg, rgba(15,23,42,0.5) 0%, rgba(30,41,59,0.3) 50%, rgba(10,10,10,0) 100%);
+}
+body.mood-day::before {
+    background: radial-gradient(ellipse at 80% 0%, rgba(228,255,26,0.04) 0%, transparent 50%),
+                linear-gradient(180deg, rgba(30,25,10,0.15) 0%, transparent 40%);
+}
+body.mood-dawn::before {
+    background: linear-gradient(180deg, transparent 0%, rgba(245,158,11,0.04) 60%, rgba(255,107,53,0.06) 100%);
+}
+body.mood-dusk::before {
+    background: linear-gradient(180deg, rgba(30,20,50,0.3) 0%, rgba(80,40,60,0.1) 50%, transparent 100%);
+}
+body.mood-chill::before {
+    background: linear-gradient(180deg, rgba(148,163,184,0.06) 0%, rgba(100,130,160,0.03) 40%, transparent 100%);
+}
+body.mood-hype::before {
+    background: radial-gradient(ellipse at 50% 100%, rgba(239,68,68,0.08) 0%, transparent 50%),
+                linear-gradient(180deg, rgba(30,10,10,0.15) 0%, transparent 40%);
+}
+body.mood-zen::before {
+    background: radial-gradient(ellipse at 30% 70%, rgba(74,222,128,0.03) 0%, transparent 40%),
+                linear-gradient(180deg, rgba(10,20,15,0.1) 0%, transparent 60%);
+}
+body.mood-creative::before {
+    background: linear-gradient(135deg, rgba(167,139,250,0.04) 0%, rgba(244,114,182,0.03) 50%, rgba(34,211,238,0.03) 100%);
+}
+
+/* ── MOOD SELECTOR ────────────────────────── */
+.mood-selector {
+    position: relative; z-index: 10;
+    flex-shrink: 0;
+}
+.mood-toggle {
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    padding: 5px 12px; border-radius: 16px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--text-muted, #A1A1A1); text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.3s, color 0.3s, box-shadow 0.3s;
+    user-select: none; white-space: nowrap;
+}
+.mood-toggle:hover {
+    border-color: var(--mood-accent, rgba(255,255,255,0.15));
+    box-shadow: 0 0 16px var(--mood-glow, rgba(255,255,255,0.03));
+}
+.mood-toggle-icon { font-size: 14px; }
+.mood-dropdown {
+    position: absolute; top: calc(100% + 12px); left: 50%; transform: translateX(-50%) translateY(-8px);
+    background: rgba(10,10,10,0.95); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; padding: 6px;
+    min-width: 190px; backdrop-filter: blur(16px);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+}
+.mood-selector.open .mood-dropdown {
+    opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0);
+}
+.mood-option {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px; border-radius: 8px;
+    cursor: pointer; transition: background 0.2s;
+    border: none; background: none; width: 100%;
+    font-family: 'Inter', sans-serif;
+}
+.mood-option:hover { background: rgba(255,255,255,0.06); }
+.mood-option.active { background: rgba(228,255,26,0.08); }
+.mood-option-icon { font-size: 18px; min-width: 24px; text-align: center; }
+.mood-option-info { display: flex; flex-direction: column; text-align: left; }
+.mood-option-label { font-size: 12px; font-weight: 700; color: #fff; letter-spacing: 0.04em; }
+.mood-option-desc { font-size: 10px; color: #A1A1A1; }
+.mood-selector ~ .weather-indicator { display: none; }
+@keyframes weatherFadeIn { to { opacity: 1; } }
+
+/* Fallback indicator */
+.weather-indicator {
+    position: fixed; top: 16px; left: 16px; z-index: 900;
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(10,10,10,0.8); border: 1px solid rgba(255,255,255,0.06);
+    padding: 6px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+    color: #A1A1A1; text-transform: uppercase;
+    opacity: 0; animation: weatherFadeIn 1s 2s forwards;
+    backdrop-filter: blur(8px);
+}
+.weather-icon { font-size: 16px; }
+
+/* ── FULL-SCREEN TINT OVERLAY ─────────────── */
+.weather-tint {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    transition: background 2s ease, opacity 1.5s ease;
+    opacity: 0;
+    will-change: opacity;
+}
+.weather-tint.active { opacity: 1; }
+
+/* GPU acceleration for animated weather elements */
+.weather-star, .weather-firefly, .weather-rain-drop,
+.weather-cloud, .weather-ember, .weather-snowflake,
+.weather-cosmic-dust, .weather-golden-mote, .weather-petal,
+.weather-spaceship, .weather-bird, .weather-leaf {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+}
+
+/* ===========================================
+   NIGHT — Deep cosmos, milky way, constellations
+   =========================================== */
+.weather-stars {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 1;
+}
+.weather-star {
+    position: absolute; border-radius: 50%;
+    background: #fff;
+    animation: twinkle ease-in-out infinite alternate;
+}
+.weather-star.bright {
+    box-shadow: 0 0 6px 2px rgba(34,211,238,0.5), 0 0 12px rgba(34,211,238,0.2);
+}
+.weather-star.shooting {
+    width: 4px; height: 2px; border-radius: 0;
+    background: linear-gradient(90deg, #fff, rgba(34,211,238,0.8), rgba(167,139,250,0.4), transparent);
+    box-shadow: 0 0 10px rgba(34,211,238,0.6), 0 0 30px rgba(34,211,238,0.3);
+    animation: shootingStar 1.5s linear forwards;
+}
+@keyframes twinkle {
+    0% { opacity: 0.1; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1.5); }
+}
+@keyframes shootingStar {
+    0% { opacity: 1; transform: translateX(0) translateY(0) rotate(-35deg); width: 4px; }
+    20% { width: 150px; opacity: 1; }
+    100% { opacity: 0; transform: translateX(500px) translateY(300px) rotate(-35deg); width: 3px; }
+}
+
+/* Milky way band */
+.weather-milkyway {
+    position: fixed; top: 0; left: -20%; width: 140%; height: 100%;
+    pointer-events: none; z-index: 0;
+    background: linear-gradient(
+        135deg,
+        transparent 30%,
+        rgba(34,211,238,0.012) 38%,
+        rgba(167,139,250,0.018) 42%,
+        rgba(34,211,238,0.015) 46%,
+        rgba(167,139,250,0.01) 50%,
+        rgba(255,255,255,0.008) 54%,
+        transparent 62%
+    );
+    filter: blur(20px);
+    animation: milkywayDrift 60s linear infinite;
+}
+@keyframes milkywayDrift {
+    0% { transform: rotate(-15deg) translateX(0); }
+    100% { transform: rotate(-15deg) translateX(5%); }
+}
+
+/* Constellation lines */
+.weather-constellation-line {
+    position: absolute; pointer-events: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(34,211,238,0.15), transparent);
+    transform-origin: left center;
+    animation: constellationFade 6s ease-in-out infinite alternate;
+}
+@keyframes constellationFade {
+    0% { opacity: 0.1; }
+    100% { opacity: 0.4; }
+}
+
+/* Moon with halo */
+.weather-moon {
+    position: fixed; top: 120px; right: 80px; z-index: 1;
+    width: 90px; height: 90px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fffff0 0%, #d8d8c8 40%, #b0b0a0 70%, #909080 100%);
+    box-shadow:
+        0 0 40px rgba(255,255,240,0.08),
+        0 0 80px rgba(34,211,238,0.06),
+        0 0 160px rgba(34,211,238,0.03),
+        inset -10px -6px 0 rgba(0,0,0,0.2);
+    pointer-events: none;
+    animation: moonGlow 8s ease-in-out infinite;
+}
+/* Moon halo ring */
+.weather-moon::after {
+    content: "";
+    position: absolute; inset: -30px;
+    border-radius: 50%;
+    border: 1px solid rgba(34,211,238,0.06);
+    box-shadow: 0 0 40px rgba(34,211,238,0.03);
+    animation: moonHalo 6s ease-in-out infinite alternate;
+}
+.weather-moon-crater {
+    position: absolute; border-radius: 50%;
+    background: rgba(0,0,0,0.1);
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.15);
+}
+@keyframes moonGlow {
+    0%, 100% { box-shadow: 0 0 40px rgba(255,255,240,0.08), 0 0 80px rgba(34,211,238,0.06), 0 0 160px rgba(34,211,238,0.03), inset -10px -6px 0 rgba(0,0,0,0.2); }
+    50% { box-shadow: 0 0 60px rgba(255,255,240,0.12), 0 0 120px rgba(34,211,238,0.08), 0 0 200px rgba(34,211,238,0.04), inset -10px -6px 0 rgba(0,0,0,0.2); }
+}
+@keyframes moonHalo {
+    0% { transform: scale(1); opacity: 0.3; }
+    100% { transform: scale(1.15); opacity: 0.6; }
+}
+
+/* Fireflies — bigger, more visible */
+.weather-firefly {
+    position: fixed; pointer-events: none; z-index: 2;
+    border-radius: 50%;
+    animation: fireflyFloat ease-in-out infinite;
+}
+@keyframes fireflyFloat {
+    0% { transform: translate(0, 0) scale(0.3); opacity: 0; }
+    15% { opacity: 1; transform: translate(20px, -25px) scale(1.2); }
+    30% { opacity: 0.3; transform: translate(-15px, -45px) scale(0.6); }
+    50% { opacity: 1; transform: translate(25px, -20px) scale(1.3); }
+    70% { opacity: 0.2; transform: translate(-8px, -55px) scale(0.5); }
+    85% { opacity: 0.9; transform: translate(15px, -35px) scale(1.1); }
+    100% { transform: translate(0, 0) scale(0.3); opacity: 0; }
+}
+
+/* ===========================================
+   STORM — Violent rain, dark sky, lightning chaos
+   =========================================== */
+.weather-rain-drop {
+    position: fixed; pointer-events: none; z-index: 1;
+    animation: rainFall linear infinite;
+}
+/* Storm rain is angled */
+body.mood-storm .weather-rain-drop {
+    transform: rotate(8deg);
+}
+@keyframes rainFall {
+    0% { transform: translateY(-10vh) translateX(0); opacity: 0; }
+    5% { opacity: 0.8; }
+    95% { opacity: 0.8; }
+    100% { transform: translateY(110vh) translateX(-40px); opacity: 0; }
+}
+.rain-splash {
+    position: fixed; bottom: 0; pointer-events: none; z-index: 1;
+    width: 8px; height: 3px; border-radius: 50%;
+    animation: rainSplash 0.6s ease-out forwards;
+}
+@keyframes rainSplash {
+    0% { transform: scale(1); opacity: 0.7; }
+    100% { transform: scale(12, 2); opacity: 0; }
+}
+
+/* Puddle reflections */
+.weather-puddle {
+    position: fixed; bottom: 0; pointer-events: none; z-index: 1;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(96,165,250,0.06) 0%, transparent 70%);
+    animation: puddleRipple 3s ease-in-out infinite;
+}
+@keyframes puddleRipple {
+    0%, 100% { transform: scaleX(1) scaleY(1); opacity: 0.3; }
+    50% { transform: scaleX(1.3) scaleY(0.8); opacity: 0.6; }
+}
+
+/* Dark storm clouds — bigger, more menacing */
+.weather-cloud {
+    position: fixed; pointer-events: none; z-index: 2;
+    border-radius: 40%;
+    animation: cloudDrift linear infinite;
+}
+.weather-cloud.dark {
+    filter: blur(20px);
+    background: radial-gradient(ellipse, rgba(15,23,42,0.4) 0%, rgba(30,41,59,0.15) 50%, transparent 75%);
+}
+.weather-cloud.light {
+    filter: blur(12px);
+    background: radial-gradient(ellipse, rgba(100,116,139,0.12) 0%, rgba(100,116,139,0.04) 55%, transparent 80%);
+}
+@keyframes cloudDrift {
+    0% { transform: translateX(-400px); }
+    100% { transform: translateX(calc(100vw + 400px)); }
+}
+
+/* Lightning — more dramatic */
+.weather-lightning {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 3;
+    opacity: 0;
+}
+.weather-lightning.flash {
+    animation: lightningFlash 0.6s ease-out;
+}
+@keyframes lightningFlash {
+    0% { opacity: 0; background: transparent; }
+    3% { opacity: 0.5; background: rgba(200,220,255,0.1); }
+    6% { opacity: 0.05; }
+    9% { opacity: 0.4; background: rgba(96,165,250,0.08); }
+    15% { opacity: 0.15; }
+    20% { opacity: 0.3; background: rgba(255,255,255,0.05); }
+    30% { opacity: 0.15; }
+    50% { opacity: 0.05; background: rgba(96,165,250,0.02); }
+    100% { opacity: 0; background: transparent; }
+}
+.lightning-bolt {
+    position: fixed; pointer-events: none; z-index: 3;
+    width: 3px; opacity: 0;
+    background: linear-gradient(180deg, rgba(200,220,255,0.95), rgba(96,165,250,0.9) 30%, rgba(255,255,255,0.8) 50%, rgba(96,165,250,0.5) 75%, transparent);
+    filter: blur(0.5px);
+    animation: boltFlash 0.4s ease-out forwards;
+    box-shadow: 0 0 8px rgba(96,165,250,0.6), 0 0 20px rgba(96,165,250,0.3);
+}
+/* Bolt branches */
+.lightning-bolt .bolt-branch {
+    position: absolute; left: 0;
+    width: 2px;
+    background: linear-gradient(180deg, rgba(96,165,250,0.8), transparent);
+    filter: blur(0.5px);
+    box-shadow: 0 0 6px rgba(96,165,250,0.4);
+}
+@keyframes boltFlash {
+    0% { opacity: 0; }
+    8% { opacity: 1; }
+    20% { opacity: 0.4; }
+    35% { opacity: 1; }
+    60% { opacity: 0.3; }
+    100% { opacity: 0; }
+}
+
+/* Screen shake */
+@keyframes screenShake {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-3px, 2px); }
+    20% { transform: translate(3px, -1px); }
+    30% { transform: translate(-2px, 3px); }
+    40% { transform: translate(2px, -3px); }
+    50% { transform: translate(-3px, 1px); }
+    60% { transform: translate(1px, -2px); }
+    70% { transform: translate(-1px, 3px); }
+    80% { transform: translate(3px, -1px); }
+    90% { transform: translate(-2px, 0); }
+}
+body.weather-shaking { animation: screenShake 0.25s ease-out; }
+
+/* ===========================================
+   DAY — Blazing sun, god rays, heat distortion
+   =========================================== */
+.weather-sun-orb {
+    position: fixed; top: -60px; right: 40px; z-index: 1;
+    width: 220px; height: 220px; border-radius: 50%;
+    background: radial-gradient(circle,
+        rgba(255,255,200,0.2) 0%,
+        rgba(228,255,26,0.12) 20%,
+        rgba(245,158,11,0.06) 40%,
+        transparent 65%
+    );
+    pointer-events: none;
+    animation: sunPulse 5s ease-in-out infinite;
+}
+/* Sun corona ring */
+.weather-sun-orb::after {
+    content: "";
+    position: absolute; inset: -20px;
+    border-radius: 50%;
+    border: 2px solid rgba(228,255,26,0.06);
+    box-shadow: 0 0 60px rgba(228,255,26,0.04);
+    animation: sunCorona 4s ease-in-out infinite alternate;
+}
+.weather-sun-rays {
+    position: absolute; inset: -80px; border-radius: 50%;
+    background: conic-gradient(from 0deg,
+        transparent 0%, rgba(228,255,26,0.08) 2%, transparent 5%,
+        transparent 8%, rgba(245,158,11,0.06) 10%, transparent 13%,
+        transparent 16%, rgba(228,255,26,0.07) 18%, transparent 21%,
+        transparent 24%, rgba(245,158,11,0.05) 26%, transparent 29%,
+        transparent 32%, rgba(228,255,26,0.06) 34%, transparent 37%,
+        transparent 40%, rgba(245,158,11,0.07) 42%, transparent 45%,
+        transparent 48%, rgba(228,255,26,0.05) 50%, transparent 53%,
+        transparent 100%
+    );
+    animation: sunRaysSpin 20s linear infinite;
+}
+@keyframes sunPulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.15); opacity: 1; }
+}
+@keyframes sunRaysSpin { to { transform: rotate(360deg); } }
+@keyframes sunCorona {
+    0% { transform: scale(1); opacity: 0.4; }
+    100% { transform: scale(1.1); opacity: 0.7; }
+}
+
+/* God rays — volumetric light beams */
+.weather-godray {
+    position: fixed; pointer-events: none; z-index: 1;
+    top: 0; transform-origin: top center;
+    background: linear-gradient(180deg,
+        rgba(228,255,26,0.04) 0%,
+        rgba(228,255,26,0.02) 30%,
+        rgba(245,158,11,0.01) 60%,
+        transparent 100%
+    );
+    animation: godrayPulse 8s ease-in-out infinite;
+}
+@keyframes godrayPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+}
+
+.weather-lens-flare {
+    position: fixed; pointer-events: none; z-index: 1;
+    height: 3px; border-radius: 2px;
+    background: linear-gradient(90deg, transparent, rgba(228,255,26,0.15), rgba(245,158,11,0.1), transparent);
+    animation: lensFlarePulse 6s ease-in-out infinite;
+}
+@keyframes lensFlarePulse {
+    0%, 100% { opacity: 0; transform: scaleX(0.7); }
+    50% { opacity: 1; transform: scaleX(1.1); }
+}
+
+/* Heat shimmer — full viewport distortion feel */
+.weather-heat-shimmer {
+    position: fixed; bottom: 0; left: 0; width: 100%; height: 200px;
+    pointer-events: none; z-index: 1;
+    background: linear-gradient(180deg, transparent 0%, rgba(228,255,26,0.025) 40%, rgba(245,158,11,0.02) 100%);
+    animation: heatShimmer 2s ease-in-out infinite;
+}
+@keyframes heatShimmer {
+    0%, 100% { transform: scaleX(1); opacity: 0.5; }
+    25% { transform: scaleX(1.03) translateY(-5px); opacity: 0.9; }
+    50% { transform: scaleX(0.97) translateY(3px); opacity: 0.4; }
+    75% { transform: scaleX(1.02) translateY(-2px); opacity: 1; }
+}
+.weather-mirage {
+    position: fixed; bottom: 0; left: 0; width: 100%; height: 80px;
+    pointer-events: none; z-index: 1; overflow: hidden;
+}
+.weather-mirage-line {
+    position: absolute; width: 100%; height: 2px; left: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(228,255,26,0.06) 20%, rgba(245,158,11,0.05) 50%, rgba(228,255,26,0.06) 80%, transparent 100%);
+    animation: mirageWave 2.5s ease-in-out infinite;
+}
+@keyframes mirageWave {
+    0%, 100% { transform: translateX(-5%) scaleY(1); }
+    50% { transform: translateX(5%) scaleY(2.5); }
+}
+
+/* Dust motes — golden lazy floaters */
+.weather-dust {
+    position: fixed; pointer-events: none; z-index: 1;
+    border-radius: 50%;
+    animation: dustFloat ease-in-out infinite;
+}
+@keyframes dustFloat {
+    0% { transform: translate(0, 0); opacity: 0; }
+    25% { opacity: 0.7; transform: translate(25px, -35px); }
+    50% { opacity: 0.3; transform: translate(-20px, -70px); }
+    75% { opacity: 0.6; transform: translate(15px, -45px); }
+    100% { transform: translate(0, 0); opacity: 0; }
+}
+
+/* ===========================================
+   DAWN — Sunrise, golden hour, birds
+   =========================================== */
+.weather-dawn-glow {
+    position: fixed; bottom: 0; left: 0; width: 100%; height: 60%;
+    background: radial-gradient(ellipse at 50% 100%,
+        rgba(255,107,53,0.1) 0%,
+        rgba(245,158,11,0.06) 20%,
+        rgba(255,180,50,0.03) 40%,
+        transparent 65%
+    );
+    pointer-events: none; z-index: 1;
+    animation: dawnGlowPulse 6s ease-in-out infinite;
+}
+@keyframes dawnGlowPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* Sun disc rising from bottom */
+.weather-dawn-sun {
+    position: fixed; bottom: -40px; left: 50%; z-index: 1;
+    width: 120px; height: 120px; border-radius: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(255,200,50,0.2) 0%, rgba(245,158,11,0.1) 40%, transparent 65%);
+    box-shadow: 0 0 80px rgba(245,158,11,0.1), 0 0 160px rgba(255,107,53,0.05);
+    pointer-events: none;
+    animation: dawnSunRise 8s ease-in-out infinite;
+}
+@keyframes dawnSunRise {
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.6; }
+    50% { transform: translateX(-50%) translateY(-20px); opacity: 1; }
+}
+
+/* Light rays fanning upward */
+.weather-dawn-ray {
+    position: fixed; bottom: 0; pointer-events: none; z-index: 1;
+    transform-origin: bottom center;
+    background: linear-gradient(0deg, rgba(245,158,11,0.06) 0%, rgba(255,200,50,0.02) 40%, transparent 100%);
+    animation: dawnRayPulse 6s ease-in-out infinite;
+}
+@keyframes dawnRayPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+}
+
+.weather-horizon {
+    position: fixed; bottom: 0; left: 0; width: 100%; height: 4px;
+    background: linear-gradient(90deg, transparent 5%, rgba(245,158,11,0.35) 25%, rgba(255,107,53,0.3) 50%, rgba(245,158,11,0.35) 75%, transparent 95%);
+    pointer-events: none; z-index: 1;
+    animation: horizonGlow 4s ease-in-out infinite;
+    box-shadow: 0 0 40px rgba(245,158,11,0.2), 0 -10px 60px rgba(255,107,53,0.06);
+}
+@keyframes horizonGlow {
+    0%, 100% { opacity: 0.5; box-shadow: 0 0 30px rgba(245,158,11,0.1); }
+    50% { opacity: 1; box-shadow: 0 0 60px rgba(245,158,11,0.3), 0 -15px 80px rgba(255,107,53,0.08); }
+}
+
+/* Golden rising motes */
+.weather-golden-mote {
+    position: fixed; pointer-events: none; z-index: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,158,11,0.9), rgba(255,107,53,0.4));
+    animation: goldenRise linear infinite;
+}
+@keyframes goldenRise {
+    0% { transform: translateY(0) translateX(0) scale(0); opacity: 0; }
+    12% { opacity: 0.9; transform: translateY(-8vh) translateX(12px) scale(1.2); }
+    50% { opacity: 0.5; transform: translateY(-40vh) translateX(-15px) scale(0.8); }
+    100% { transform: translateY(-85vh) translateX(25px) scale(0.2); opacity: 0; }
+}
+
+/* Bird silhouettes */
+.weather-bird {
+    position: fixed; pointer-events: none; z-index: 2;
+    font-size: 12px; color: rgba(100,80,60,0.25);
+    animation: birdFly linear infinite;
+}
+@keyframes birdFly {
+    0% { transform: translateX(-100px) translateY(0) scaleX(1); }
+    25% { transform: translateX(25vw) translateY(-20px) scaleX(0.9); }
+    50% { transform: translateX(50vw) translateY(10px) scaleX(1); }
+    75% { transform: translateX(75vw) translateY(-15px) scaleX(0.9); }
+    100% { transform: translateX(calc(100vw + 100px)) translateY(5px) scaleX(1); }
+}
+
+/* Wind streaks */
+.weather-wind-particle {
+    position: fixed; pointer-events: none; z-index: 1;
+    height: 1px; border-radius: 1px; opacity: 0;
+    animation: windDrift linear infinite;
+}
+@keyframes windDrift {
+    0% { transform: translateX(-100px) translateY(0); opacity: 0; }
+    15% { opacity: 0.4; }
+    85% { opacity: 0.4; }
+    100% { transform: translateX(calc(100vw + 100px)) translateY(-30px); opacity: 0; }
+}
+.weather-leaf {
+    position: fixed; pointer-events: none; z-index: 1;
+    font-size: 16px; opacity: 0;
+    animation: leafDrift linear infinite;
+}
+@keyframes leafDrift {
+    0% { transform: translateX(-60px) translateY(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    50% { transform: translateX(50vw) translateY(-60px) rotate(220deg); opacity: 0.5; }
+    100% { transform: translateX(calc(100vw + 60px)) translateY(40px) rotate(440deg); opacity: 0; }
+}
+
+/* ===========================================
+   CHILL — Heavy snow, ice crystals, frost glass
+   =========================================== */
+.weather-snowflake {
+    position: fixed; pointer-events: none; z-index: 2;
+    color: rgba(200,215,230,0.7);
+    animation: snowFall linear infinite;
+    text-shadow: 0 0 4px rgba(148,163,184,0.3);
+}
+@keyframes snowFall {
+    0% { transform: translateY(-5vh) translateX(0) rotate(0deg); opacity: 0; }
+    8% { opacity: 0.9; }
+    50% { transform: translateY(50vh) translateX(40px) rotate(180deg); }
+    92% { opacity: 0.7; }
+    100% { transform: translateY(110vh) translateX(-30px) rotate(360deg); opacity: 0; }
+}
+
+/* Ice crystals at screen corners */
+.weather-ice-crystal {
+    position: fixed; pointer-events: none; z-index: 2;
+    opacity: 0;
+    animation: iceCrystalGrow 12s ease-in-out infinite;
+}
+.weather-ice-crystal svg { width: 100%; height: 100%; }
+@keyframes iceCrystalGrow {
+    0%, 100% { opacity: 0.15; transform: scale(0.8) rotate(0deg); }
+    50% { opacity: 0.35; transform: scale(1.1) rotate(15deg); }
+}
+
+/* Frost vignette — heavier, more visible */
+.weather-frost {
+    position: fixed; inset: 0; pointer-events: none; z-index: 2;
+    background:
+        radial-gradient(ellipse at top left, rgba(180,200,220,0.12) 0%, transparent 25%),
+        radial-gradient(ellipse at top right, rgba(180,200,220,0.1) 0%, transparent 22%),
+        radial-gradient(ellipse at bottom left, rgba(180,200,220,0.11) 0%, transparent 24%),
+        radial-gradient(ellipse at bottom right, rgba(180,200,220,0.09) 0%, transparent 20%);
+    animation: frostPulse 10s ease-in-out infinite;
+    border: 1px solid rgba(180,200,220,0.04);
+}
+/* Frosted glass edge */
+.weather-frost::after {
+    content: "";
+    position: absolute; inset: 0;
+    box-shadow: inset 0 0 100px rgba(148,163,184,0.08), inset 0 0 200px rgba(148,163,184,0.04);
+    border-radius: 0;
+}
+@keyframes frostPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* Fog layer — thicker */
+.weather-fog {
+    position: fixed; bottom: 0; left: 0; width: 250%; height: 35%;
+    pointer-events: none; z-index: 1;
+    background: linear-gradient(180deg, transparent 0%, rgba(148,163,184,0.06) 40%, rgba(148,163,184,0.1) 100%);
+    animation: fogDrift 25s linear infinite;
+    filter: blur(25px);
+}
+@keyframes fogDrift {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-60%); }
+}
+
+/* Breath vapor — periodic puffs */
+.weather-breath {
+    position: fixed; pointer-events: none; z-index: 2;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,210,220,0.1), transparent 70%);
+    filter: blur(8px);
+    animation: breathPuff 6s ease-out infinite;
+}
+@keyframes breathPuff {
+    0% { transform: scale(0.3) translateY(0); opacity: 0; }
+    20% { opacity: 0.5; transform: scale(1) translateY(-20px); }
+    100% { transform: scale(2) translateY(-80px); opacity: 0; }
+}
+
+/* ===========================================
+   HYPE — Fire, explosions, intensity
+   =========================================== */
+.weather-ember {
+    position: fixed; pointer-events: none; z-index: 2;
+    border-radius: 50%;
+    animation: emberRise linear infinite;
+}
+@keyframes emberRise {
+    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+    8% { opacity: 1; }
+    25% { transform: translateY(-20vh) translateX(20px) scale(0.9); opacity: 0.9; }
+    50% { transform: translateY(-45vh) translateX(-15px) scale(0.6); opacity: 0.7; }
+    75% { transform: translateY(-70vh) translateX(25px) scale(0.3); opacity: 0.4; }
+    100% { transform: translateY(-100vh) translateX(-10px) scale(0.1); opacity: 0; }
+}
+
+/* Fire licks from bottom edge */
+.weather-fire-lick {
+    position: fixed; bottom: -10px; pointer-events: none; z-index: 2;
+    width: 60px; height: 80px;
+    background: radial-gradient(ellipse at bottom,
+        rgba(239,68,68,0.15) 0%,
+        rgba(245,158,11,0.1) 30%,
+        rgba(228,255,26,0.04) 60%,
+        transparent 80%
+    );
+    filter: blur(6px);
+    animation: fireLick 2s ease-in-out infinite;
+}
+@keyframes fireLick {
+    0%, 100% { transform: scaleY(1) scaleX(1); opacity: 0.5; }
+    25% { transform: scaleY(1.6) scaleX(0.8); opacity: 0.9; }
+    50% { transform: scaleY(0.8) scaleX(1.2); opacity: 0.4; }
+    75% { transform: scaleY(1.4) scaleX(0.9); opacity: 0.8; }
+}
+
+/* Screen edge pulse — more intense */
+.weather-screen-pulse {
+    position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    box-shadow:
+        inset 0 0 100px rgba(239,68,68,0.08),
+        inset 0 0 200px rgba(239,68,68,0.04),
+        inset 0 -60px 80px rgba(245,158,11,0.06);
+    animation: screenPulse 2.5s ease-in-out infinite;
+}
+@keyframes screenPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; box-shadow: inset 0 0 120px rgba(239,68,68,0.1), inset 0 0 250px rgba(239,68,68,0.05), inset 0 -80px 100px rgba(245,158,11,0.08); }
+}
+
+/* Burst explosions — periodic particle bursts */
+.weather-burst {
+    position: fixed; pointer-events: none; z-index: 3;
+    width: 6px; height: 6px; border-radius: 50%;
+    animation: burstParticle 0.8s ease-out forwards;
+}
+@keyframes burstParticle {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--bx, 50px), var(--by, -50px)) scale(0); opacity: 0; }
+}
+
+/* ===========================================
+   ZEN — Sakura petals, ripples, breathing
+   =========================================== */
+.weather-aurora-ribbon {
+    position: fixed; top: 0; left: 0; width: 100%; height: 50%;
+    pointer-events: none; z-index: 1;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(74,222,128,0.025) 15%,
+        rgba(34,211,238,0.02) 30%,
+        rgba(74,222,128,0.015) 50%,
+        transparent 70%
+    );
+    animation: auroraRibbonWave 12s ease-in-out infinite;
+    filter: blur(30px);
+}
+@keyframes auroraRibbonWave {
+    0%, 100% { transform: translateX(-5%) skewX(0deg); opacity: 0.4; }
+    25% { transform: translateX(3%) skewX(-2deg); opacity: 0.9; }
+    50% { transform: translateX(-3%) skewX(1.5deg); opacity: 0.5; }
+    75% { transform: translateX(4%) skewX(-1.5deg); opacity: 1; }
+}
+
+/* Sakura / lotus petals */
+.weather-petal {
+    position: fixed; pointer-events: none; z-index: 2;
+    font-size: 14px;
+    animation: petalDrift linear infinite;
+    filter: drop-shadow(0 2px 4px rgba(74,222,128,0.2));
+}
+@keyframes petalDrift {
+    0% { transform: translateX(-40px) translateY(-20px) rotate(0deg) scale(0.7); opacity: 0; }
+    10% { opacity: 0.7; }
+    30% { transform: translateX(20vw) translateY(30vh) rotate(120deg) scale(1); opacity: 0.6; }
+    60% { transform: translateX(50vw) translateY(50vh) rotate(240deg) scale(0.9); opacity: 0.5; }
+    100% { transform: translateX(calc(100vw + 40px)) translateY(80vh) rotate(400deg) scale(0.6); opacity: 0; }
+}
+
+/* Ripple circles — periodic expanding rings */
+.weather-ripple {
+    position: fixed; pointer-events: none; z-index: 1;
+    border-radius: 50%;
+    border: 1px solid rgba(74,222,128,0.12);
+    animation: rippleExpand 4s ease-out forwards;
+}
+@keyframes rippleExpand {
+    0% { transform: scale(0); opacity: 0.6; }
+    100% { transform: scale(8); opacity: 0; }
+}
+
+/* Breathing pulse — subtle content scale */
+.weather-zen-breathe {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: radial-gradient(ellipse at center, rgba(74,222,128,0.015) 0%, transparent 50%);
+    animation: zenBreathe 6s ease-in-out infinite;
+}
+@keyframes zenBreathe {
+    0%, 100% { transform: scale(0.95); opacity: 0.3; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+/* ===========================================
+   CREATIVE — Vivid aurora, nebula, paint splashes
+   =========================================== */
+.weather-aurora {
+    position: fixed; top: 0; left: 0; width: 100%; height: 70%;
+    pointer-events: none; z-index: 1; overflow: hidden;
+}
+.weather-aurora-band {
+    position: absolute; width: 130%; height: 100%;
+    filter: blur(50px); opacity: 0;
+    animation: auroraDance ease-in-out infinite;
+}
+.weather-aurora-band:nth-child(1) {
+    background: linear-gradient(110deg, transparent 15%, rgba(167,139,250,0.08) 35%, rgba(34,211,238,0.06) 55%, transparent 75%);
+    animation-duration: 10s; animation-delay: 0s;
+}
+.weather-aurora-band:nth-child(2) {
+    background: linear-gradient(100deg, transparent 25%, rgba(74,222,128,0.06) 40%, rgba(244,114,182,0.07) 60%, transparent 80%);
+    animation-duration: 13s; animation-delay: -3s;
+}
+.weather-aurora-band:nth-child(3) {
+    background: linear-gradient(120deg, transparent 5%, rgba(244,114,182,0.05) 30%, rgba(34,211,238,0.06) 50%, rgba(167,139,250,0.04) 70%, transparent 90%);
+    animation-duration: 16s; animation-delay: -6s;
+}
+.weather-aurora-band:nth-child(4) {
+    background: linear-gradient(95deg, transparent 20%, rgba(228,255,26,0.04) 38%, rgba(167,139,250,0.05) 55%, transparent 75%);
+    animation-duration: 19s; animation-delay: -9s;
+}
+@keyframes auroraDance {
+    0% { transform: translateX(-12%) skewX(-6deg) scaleY(0.7); opacity: 0.3; }
+    20% { transform: translateX(5%) skewX(3deg) scaleY(1.3); opacity: 0.9; }
+    40% { transform: translateX(-5%) skewX(-3deg) scaleY(0.8); opacity: 0.5; }
+    60% { transform: translateX(8%) skewX(5deg) scaleY(1.2); opacity: 0.85; }
+    80% { transform: translateX(-3%) skewX(-2deg) scaleY(1.0); opacity: 0.6; }
+    100% { transform: translateX(-12%) skewX(-6deg) scaleY(0.7); opacity: 0.3; }
+}
+
+/* Cosmic dust — bigger, more vivid */
+.weather-cosmic-dust {
+    position: fixed; pointer-events: none; z-index: 1;
+    border-radius: 50%;
+    animation: cosmicFloat ease-in-out infinite;
+}
+@keyframes cosmicFloat {
+    0% { transform: translate(0, 0) scale(0.4); opacity: 0; filter: hue-rotate(0deg); }
+    20% { opacity: 0.8; transform: translate(35px, -25px) scale(1.2); filter: hue-rotate(45deg); }
+    40% { opacity: 0.4; transform: translate(-25px, -55px) scale(0.7); filter: hue-rotate(120deg); }
+    60% { opacity: 0.9; transform: translate(20px, -35px) scale(1.3); filter: hue-rotate(200deg); }
+    80% { opacity: 0.5; transform: translate(-15px, -65px) scale(0.8); filter: hue-rotate(280deg); }
+    100% { transform: translate(0, 0) scale(0.4); opacity: 0; filter: hue-rotate(360deg); }
+}
+
+/* Nebula — larger, more vivid */
+.weather-nebula {
+    position: fixed; pointer-events: none; z-index: 0;
+    border-radius: 50%;
+    filter: blur(100px);
+    animation: nebulaShift 25s ease-in-out infinite;
+}
+@keyframes nebulaShift {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.25; }
+    25% { transform: translate(50px, -30px) scale(1.15); opacity: 0.5; }
+    50% { transform: translate(-40px, 20px) scale(0.85); opacity: 0.35; }
+    75% { transform: translate(30px, -10px) scale(1.1); opacity: 0.55; }
+}
+
+/* Paint splashes — color blobs that appear and fade */
+.weather-paint-splash {
+    position: fixed; pointer-events: none; z-index: 1;
+    border-radius: 40% 60% 50% 50% / 50% 40% 60% 50%;
+    filter: blur(40px);
+    animation: paintSplash 10s ease-in-out infinite;
+}
+@keyframes paintSplash {
+    0%, 100% { transform: scale(0.5) rotate(0deg); opacity: 0; }
+    20% { transform: scale(1.2) rotate(30deg); opacity: 0.4; }
+    50% { transform: scale(0.9) rotate(-10deg); opacity: 0.25; }
+    80% { transform: scale(1.1) rotate(20deg); opacity: 0.35; }
+}
+
+/* Prismatic light refraction */
+.weather-prism {
+    position: fixed; pointer-events: none; z-index: 1;
+    width: 300px; height: 2px;
+    background: linear-gradient(90deg,
+        rgba(239,68,68,0.2),
+        rgba(245,158,11,0.2),
+        rgba(228,255,26,0.2),
+        rgba(74,222,128,0.2),
+        rgba(34,211,238,0.2),
+        rgba(167,139,250,0.2),
+        rgba(244,114,182,0.2)
+    );
+    animation: prismShift 8s ease-in-out infinite;
+    filter: blur(1px);
+}
+@keyframes prismShift {
+    0%, 100% { transform: translateX(-50px) rotate(-5deg); opacity: 0.2; }
+    50% { transform: translateX(50px) rotate(5deg); opacity: 0.6; }
+}
+
+/* ── DUSK — purple/orange sky ────────────── */
+.weather-dusk-sky {
+    position: fixed; top: 0; left: 0; width: 100%; height: 50%;
+    pointer-events: none; z-index: 0;
+    background: linear-gradient(180deg,
+        rgba(30,20,50,0.2) 0%,
+        rgba(100,50,80,0.08) 30%,
+        rgba(167,139,250,0.04) 50%,
+        transparent 80%
+    );
+    animation: duskSkyPulse 10s ease-in-out infinite;
+}
+@keyframes duskSkyPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.9; }
+}
+
+/* ===========================================
+   SPACESHIPS — Large silhouettes crossing screen
+   =========================================== */
+.weather-spaceship {
+    position: fixed; pointer-events: none; z-index: 1;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 12px rgba(34,211,238,0.35));
+}
+.weather-spaceship svg {
+    width: 100%; height: 100%;
+}
+@keyframes shipFlyRight {
+    0% { transform: translateX(0); opacity: 0; }
+    5% { opacity: 0.85; }
+    95% { opacity: 0.85; }
+    100% { transform: translateX(calc(100vw + 400px)); opacity: 0; }
+}
+@keyframes shipFlyLeft {
+    0% { transform: scaleX(-1) translateX(0); opacity: 0; }
+    5% { opacity: 0.85; }
+    95% { opacity: 0.85; }
+    100% { transform: scaleX(-1) translateX(calc(100vw + 400px)); opacity: 0; }
+}
+
+/* ===========================================
+   EXTREME WEATHER MOODS
+   Volcano · Blizzard · Earthquake · Tornado · Cosmos
+   =========================================== */
+
+/* ── VOLCANO ─────────────────────────────── */
+body.mood-volcano::before {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: radial-gradient(ellipse at 50% 110%, rgba(255,69,0,0.45) 0%, rgba(180,30,0,0.25) 35%, transparent 70%),
+                linear-gradient(to top, rgba(255,50,0,0.18) 0%, transparent 55%);
+    animation: lavaSkyPulse 4s ease-in-out infinite;
+}
+@keyframes lavaSkyPulse {
+    0%, 100% { opacity: 0.85; }
+    50%       { opacity: 1; }
+}
+
+.weather-lava-drop {
+    position: fixed; pointer-events: none; z-index: 2;
+    width: 6px; height: 14px;
+    border-radius: 50% 50% 60% 60%;
+    background: radial-gradient(ellipse at 50% 30%, #FFD700, #FF4500 60%, #8B0000);
+    filter: drop-shadow(0 0 4px rgba(255,100,0,0.9));
+    animation: lavaFall linear forwards;
+}
+@keyframes lavaPulse {
+    0%, 100% { opacity: 0.6; }
+    50%       { opacity: 1; }
+}
+@keyframes lavaFall {
+    0%   { transform: translateY(0) scaleY(1); opacity: 1; }
+    80%  { transform: translateY(var(--fall-dist, 55vh)) scaleY(1.3); opacity: 1; }
+    100% { transform: translateY(var(--fall-dist, 65vh)) scaleY(0.4) scaleX(2.5); opacity: 0; }
+}
+
+.weather-ash {
+    position: fixed; pointer-events: none; z-index: 2;
+    border-radius: 50%;
+    background: rgba(80,60,50,0.7);
+    filter: blur(0.5px);
+    animation: ashFall linear forwards;
+}
+@keyframes ashFall {
+    0%   { transform: translateY(-10px) translateX(0) rotate(0deg); opacity: 0.6; }
+    100% { transform: translateY(var(--fall-dist, 110vh)) translateX(var(--drift, 40px)) rotate(540deg); opacity: 0; }
+}
+
+.weather-lava-sky {
+    position: fixed; pointer-events: none; z-index: 1;
+    width: 100%; height: 100%;
+    top: 0; left: 0;
+    background: linear-gradient(to bottom, rgba(120,20,0,0.25) 0%, transparent 50%);
+    animation: lavaSkyBand 6s ease-in-out infinite alternate;
+}
+@keyframes lavaSkyBand {
+    0%   { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.weather-eruption-flash {
+    position: fixed; inset: 0; pointer-events: none; z-index: 50;
+    background: rgba(255,140,0,0.55);
+    animation: eruptFlash 0.6s ease-out forwards;
+}
+@keyframes eruptFlash {
+    0%   { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.weather-eruption-particle {
+    position: fixed; pointer-events: none; z-index: 4;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: radial-gradient(circle, #FFD700 0%, #FF4500 60%, transparent 100%);
+    filter: drop-shadow(0 0 3px rgba(255,100,0,0.9));
+    animation: eruptParticle ease-out forwards;
+}
+@keyframes eruptParticle {
+    0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--dx, 80px), var(--dy, -120px)) scale(0.2); opacity: 0; }
+}
+
+/* ── BLIZZARD ─────────────────────────────── */
+body.mood-blizzard::before {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: linear-gradient(to bottom, rgba(200,230,255,0.07) 0%, transparent 50%);
+}
+
+.weather-blizzard-snow {
+    position: fixed; pointer-events: none; z-index: 3;
+    border-radius: 50%;
+    background: rgba(220,240,255,0.9);
+    filter: blur(0.4px);
+    animation: blizzardFall linear infinite;
+}
+@keyframes blizzardFall {
+    0%   { transform: translateY(-10px) translateX(0); opacity: 0.9; }
+    100% { transform: translateY(110vh) translateX(var(--drift, -60px)); opacity: 0.4; }
+}
+
+.weather-icicle {
+    position: fixed; top: 0; pointer-events: none; z-index: 3;
+    width: 0; height: 0;
+    border-left: var(--w, 4px) solid transparent;
+    border-right: var(--w, 4px) solid transparent;
+    border-top: var(--h, 28px) solid rgba(186,230,253,0.75);
+    filter: drop-shadow(0 0 3px rgba(186,230,253,0.6));
+    animation: icicleGrow ease-out forwards;
+}
+@keyframes icicleGrow {
+    0%   { transform: scaleY(0); opacity: 0; }
+    60%  { transform: scaleY(1.1); opacity: 1; }
+    100% { transform: scaleY(1); opacity: 0.85; }
+}
+
+.weather-freeze-corner {
+    position: fixed; pointer-events: none; z-index: 4;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle at var(--cx, 0%) var(--cy, 0%), rgba(186,230,253,0.6) 0%, transparent 70%);
+    filter: blur(2px);
+    animation: freezeIn ease-out forwards;
+}
+@keyframes freezeIn {
+    0%   { opacity: 0; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.weather-whiteout {
+    position: fixed; inset: 0; pointer-events: none; z-index: 50;
+    background: rgba(220,240,255,0.65);
+    animation: whiteoutFlash 0.8s ease-out forwards;
+}
+@keyframes whiteoutFlash {
+    0%   { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* ── EARTHQUAKE ──────────────────────────── */
+body.mood-earthquake::before {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(120,90,20,0.4) 0%, rgba(80,50,10,0.2) 40%, transparent 70%),
+                linear-gradient(to top, rgba(100,70,10,0.15) 0%, transparent 50%);
+    animation: quakeSkyPulse 3s ease-in-out infinite;
+}
+@keyframes quakeSkyPulse {
+    0%, 100% { opacity: 0.7; }
+    50%       { opacity: 1; }
+}
+
+/* Body shake during quake intervals */
+body.weather-quaking {
+    animation: groundShake 0.6s ease-in-out;
+}
+@keyframes groundShake {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    10%       { transform: translate(-4px, 2px) rotate(-0.3deg); }
+    25%       { transform: translate(5px, -3px) rotate(0.4deg); }
+    40%       { transform: translate(-6px, 1px) rotate(-0.5deg); }
+    55%       { transform: translate(4px, 3px) rotate(0.3deg); }
+    70%       { transform: translate(-3px, -2px) rotate(-0.2deg); }
+    85%       { transform: translate(2px, 1px) rotate(0.1deg); }
+}
+
+.weather-dust-cloud {
+    position: fixed; pointer-events: none; z-index: 2;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(161,120,40,0.6) 0%, rgba(100,70,10,0.1) 70%, transparent 100%);
+    filter: blur(8px);
+    animation: dustRise ease-out forwards;
+}
+@keyframes dustRise {
+    0%   { transform: translateY(0) scale(0.3); opacity: 0; }
+    30%  { opacity: 0.7; }
+    100% { transform: translateY(var(--rise, -80px)) scale(1.8); opacity: 0; }
+}
+
+.weather-rock-debris {
+    position: fixed; pointer-events: none; z-index: 3;
+    border-radius: 3px;
+    background: rgba(100,80,50,0.85);
+    animation: debrisFall linear forwards;
+}
+@keyframes debrisFall {
+    0%   { transform: translateY(var(--start-y, -20px)) translateX(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(var(--end-y, 80px)) translateX(var(--drift, 30px)) rotate(var(--rot, 360deg)); opacity: 0; }
+}
+
+/* ── TORNADO ─────────────────────────────── */
+body.mood-tornado::before {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(148,163,184,0.25) 0%, rgba(100,120,140,0.15) 50%, transparent 80%),
+                linear-gradient(to top, rgba(80,100,120,0.2) 0%, transparent 60%);
+    animation: tornadoSkyPulse 4s ease-in-out infinite;
+}
+@keyframes tornadoSkyPulse {
+    0%, 100% { opacity: 0.6; }
+    50%       { opacity: 1; }
+}
+
+.weather-vortex {
+    position: fixed; pointer-events: none; z-index: 2;
+    border-radius: 50%;
+    border: 2px solid rgba(148,163,184,0.4);
+    animation: vortexSpin linear infinite;
+}
+@keyframes vortexSpin {
+    0%   { transform: rotate(0deg) scale(1); opacity: 0.6; }
+    50%  { transform: rotate(180deg) scale(1.1); opacity: 0.9; }
+    100% { transform: rotate(360deg) scale(1); opacity: 0.6; }
+}
+
+.weather-wind-streak {
+    position: fixed; pointer-events: none; z-index: 3;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(200,210,230,0.7), transparent);
+    animation: windSlash linear forwards;
+}
+@keyframes windSlash {
+    0%   { transform: translateX(0) scaleX(0.2); opacity: 0; }
+    20%  { opacity: 1; transform: translateX(10%) scaleX(1); }
+    100% { transform: translateX(110vw) scaleX(1.5); opacity: 0; }
+}
+
+.weather-debris-chunk {
+    position: fixed; pointer-events: none; z-index: 3;
+    border-radius: 2px;
+    background: rgba(120,130,140,0.8);
+    animation: debrisWind linear forwards;
+}
+@keyframes debrisWind {
+    0%   { transform: translateX(0) translateY(0) rotate(0deg); opacity: 0.9; }
+    100% { transform: translateX(var(--dx, 80vw)) translateY(var(--dy, -30px)) rotate(var(--rot, 720deg)); opacity: 0; }
+}
+
+/* ── COSMOS ──────────────────────────────── */
+body.mood-cosmos::before {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: radial-gradient(ellipse at 25% 35%, rgba(124,58,237,0.2) 0%, transparent 45%),
+                radial-gradient(ellipse at 75% 65%, rgba(99,102,241,0.15) 0%, transparent 45%),
+                radial-gradient(ellipse at 50% 50%, rgba(10,0,30,0.7) 0%, transparent 75%);
+    animation: cosmosPulse 10s ease-in-out infinite alternate;
+}
+@keyframes cosmosPulse {
+    0%   { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* Twinkling stars */
+.weather-star {
+    position: fixed; pointer-events: none;
+}
+@keyframes cosmicStarTwinkle {
+    0%   { opacity: 0.2; transform: scale(0.8); }
+    100% { opacity: 1;   transform: scale(1.2); }
+}
+
+/* Diagonal meteor streaks — use clip-path + translate so rotation is preserved */
+.weather-cosmic-meteor {
+    position: fixed; pointer-events: none; z-index: 4;
+    border-radius: 2px;
+    filter: drop-shadow(0 0 4px rgba(196,181,253,0.9));
+    animation: cosmicMeteorFly linear forwards;
+}
+@keyframes cosmicMeteorFly {
+    0%   { opacity: 0; transform: translate(0, 0); }
+    10%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(60vw, 70vh); }
+}
+
+/* Nebula blobs and overlay */
+.weather-nebula {
+    position: fixed; pointer-events: none;
+}
+@keyframes nebulaBreath {
+    0%   { opacity: 0.5; transform: scale(1); }
+    100% { opacity: 1;   transform: scale(1.05); }
+}
+@keyframes nebulaFloat {
+    0%   { transform: translate(0, 0) scale(1); opacity: 0.6; }
+    100% { transform: translate(30px, -20px) scale(1.1); opacity: 0.9; }
+}
+
+/* Galaxy rotating ring */
+.weather-galaxy-ring {
+    position: fixed; pointer-events: none; z-index: 1;
+    width: 700px; height: 700px;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    filter: blur(25px);
+}
+@keyframes galaxyRotate {
+    0%   { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ── RESPONSIVE (EXTREME MOODS) ──────────── */
+@media (max-width: 768px) {
+    .weather-vortex { display: none; }
+    .weather-freeze-corner { width: 100px; height: 100px; }
+}
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media (max-width: 768px) {
+    .mood-toggle { padding: 4px 8px; font-size: 10px; gap: 4px; }
+    .mood-toggle-icon { font-size: 12px; }
+    .mood-toggle-label { display: none; }
+    .mood-dropdown { left: 0; transform: translateX(0) translateY(-8px); }
+    .mood-selector.open .mood-dropdown { transform: translateX(0) translateY(0); }
+    .weather-moon { width: 55px; height: 55px; right: 30px; top: 40px; }
+    .weather-sun-orb { width: 140px; height: 140px; }
+    .weather-aurora { height: 50%; }
+    .weather-fire-lick { width: 40px; height: 50px; }
+    .weather-godray { display: none; }
+}

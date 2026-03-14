@@ -1,0 +1,33 @@
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+
+# Claude Code local settings (contains API tokens)
+.claude/settings.local.json
+
+# macOS
+.DS_Store
+.AppleDouble
+._*
+.Spotlight-V100
+.Trashes
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Build artifacts
+dist/
+build/
+.cache/
+
+# Logs
+*.log
+
+# Editor
+.idea/
+.vscode/settings.json
+*.swp
+*.swo

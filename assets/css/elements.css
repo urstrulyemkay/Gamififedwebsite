@@ -1,0 +1,502 @@
+/* ============================================
+   ELEMENTS.CSS — Per-element visual personality
+   Each element transforms the UI's feel, not just
+   the accent color. Applied via body.element-{id}.
+   ============================================ */
+
+/* ── PERSONALITY CSS VARIABLES (defaults) ──── */
+:root {
+    --elem-radius: 12px;
+    --elem-radius-sm: 6px;
+    --elem-radius-lg: 16px;
+    --elem-speed: 0.3s;
+    --elem-weight: 500;
+    --elem-spacing: 0em;
+    --elem-border-opacity: 0.06;
+    --elem-glow-scale: 1;
+    --elem-section-tint: transparent;
+}
+
+/* ============================================
+   FIRE — Battle mode. Sharp, fast, aggressive.
+   ============================================ */
+body.element-fire {
+    --elem-radius: 2px;
+    --elem-radius-sm: 1px;
+    --elem-radius-lg: 4px;
+    --elem-speed: 0.1s;
+    --elem-weight: 700;
+    --elem-spacing: 0.03em;
+    --elem-border-opacity: 0.1;
+    --elem-glow-scale: 1.4;
+    --elem-section-tint: rgba(255,107,53,0.015);
+}
+
+/* Sharp corners everywhere */
+body.element-fire .section-card,
+body.element-fire .card,
+body.element-fire .inventory-item,
+body.element-fire .achievement-card,
+body.element-fire .boss-card,
+body.element-fire .venture-card,
+body.element-fire .genai-card,
+body.element-fire .portfolio-card,
+body.element-fire .skill-row,
+body.element-fire .quest-item,
+body.element-fire .academic-item {
+    border-radius: 2px !important;
+    transition: all 0.1s ease !important;
+}
+
+/* Left-bar accent — combat UI feel */
+body.element-fire .section-card,
+body.element-fire .card,
+body.element-fire .boss-card,
+body.element-fire .venture-card {
+    border-left: 2px solid rgba(var(--element-rgb, 255,107,53), 0.35) !important;
+}
+
+/* Aggressive hover — slight skew + fast lift */
+body.element-fire .section-card:hover,
+body.element-fire .card:hover,
+body.element-fire .boss-card:hover,
+body.element-fire .venture-card:hover,
+body.element-fire .genai-card:hover,
+body.element-fire .achievement-card:hover {
+    transform: translateY(-3px) skewX(-0.4deg) !important;
+    box-shadow: 0 8px 24px rgba(var(--element-rgb, 255,107,53), 0.18),
+                4px 0 0 rgba(var(--element-rgb, 255,107,53), 0.5) !important;
+    border-left-color: rgba(var(--element-rgb, 255,107,53), 0.7) !important;
+}
+
+/* Heavy section tags */
+body.element-fire .section-tag {
+    font-weight: 800 !important;
+    letter-spacing: 0.18em !important;
+    border-left: 3px solid var(--accent);
+    padding-left: 10px !important;
+}
+
+/* Bold section titles */
+body.element-fire .section-title {
+    letter-spacing: -0.04em !important;
+    font-weight: 800 !important;
+}
+
+/* Section background tint */
+body.element-fire .section {
+    background: linear-gradient(180deg, rgba(255,107,53,0.018) 0%, transparent 60%) !important;
+}
+
+/* Skill bars — sharp + fast fill */
+body.element-fire .skill-bar-fill {
+    border-radius: 0 !important;
+}
+
+/* Nav buttons */
+body.element-fire .blog-filter,
+body.element-fire .mood-toggle {
+    border-radius: 2px !important;
+}
+
+/* ============================================
+   WATER — Voyage mode. Fluid, rounded, calm.
+   ============================================ */
+body.element-water {
+    --elem-radius: 20px;
+    --elem-radius-sm: 10px;
+    --elem-radius-lg: 28px;
+    --elem-speed: 0.5s;
+    --elem-weight: 400;
+    --elem-spacing: -0.01em;
+    --elem-border-opacity: 0.05;
+    --elem-glow-scale: 0.8;
+    --elem-section-tint: rgba(34,211,238,0.012);
+}
+
+/* Very rounded everything */
+body.element-water .section-card,
+body.element-water .card,
+body.element-water .inventory-item,
+body.element-water .achievement-card,
+body.element-water .boss-card,
+body.element-water .venture-card,
+body.element-water .genai-card,
+body.element-water .portfolio-card,
+body.element-water .quest-item,
+body.element-water .academic-item {
+    border-radius: 20px !important;
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* Gentle float hover */
+body.element-water .section-card:hover,
+body.element-water .card:hover,
+body.element-water .boss-card:hover,
+body.element-water .venture-card:hover,
+body.element-water .genai-card:hover,
+body.element-water .achievement-card:hover {
+    transform: translateY(-6px) scale(1.01) !important;
+    box-shadow: 0 20px 48px rgba(var(--element-rgb, 34,211,238), 0.1),
+                0 0 0 1px rgba(var(--element-rgb, 34,211,238), 0.08) !important;
+}
+
+/* Light typography */
+body.element-water .section-tag {
+    font-weight: 500 !important;
+    letter-spacing: 0.08em !important;
+    border-radius: 100px !important;
+    padding: 4px 14px !important;
+}
+
+body.element-water .section-title {
+    font-weight: 600 !important;
+    letter-spacing: -0.02em !important;
+}
+
+/* Cool section tint */
+body.element-water .section {
+    background: linear-gradient(180deg, rgba(34,211,238,0.014) 0%, transparent 70%) !important;
+}
+
+/* Pill-shaped skill bars */
+body.element-water .skill-bar,
+body.element-water .skill-bar-fill {
+    border-radius: 100px !important;
+}
+
+/* Pill nav buttons */
+body.element-water .blog-filter,
+body.element-water .mood-toggle {
+    border-radius: 100px !important;
+}
+
+/* Inventory items very round */
+body.element-water .inventory-item {
+    border-radius: 50% !important;
+}
+
+/* ============================================
+   EARTH — Field Notes. Organic, solid, grounded.
+   ============================================ */
+body.element-earth {
+    --elem-radius: 8px;
+    --elem-radius-sm: 4px;
+    --elem-radius-lg: 12px;
+    --elem-speed: 0.35s;
+    --elem-weight: 600;
+    --elem-spacing: 0.01em;
+    --elem-border-opacity: 0.07;
+    --elem-glow-scale: 0.9;
+    --elem-section-tint: rgba(74,222,128,0.012);
+}
+
+/* Natural rounded corners */
+body.element-earth .section-card,
+body.element-earth .card,
+body.element-earth .inventory-item,
+body.element-earth .achievement-card,
+body.element-earth .boss-card,
+body.element-earth .venture-card,
+body.element-earth .genai-card,
+body.element-earth .portfolio-card,
+body.element-earth .quest-item,
+body.element-earth .academic-item {
+    border-radius: 8px !important;
+    transition: all 0.35s ease !important;
+}
+
+/* Grounded hover — more shadow, less lift */
+body.element-earth .section-card:hover,
+body.element-earth .card:hover,
+body.element-earth .boss-card:hover,
+body.element-earth .venture-card:hover,
+body.element-earth .genai-card:hover,
+body.element-earth .achievement-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4),
+                0 4px 12px rgba(var(--element-rgb, 74,222,128), 0.12),
+                0 0 0 1px rgba(var(--element-rgb, 74,222,128), 0.1) !important;
+}
+
+/* Solid typography */
+body.element-earth .section-tag {
+    font-weight: 700 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+}
+
+body.element-earth .section-title {
+    font-weight: 700 !important;
+}
+
+/* Warm section tint */
+body.element-earth .section {
+    background: linear-gradient(180deg, rgba(74,222,128,0.014) 0%, transparent 70%) !important;
+}
+
+/* Thick skill bars */
+body.element-earth .skill-row {
+    border-left: 2px solid rgba(var(--element-rgb, 74,222,128), 0.2) !important;
+    padding-left: 12px !important;
+}
+
+/* ============================================
+   AIR — Minimal, light, floating.
+   ============================================ */
+body.element-air {
+    --elem-radius: 100px;
+    --elem-radius-sm: 50px;
+    --elem-radius-lg: 100px;
+    --elem-speed: 0.18s;
+    --elem-weight: 300;
+    --elem-spacing: 0.02em;
+    --elem-border-opacity: 0.04;
+    --elem-glow-scale: 0.6;
+    --elem-section-tint: rgba(224,231,255,0.01);
+}
+
+/* Pill-shaped cards */
+body.element-air .section-card,
+body.element-air .card,
+body.element-air .boss-card,
+body.element-air .venture-card,
+body.element-air .genai-card,
+body.element-air .portfolio-card,
+body.element-air .quest-item,
+body.element-air .academic-item {
+    border-radius: 20px !important;
+    transition: all 0.18s ease-out !important;
+    background: rgba(255,255,255,0.015) !important;
+    border-color: rgba(255,255,255,0.04) !important;
+}
+
+/* Achievement + inventory stay round */
+body.element-air .achievement-card,
+body.element-air .inventory-item {
+    border-radius: 50% !important;
+}
+
+/* Floating hover — high lift, minimal shadow */
+body.element-air .section-card:hover,
+body.element-air .card:hover,
+body.element-air .boss-card:hover,
+body.element-air .venture-card:hover,
+body.element-air .genai-card:hover,
+body.element-air .achievement-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.15),
+                0 0 0 1px rgba(var(--element-rgb, 224,231,255), 0.06) !important;
+    background: rgba(255,255,255,0.025) !important;
+}
+
+/* Thin, airy typography */
+body.element-air .section-tag {
+    font-weight: 400 !important;
+    letter-spacing: 0.15em !important;
+    background: transparent !important;
+    border: 1px solid rgba(var(--element-rgb, 224,231,255), 0.15) !important;
+    border-radius: 100px !important;
+}
+
+body.element-air .section-title {
+    font-weight: 600 !important;
+    letter-spacing: -0.01em !important;
+}
+
+/* Very subtle section background */
+body.element-air .section {
+    background: transparent !important;
+}
+
+/* Thin pill skill bars */
+body.element-air .skill-bar {
+    height: 2px !important;
+    border-radius: 100px !important;
+}
+body.element-air .skill-bar-fill {
+    border-radius: 100px !important;
+}
+
+/* Pill everything in nav */
+body.element-air .blog-filter,
+body.element-air .mood-toggle,
+body.element-air .post-tag {
+    border-radius: 100px !important;
+}
+
+/* ============================================
+   ETHER — Arcane mode. Cosmic, mystical, intense.
+   ============================================ */
+body.element-ether {
+    --elem-radius: 12px;
+    --elem-radius-sm: 6px;
+    --elem-radius-lg: 18px;
+    --elem-speed: 0.25s;
+    --elem-weight: 500;
+    --elem-spacing: 0.005em;
+    --elem-border-opacity: 0.08;
+    --elem-glow-scale: 1.6;
+    --elem-section-tint: rgba(167,139,250,0.02);
+}
+
+/* Asymmetric feel via clip-path hint */
+body.element-ether .section-card,
+body.element-ether .card,
+body.element-ether .inventory-item,
+body.element-ether .achievement-card,
+body.element-ether .boss-card,
+body.element-ether .venture-card,
+body.element-ether .genai-card,
+body.element-ether .portfolio-card,
+body.element-ether .quest-item,
+body.element-ether .academic-item {
+    border-radius: 14px 6px 14px 6px !important;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    border-color: rgba(var(--element-rgb, 167,139,250), 0.1) !important;
+}
+
+/* Cosmic glow burst hover */
+body.element-ether .section-card:hover,
+body.element-ether .card:hover,
+body.element-ether .boss-card:hover,
+body.element-ether .venture-card:hover,
+body.element-ether .genai-card:hover,
+body.element-ether .achievement-card:hover {
+    transform: translateY(-4px) scale(1.02) !important;
+    box-shadow: 0 0 0 1px rgba(var(--element-rgb, 167,139,250), 0.2),
+                0 0 30px rgba(var(--element-rgb, 167,139,250), 0.15),
+                0 0 60px rgba(var(--element-rgb, 167,139,250), 0.05),
+                0 16px 32px rgba(0,0,0,0.4) !important;
+    border-radius: 6px 14px 6px 14px !important;
+}
+
+/* Mystical section tags */
+body.element-ether .section-tag {
+    font-weight: 600 !important;
+    letter-spacing: 0.14em !important;
+    border-radius: 4px 0 4px 0 !important;
+    border: 1px solid rgba(var(--element-rgb, 167,139,250), 0.25) !important;
+    background: rgba(var(--element-rgb, 167,139,250), 0.06) !important;
+}
+
+body.element-ether .section-title {
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+}
+
+/* Cosmic section tint */
+body.element-ether .section {
+    background: linear-gradient(180deg, rgba(167,139,250,0.022) 0%, transparent 80%) !important;
+}
+
+/* Arcane borders on skill rows */
+body.element-ether .skill-row {
+    border-right: 1px solid rgba(var(--element-rgb, 167,139,250), 0.15) !important;
+    padding-right: 12px !important;
+}
+
+/* Asymmetric nav buttons */
+body.element-ether .blog-filter,
+body.element-ether .mood-toggle {
+    border-radius: 8px 2px 8px 2px !important;
+}
+
+/* ============================================
+   ELEMENT ARENA ICON ANIMATIONS
+   Each element icon gets a unique idle animation
+   ============================================ */
+
+/* Base — GPU layer, no filter in keyframes (causes repaint jitter on hover) */
+.element-arena-icon {
+    display: block;
+    transform-origin: center;
+    will-change: transform;
+    isolation: isolate;
+}
+
+/* FIRE — flicker: rapid scale pulse + subtle rotation */
+@keyframes iconFire {
+    0%   { transform: scale(1)    rotate(0deg); }
+    15%  { transform: scale(1.08) rotate(-2deg); }
+    30%  { transform: scale(0.97) rotate(1deg); }
+    50%  { transform: scale(1.06) rotate(-1deg); }
+    70%  { transform: scale(0.98) rotate(2deg); }
+    85%  { transform: scale(1.05) rotate(-1deg); }
+    100% { transform: scale(1)    rotate(0deg); }
+}
+.element-arena-icon--fire {
+    animation: iconFire 1.8s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(255,107,53,0.5));
+}
+
+/* WATER — slow rocking wave motion */
+@keyframes iconWater {
+    0%   { transform: rotate(-4deg) translateY(0); }
+    25%  { transform: rotate(0deg)  translateY(-4px); }
+    50%  { transform: rotate(4deg)  translateY(0); }
+    75%  { transform: rotate(0deg)  translateY(4px); }
+    100% { transform: rotate(-4deg) translateY(0); }
+}
+.element-arena-icon--water {
+    animation: iconWater 3.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    filter: drop-shadow(0 4px 10px rgba(34,211,238,0.35));
+}
+
+/* EARTH — slow breathing pulse, very grounded */
+@keyframes iconEarth {
+    0%   { transform: scale(1)    translateY(0); }
+    40%  { transform: scale(1.06) translateY(-3px); }
+    60%  { transform: scale(1.06) translateY(-3px); }
+    100% { transform: scale(1)    translateY(0); }
+}
+.element-arena-icon--earth {
+    animation: iconEarth 4s ease-in-out infinite;
+    filter: drop-shadow(0 6px 10px rgba(74,222,128,0.3));
+}
+
+/* AIR — light float + gentle drift */
+@keyframes iconAir {
+    0%   { transform: translateY(0);   }
+    30%  { transform: translateY(-8px) rotate(3deg); }
+    60%  { transform: translateY(-4px) rotate(-2deg); }
+    80%  { transform: translateY(-9px) rotate(1deg); }
+    100% { transform: translateY(0);   }
+}
+.element-arena-icon--air {
+    animation: iconAir 5s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(224,231,255,0.35));
+}
+
+/* ETHER — continuous spin */
+@keyframes iconEther {
+    from { transform: rotate(0deg) scale(1); }
+    50%  { transform: rotate(180deg) scale(1.08); }
+    to   { transform: rotate(360deg) scale(1); }
+}
+.element-arena-icon--ether {
+    animation: iconEther 6s linear infinite;
+    filter: drop-shadow(0 0 12px rgba(167,139,250,0.5));
+}
+
+/* ============================================
+   ELEMENT TRANSITION — smooth personality swap
+   ============================================ */
+body {
+    transition: background 1.5s ease;
+}
+
+.section-card,
+.card,
+.inventory-item,
+.achievement-card,
+.boss-card,
+.venture-card,
+.genai-card,
+.portfolio-card,
+.quest-item,
+.academic-item {
+    transition-property: border-radius, border-color, background, box-shadow, transform;
+    transition-duration: 0.4s;
+    transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+}

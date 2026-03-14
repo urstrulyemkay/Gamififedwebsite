@@ -1,0 +1,56 @@
+/* ============================================
+   FOG-GATE.CSS — Dark Souls area name toast
+   Subtle bottom-center text, fires once per section.
+   ============================================ */
+
+.fog-gate {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9500;
+    pointer-events: none;
+    text-align: center;
+    opacity: 0;
+}
+
+.fog-gate-divider-top,
+.fog-gate-divider-bottom {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(var(--element-rgb, 228,255,26), 0.35) 50%,
+        transparent
+    );
+    margin: 0 auto;
+}
+
+.fog-gate-area {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.75);
+    padding: 10px 24px;
+    white-space: nowrap;
+}
+
+/* Fade in → hold → fade out */
+@keyframes fogToastIn {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(6px); }
+    20%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    75%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+}
+
+.fog-gate--show {
+    animation: fogToastIn 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (max-width: 768px) {
+    .fog-gate { bottom: 60px; }
+    .fog-gate-area { font-size: 11px; letter-spacing: 0.2em; }
+}

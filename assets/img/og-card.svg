@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A0A0A"/>
+      <stop offset="100%" stop-color="#141414"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E4FF1A" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#0A0A0A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <ellipse cx="600" cy="315" rx="400" ry="250" fill="url(#glow)"/>
+  <rect x="40" y="40" width="1120" height="550" rx="20" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <!-- Accent bar -->
+  <rect x="80" y="200" width="4" height="80" rx="2" fill="#E4FF1A"/>
+  <!-- Name -->
+  <text x="104" y="238" font-family="Inter, system-ui, sans-serif" font-size="52" font-weight="700" fill="#FFFFFF" letter-spacing="-0.03em">Mani Kumar Jami</text>
+  <!-- Title -->
+  <text x="104" y="275" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="400" fill="#A1A1A1" letter-spacing="-0.02em">Product Leader &amp; 2X Founder | AI Builder</text>
+  <!-- Stats -->
+  <text x="104" y="340" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="500" fill="#E4FF1A" letter-spacing="0.08em">STATS</text>
+  <text x="104" y="370" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="400" fill="#A1A1A1">$250M+ ARR  ·  200M+ Users  ·  15+ Products  ·  India's Firsts x3</text>
+  <!-- Tags -->
+  <rect x="104" y="410" width="64" height="28" rx="6" fill="rgba(228,255,26,0.1)"/>
+  <text x="136" y="429" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#E4FF1A" text-anchor="middle">LLMs</text>
+  <rect x="180" y="410" width="60" height="28" rx="6" fill="rgba(228,255,26,0.1)"/>
+  <text x="210" y="429" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#E4FF1A" text-anchor="middle">RAG</text>
+  <rect x="252" y="410" width="84" height="28" rx="6" fill="rgba(228,255,26,0.1)"/>
+  <text x="294" y="429" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#E4FF1A" text-anchor="middle">Voice AI</text>
+  <rect x="348" y="410" width="58" height="28" rx="6" fill="rgba(228,255,26,0.1)"/>
+  <text x="377" y="429" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#E4FF1A" text-anchor="middle">PLG</text>
+  <rect x="418" y="410" width="110" height="28" rx="6" fill="rgba(228,255,26,0.1)"/>
+  <text x="473" y="429" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#E4FF1A" text-anchor="middle">Marketplace</text>
+  <!-- URL -->
+  <text x="104" y="560" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="500" fill="rgba(255,255,255,0.3)" letter-spacing="0.04em">manikumarjami.com</text>
+  <!-- RPG badge -->
+  <text x="1080" y="560" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="rgba(228,255,26,0.4)" letter-spacing="0.08em" text-anchor="end">LVL 95 · LEGENDARY</text>
+</svg>

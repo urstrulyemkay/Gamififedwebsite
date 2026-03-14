@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mani Kumar Jami — Product Leader & 2X Founder | AI Builder</title>
+    <meta name="description" content="Product strategist, AI builder, and 2X founder based in Bengaluru. Built Meetbytravel to profitability. MBA Xavier, CFA L1, Bloomberg Certified. Explore my career like an RPG.">
+    <meta name="keywords" content="Mani Kumar Jami, Product Leader, AI Builder, Founder, Meetbytravel, DriveX, MBA Xavier, Product Strategy">
+    <meta name="author" content="Mani Kumar Jami">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://manikumarjami.com">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mani Kumar Jami — Product Leader & 2X Founder | AI Builder">
+    <meta property="og:description" content="Product strategist, AI builder, and 2X founder. $250M+ ARR, 200M+ users. Explore my career like an RPG adventure.">
+    <meta property="og:url" content="https://manikumarjami.com">
+    <meta property="og:site_name" content="Mani Kumar Jami">
+    <meta property="og:image" content="https://manikumarjami.com/assets/img/og-card.svg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Mani Kumar Jami — Product Leader, AI Builder, 2X Founder. Explore the RPG portfolio.">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@manikumarjami">
+    <meta name="twitter:creator" content="@manikumarjami">
+    <meta name="twitter:title" content="Mani Kumar Jami — Product Leader & 2X Founder | AI Builder">
+    <meta name="twitter:description" content="Product strategist, AI builder, and 2X founder. $250M+ ARR, 200M+ users. Explore my career like an RPG adventure.">
+    <meta name="twitter:image" content="https://manikumarjami.com/assets/img/og-card.svg">
+    <meta name="twitter:image:alt" content="Mani Kumar Jami — Product Leader, AI Builder, 2X Founder">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Mani Kumar Jami",
+        "url": "https://manikumarjami.com",
+        "jobTitle": "Product Lead",
+        "worksFor": { "@type": "Organization", "name": "DriveX" },
+        "alumniOf": [
+            { "@type": "EducationalOrganization", "name": "Xavier Institute of Management" },
+            { "@type": "EducationalOrganization", "name": "SRM University" }
+        ],
+        "knowsAbout": ["Product Strategy", "AI", "Machine Learning", "Entrepreneurship", "Investment Banking"],
+        "sameAs": [
+            "https://linkedin.com/in/manikumarjami",
+            "https://medium.com/@manikumarjami",
+            "https://substack.com/@emkayjami",
+            "https://x.com/manikumarjami",
+            "https://topmate.io/manikumarjami",
+            "https://meetbytravel.com"
+        ]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/elements.css">
+    <link rel="stylesheet" href="assets/css/fog-gate.css">
+    <link rel="stylesheet" href="assets/css/card-arena.css">
+    <link rel="stylesheet" href="assets/css/weather.css">
+</head>
+<body>
+
+    <!-- GAME BOOT SCREEN — Built dynamically from cms/content.js -->
+    <div id="game-boot" class="game-boot">
+        <canvas id="boot-canvas" class="boot-canvas"></canvas>
+        <div class="element-glow element-glow--fire"></div>
+        <div class="element-glow element-glow--water"></div>
+        <div class="element-glow element-glow--earth"></div>
+        <div class="element-glow element-glow--air"></div>
+        <div class="element-glow element-glow--ether"></div>
+        <div class="boot-content" id="boot-content"></div>
+    </div>
+
+    <!-- TERRITORY HUD (Age of Empires style) -->
+    <div class="territory-hud" id="territory-hud">
+        <div class="territory-banner" id="territory-banner">
+            <div class="territory-icon" id="territory-icon"></div>
+            <div class="territory-info">
+                <span class="territory-tag" id="territory-tag">ENTERING</span>
+                <span class="territory-name" id="territory-name"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Particle canvas -->
+    <canvas id="particles" class="particle-canvas"></canvas>
+
+    <!-- EMOJI AVATAR CURSOR -->
+    <div id="emoji-cursor" class="emoji-cursor">
+        <span class="cursor-emoji"></span>
+        <span class="cursor-label"></span>
+    </div>
+
+    <!-- MINI-MAP -->
+    <div class="minimap" id="minimap">
+        <div class="minimap-title">MAP</div>
+        <div class="minimap-dots" id="minimap-dots"></div>
+        <div class="minimap-player" id="minimap-player"></div>
+    </div>
+
+    <!-- RESOURCE HUD (strategy game style) -->
+    <div class="resource-hud" id="resource-hud">
+        <div class="resource-item" data-resource="intel">
+            <span class="resource-icon">&#x1F4A1;</span>
+            <span class="resource-val" id="res-intel">0</span>
+            <span class="resource-label">INTEL</span>
+        </div>
+        <div class="resource-item" data-resource="xp">
+            <span class="resource-icon">&#x2B50;</span>
+            <span class="resource-val" id="res-xp">0</span>
+            <span class="resource-label">XP</span>
+        </div>
+        <div class="resource-item" data-resource="territories">
+            <span class="resource-icon">&#x1F30D;</span>
+            <span class="resource-val" id="res-territories">0/9</span>
+            <span class="resource-label">ZONES</span>
+        </div>
+    </div>
+
+    <!-- COMBO COUNTER -->
+    <div class="combo-counter" id="combo-counter">
+        <span class="combo-number" id="combo-number">0</span>
+        <span class="combo-label">COMBO</span>
+    </div>
+
+    <!-- SOUND TOGGLE -->
+    <button class="sound-toggle" id="sound-toggle" aria-label="Toggle sound">
+        <span id="sound-icon">&#x1F50A;</span>
+    </button>
+
+    <!-- LEVEL-UP NOTIFICATION -->
+    <div class="levelup-toast" id="levelup-toast">
+        <div class="levelup-icon">&#x2B50;</div>
+        <div class="levelup-text">
+            <span class="levelup-title">LEVEL UP!</span>
+            <span class="levelup-desc" id="levelup-desc">You reached LVL 2</span>
+        </div>
+    </div>
+
+    <!-- ACHIEVEMENT TOAST -->
+    <div class="achievement-toast" id="achievement-toast">
+        <div class="ach-toast-icon" id="ach-toast-icon">&#x1F3C6;</div>
+        <div class="ach-toast-text">
+            <span class="ach-toast-title" id="ach-toast-title">Achievement Unlocked</span>
+            <span class="ach-toast-desc" id="ach-toast-desc"></span>
+        </div>
+    </div>
+
+    <!-- SAVE GAME BANNER -->
+    <div class="save-banner" id="save-banner">
+        <div class="save-banner-inner">
+            <span>&#x1F3AE; Welcome back, adventurer!</span>
+            <button class="save-resume-btn" id="save-resume-btn">Resume from LVL <span id="save-level">1</span></button>
+            <button class="save-dismiss-btn" id="save-dismiss-btn">Start Fresh</button>
+        </div>
+    </div>
+
+    <!-- XP NAV BAR — links built from cms/content.js -->
+    <nav id="xp-nav">
+        <div class="nav-inner">
+            <div class="nav-left">
+                <span class="nav-name" id="nav-name"></span>
+                <button class="element-reselect" id="element-reselect" title="Change Element">
+                    <span class="element-reselect-icon" id="element-reselect-icon"></span>
+                    <span class="element-reselect-label" id="element-reselect-label"></span>
+                </button>
+                <div class="mood-selector" id="mood-selector">
+                    <div class="mood-toggle" id="mood-toggle">
+                        <span class="mood-toggle-icon" id="mood-toggle-icon"></span>
+                        <span class="mood-toggle-label" id="mood-toggle-label"></span>
+                    </div>
+                    <div class="mood-dropdown" id="mood-dropdown"></div>
+                </div>
+                <div class="xp-badge" id="xp-badge">
+                    <span class="xp-level" id="xp-level">LVL 1</span>
+                    <div class="xp-bar-track" title="Click to jump to any point">
+                        <div class="xp-bar-fill" id="xp-fill"></div>
+                        <div class="xp-bar-marker" id="xp-bar-marker"></div>
+                    </div>
+                    <span class="xp-percent" id="xp-percent">0%</span>
+                    <span class="xp-zones" id="xp-zones">0/12</span>
+                </div>
+            </div>
+            <div class="nav-links" id="nav-links-desktop"></div>
+            <div class="nav-hamburger" id="hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="mobile-menu" id="mobile-menu"></div>
+    </nav>
+
+    <main>
+    <!-- HERO — CHARACTER CARD REVEAL -->
+    <section id="about" class="hero-section fog-section" data-fog="true" aria-label="About Mani Kumar Jami">
+        <canvas id="hero-particles" class="hero-particle-canvas"></canvas>
+        <div class="hero-content">
+            <div class="hero-card-wrapper" id="hero-card-wrapper">
+                <div class="hero-card" id="hero-card">
+                    <!-- Card Front -->
+                    <div class="hcard-front">
+                        <div class="hcard-glow-ring"></div>
+                        <div class="hcard-header">
+                            <span class="hcard-class" id="hcard-class"></span>
+                            <span class="hcard-level" id="hcard-level"></span>
+                        </div>
+                        <div class="hcard-name-block">
+                            <h1 class="hcard-name" id="hcard-name"></h1>
+                            <p class="hcard-tagline" id="hcard-tagline"></p>
+                        </div>
+                        <div class="hcard-bars" id="hcard-bars"></div>
+                        <div class="hcard-summary" id="hcard-summary"></div>
+                        <div class="hcard-highlights" id="hcard-highlights"></div>
+                        <div class="hcard-tags" id="hcard-tags"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-glow"></div>
+        <div class="hero-glow-secondary"></div>
+        <div class="scroll-hint" id="scroll-hint">
+            <span>Scroll to explore</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- All section headers populated from cms/content.js sectionHeaders -->
+    <section id="quest-log" class="section fog-section" data-fog="true" aria-label="Professional Experience">
+        <div class="section-container">
+            <div class="section-header" data-section-key="quest-log"></div>
+            <div class="timeline" id="professional-timeline"></div>
+        </div>
+    </section>
+
+    <section id="academic" class="section section-surface fog-section" data-fog="true" aria-label="Education">
+        <div class="section-container">
+            <div class="section-header" data-section-key="academic"></div>
+            <div class="acad-tree" id="academic-tree"></div>
+        </div>
+    </section>
+
+    <section id="ventures" class="section fog-section" data-fog="true" aria-label="Entrepreneurship">
+        <div class="section-container">
+            <div class="section-header" data-section-key="ventures"></div>
+            <div class="venture-grid" id="venture-grid"></div>
+        </div>
+    </section>
+
+    <section id="boss-battles" class="section section-surface fog-section" data-fog="true" aria-label="Boss Battles">
+        <div class="section-container">
+            <div class="section-header" data-section-key="boss-battles"></div>
+            <div class="boss-grid-wrap">
+                <div class="boss-grid" id="boss-grid"></div>
+            </div>
+            <div class="battle-scars" id="battle-scars"></div>
+        </div>
+    </section>
+
+    <section id="skill-tree" class="section section-surface fog-section" data-fog="true" aria-label="Skills">
+        <div class="section-container">
+            <div class="section-header-row">
+                <div class="section-header" data-section-key="skill-tree"></div>
+                <div class="xp-counter reveal" id="xp-counter">
+                    <span class="xp-number" id="xp-total">0</span>
+                    <span class="xp-label">TOTAL XP EARNED</span>
+                </div>
+            </div>
+            <div class="skills-list" id="skills-list"></div>
+        </div>
+    </section>
+
+    <section id="stats" class="section fog-section" data-fog="true" aria-label="Character Stats">
+        <div class="section-container">
+            <div class="section-header" data-section-key="stats"></div>
+            <div class="stats-wrapper reveal">
+                <canvas id="radar-chart" width="400" height="400"></canvas>
+                <div class="stats-legend" id="stats-legend"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="genai" class="section fog-section" data-fog="true" aria-label="GenAI Portfolio">
+        <div class="section-container">
+            <div class="section-header" data-section-key="genai"></div>
+            <div class="genai-grid" id="genai-grid"></div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="section section-surface fog-section" data-fog="true" aria-label="Portfolio">
+        <div class="section-container">
+            <div class="section-header" data-section-key="portfolio"></div>
+            <div class="portfolio-grid" id="portfolio-grid"></div>
+        </div>
+    </section>
+
+    <section id="inventory" class="section section-surface fog-section" data-fog="true" aria-label="Tech Stack">
+        <div class="section-container">
+            <div class="section-header" data-section-key="inventory"></div>
+            <div class="inventory-grid" id="inventory-grid"></div>
+        </div>
+    </section>
+
+    <section id="achievements" class="section fog-section" data-fog="true" aria-label="Achievements">
+        <div class="section-container">
+            <div class="section-header" data-section-key="achievements"></div>
+            <div class="achievement-grid" id="achievement-grid"></div>
+        </div>
+    </section>
+
+    <!-- CTA — DIALOGUE BOX -->
+    <section id="contact" class="section cta-section fog-section" data-fog="true" aria-label="Contact">
+        <div class="cta-glow"></div>
+        <div class="dialogue-box reveal" id="dialogue-box">
+            <div class="dialogue-header">
+                <span class="dialogue-npc-icon">&#x1F9D9;&#x200D;&#x2642;&#xFE0F;</span>
+                <span class="dialogue-npc-name" id="dialogue-npc-name"></span>
+            </div>
+            <p class="dialogue-text" id="dialogue-text"></p>
+            <div class="dialogue-options" id="dialogue-options"></div>
+        </div>
+    </section>
+    </main>
+
+    <!-- BOUNCING SOCIAL BALLOONS -->
+    <section class="balloon-cta" id="balloon-cta">
+        <div class="balloon-cta-label">CONNECT WITH ME</div>
+        <div class="balloon-field" id="balloon-field">
+            <a href="https://substack.com/@emkayjami" target="_blank" rel="noopener" class="balloon-link" data-color="#FF6719" aria-label="Substack">
+                <div class="balloon-orb">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+                </div>
+                <span class="balloon-label">Substack</span>
+                <div class="balloon-string"></div>
+            </a>
+            <a href="https://linkedin.com/in/manikumarjami" target="_blank" rel="noopener" class="balloon-link" data-color="#0A66C2" aria-label="LinkedIn">
+                <div class="balloon-orb">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </div>
+                <span class="balloon-label">LinkedIn</span>
+                <div class="balloon-string"></div>
+            </a>
+            <a href="https://x.com/urstrulyemkay" target="_blank" rel="noopener" class="balloon-link" data-color="#FFFFFF" aria-label="X / Twitter">
+                <div class="balloon-orb">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </div>
+                <span class="balloon-label">X / Twitter</span>
+                <div class="balloon-string"></div>
+            </a>
+            <a href="mailto:manikumarjami@gmail.com" class="balloon-link balloon-cta-btn" data-color="#E4FF1A" aria-label="Get in Touch">
+                <div class="balloon-orb">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+                <span class="balloon-label">Get in Touch</span>
+                <div class="balloon-string"></div>
+            </a>
+            <a href="mailto:manikumarjami@gmail.com" class="balloon-link balloon-cta-btn" data-color="#4ADE80" aria-label="Email Me">
+                <div class="balloon-orb">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10h5v-2h-5c-4.34 0-8-3.66-8-8s3.66-8 8-8 8 3.66 8 8v1.43c0 .79-.71 1.57-1.5 1.57s-1.5-.78-1.5-1.57V12c0-2.76-2.24-5-5-5s-5 2.24-5 5 2.24 5 5 5c1.38 0 2.64-.56 3.54-1.47.65.89 1.77 1.47 2.96 1.47 1.97 0 3.5-1.6 3.5-3.57V12c0-5.52-4.48-10-10-10zm0 13c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/></svg>
+                </div>
+                <span class="balloon-label">Email Me</span>
+                <div class="balloon-string"></div>
+            </a>
+        </div>
+    </section>
+
+    <!-- GUILD SUBSCRIBE -->
+    <section class="subscribe-section reveal" id="subscribe-section">
+        <div class="subscribe-container">
+            <span class="subscribe-tag" id="subscribe-tag"></span>
+            <h3 class="subscribe-title" id="subscribe-title"></h3>
+            <p class="subscribe-desc" id="subscribe-desc"></p>
+            <form class="subscribe-form" id="subscribe-form" autocomplete="off">
+                <div class="subscribe-input-wrap">
+                    <input type="email" class="subscribe-input" id="subscribe-email" required>
+                    <button type="submit" class="subscribe-btn" id="subscribe-btn">
+                        <span class="subscribe-btn-text"></span>
+                    </button>
+                </div>
+                <span class="subscribe-status" id="subscribe-status"></span>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-top">
+            <span class="footer-copy">&copy; 2026 <span id="footer-name"></span></span>
+            <span class="footer-craft">Crafted as an RPG adventure &#x2694;&#xFE0F;</span>
+        </div>
+        <div class="footer-links" id="footer-links"></div>
+    </footer>
+
+    <!-- SCROLL GLOW -->
+    <div class="scroll-glow" id="scroll-glow"></div>
+
+    <!-- BACK TO TOP -->
+    <button class="back-to-top" id="back-to-top" aria-label="Back to top">&#x2191;</button>
+
+    <!-- MASCOT — floating assistant -->
+    <div class="mascot" id="mascot">
+        <div class="mascot-body" id="mascot-body">
+            <div class="mascot-face">
+                <div class="mascot-eyes">
+                    <span class="mascot-eye left"></span>
+                    <span class="mascot-eye right"></span>
+                </div>
+                <div class="mascot-mouth"></div>
+            </div>
+            <div class="mascot-glow"></div>
+        </div>
+        <div class="mascot-bubble" id="mascot-bubble">
+            <span class="mascot-bubble-text" id="mascot-bubble-text">Hey! Click me for tips</span>
+        </div>
+    </div>
+
+    <!-- STORY OVERLAY (hero card backstory) -->
+    <div class="story-overlay" id="story-overlay">
+        <div class="story-panel" id="story-panel">
+            <button class="story-close" id="story-close">&times;</button>
+            <div class="story-scroll" id="story-scroll"></div>
+        </div>
+    </div>
+
+    <!-- CARD ARENA OVERLAY -->
+    <div class="card-arena" id="card-arena">
+        <div class="arena-bg">
+            <div class="arena-orb"></div>
+            <div class="arena-orb"></div>
+            <div class="arena-orb"></div>
+        </div>
+        <div class="arena-scroll" id="arena-scroll"></div>
+        <div class="arena-hand" id="arena-hand"></div>
+    </div>
+
+    <!-- CARD DRAW OVERLAY -->
+    <div class="arena-draw-overlay" id="arena-draw-overlay"></div>
+
+    <!-- PM IDENTITY REVEAL -->
+    <div class="arena-identity" id="arena-identity"></div>
+
+    <!-- CMD+K COMMAND PALETTE -->
+    <div class="cmd-palette-overlay" id="cmd-overlay">
+        <div class="cmd-palette" id="cmd-palette">
+            <div class="cmd-header">
+                <span class="cmd-icon">&#x2318;</span>
+                <input type="text" class="cmd-input" id="cmd-input" placeholder="Search sections, actions, easter eggs..." autocomplete="off" spellcheck="false">
+                <kbd class="cmd-esc">ESC</kbd>
+            </div>
+            <div class="cmd-results" id="cmd-results"></div>
+            <div class="cmd-footer">
+                <span><kbd>&#x2191;&#x2193;</kbd> Navigate</span>
+                <span><kbd>&#x23CE;</kbd> Select</span>
+                <span><kbd>ESC</kbd> Close</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ELEMENT ARENA — fullscreen element selection -->
+    <div id="element-arena"></div>
+
+    <!-- WEATHER INDICATOR (fallback, hidden when mood selector active) -->
+    <div class="weather-indicator" id="weather-indicator">
+        <span class="weather-icon" id="weather-icon"></span>
+        <span class="weather-label" id="weather-label"></span>
+    </div>
+
+    <!-- LIGHTNING FLASH OVERLAY -->
+    <div class="weather-lightning" id="weather-lightning"></div>
+
+    <!-- LOOT DROP NOTIFICATION -->
+    <div class="loot-drop-toast" id="loot-drop-toast">
+        <div class="loot-drop-glow"></div>
+        <div class="loot-icon" id="loot-icon"></div>
+        <div class="loot-info">
+            <span class="loot-rarity" id="loot-rarity">RARE</span>
+            <span class="loot-name" id="loot-name"></span>
+            <span class="loot-flavor" id="loot-flavor"></span>
+        </div>
+    </div>
+
+    <!-- LOOT COLLECTION TRACKER -->
+    <div class="loot-collection" id="loot-collection">
+        <div class="loot-collection-header">
+            <span class="loot-collection-icon">&#x1F392;</span>
+            <span class="loot-collection-title">LOOT BAG</span>
+            <span class="loot-collection-count" id="loot-count">0/12</span>
+        </div>
+        <div class="loot-collection-grid" id="loot-grid"></div>
+    </div>
+
+
+    <!-- STORY CHAPTER BAR -->
+    <div class="story-bar" id="story-bar">
+        <div class="story-chapters" id="story-chapters"></div>
+        <div class="story-progress" id="story-progress"></div>
+    </div>
+
+    <!-- DIFFICULTY BADGE -->
+    <div class="difficulty-badge" id="difficulty-badge">
+        <span class="diff-icon"></span>
+        <span class="diff-label" id="diff-label">NORMAL</span>
+    </div>
+
+    <!-- JOURNEY SUMMARY (Year in Review) -->
+    <div class="journey-summary-overlay" id="journey-overlay">
+        <div class="journey-summary" id="journey-summary">
+            <button class="journey-close" id="journey-close">&times;</button>
+            <div class="journey-content" id="journey-content"></div>
+        </div>
+    </div>
+
+    <!-- ROLE SELECTION (boot screen addition) -->
+    <div class="role-select" id="role-select" style="display:none">
+        <p class="role-prompt">Who are you, adventurer?</p>
+        <div class="role-options" id="role-options"></div>
+    </div>
+
+    <script src="cms/content.js"></script>
+    <script src="assets/js/sounds.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/card-arena.js"></script>
+    <script src="assets/js/loot.js"></script>
+    <script src="assets/js/weather.js"></script>
+</body>
+</html>
