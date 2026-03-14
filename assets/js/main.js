@@ -1577,6 +1577,7 @@ function initSaveGame() {
 
             dismissBtn.addEventListener("click", () => {
                 banner.classList.remove("show");
+                window.scrollTo({ top: 0, behavior: "smooth" });
             });
         }
     }
