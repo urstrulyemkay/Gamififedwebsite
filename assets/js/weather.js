@@ -29,6 +29,10 @@
 
         // ========= UTILITIES =========
 
+        // Weather container — clips all effects to viewport, prevents horizontal scroll
+        var _weatherContainer = document.getElementById("weather-container") || document.body;
+        function weatherAppend(el) { _weatherContainer.appendChild(el); }
+
         // Scroll-based mood progression
         var SCROLL_MOODS = ["day", "dawn", "dusk", "night", "storm"];
         function getScrollMood() {
@@ -93,7 +97,7 @@
             tint.className = "weather-tint";
             tint.style.background = color;
             tint.style.opacity = "0";
-            document.body.appendChild(tint);
+            weatherAppend(tint);
             // Fade in
             requestAnimationFrame(function() {
                 tint.style.transition = "opacity 1.5s ease-in";
@@ -124,7 +128,7 @@
                 star.style.width = star.style.height = size + "px";
                 container.appendChild(star);
             }
-            document.body.appendChild(container);
+            weatherAppend(container);
             fadeIn(container);
 
             if (!window._weatherShootTimeouts) window._weatherShootTimeouts = [];
@@ -147,7 +151,7 @@
             var mw = document.createElement("div");
             mw.className = "weather-milkyway";
             mw.style.opacity = "0";
-            document.body.appendChild(mw);
+            weatherAppend(mw);
             fadeIn(mw);
         }
 
@@ -169,7 +173,7 @@
                 crater.style.width = c.w + "px"; crater.style.height = c.h + "px";
                 moon.appendChild(crater);
             });
-            document.body.appendChild(moon);
+            weatherAppend(moon);
             fadeIn(moon, 2000);
         }
 
@@ -191,7 +195,7 @@
                 fly.style.animationDelay = rand(0, 10) + "s";
                 var size = rand(4, 8);
                 fly.style.width = fly.style.height = size + "px";
-                document.body.appendChild(fly);
+                weatherAppend(fly);
             }
         }
 
@@ -211,14 +215,14 @@
                 drop.style.animationDuration = (speedBase + rand(0, 0.4)) + "s";
                 drop.style.animationDelay = rand(0, 2) + "s";
                 if (heavy) drop.style.transform = "rotate(8deg)";
-                document.body.appendChild(drop);
+                weatherAppend(drop);
             }
             window._weatherSplashInterval = setInterval(function() {
                 var splash = document.createElement("div");
                 splash.className = "rain-splash";
                 splash.style.left = rand(0, 100) + "%";
                 splash.style.background = color;
-                document.body.appendChild(splash);
+                weatherAppend(splash);
                 setTimeout(function() { splash.remove(); }, 600);
             }, heavy ? 100 : 350);
 
@@ -239,7 +243,7 @@
                 p.style.height = (w * 0.3) + "px";
                 p.style.animationDelay = rand(0, 3) + "s";
                 p.style.animationDuration = rand(2, 4) + "s";
-                document.body.appendChild(p);
+                weatherAppend(p);
             }
         }
 
@@ -255,7 +259,7 @@
                 cloud.style.animationDuration = (dark ? 12 : 22) + rand(0, 25) + "s";
                 cloud.style.animationDelay = -rand(0, 40) + "s";
                 cloud.style.opacity = (dark ? 0.6 : 0.3) + rand(0, 0.4);
-                document.body.appendChild(cloud);
+                weatherAppend(cloud);
             }
         }
 
@@ -285,7 +289,7 @@
                     branch.style.transformOrigin = "top left";
                     bolt.appendChild(branch);
                 }
-                document.body.appendChild(bolt);
+                weatherAppend(bolt);
                 setTimeout(function() { bolt.remove(); }, 450);
 
                 document.body.classList.add("weather-shaking");
@@ -324,7 +328,7 @@
             orb.className = "weather-sun-orb";
             orb.innerHTML = '<div class="weather-sun-rays"></div>';
             orb.style.opacity = "0";
-            document.body.appendChild(orb);
+            weatherAppend(orb);
             fadeIn(orb, 2000);
             for (var i = 0; i < 5; i++) {
                 var flare = document.createElement("div");
@@ -334,7 +338,7 @@
                 flare.style.transform = "rotate(" + rand(-25, 25) + "deg)";
                 flare.style.animationDelay = (i * 1.2) + "s";
                 flare.style.width = rand(100, 250) + "px";
-                document.body.appendChild(flare);
+                weatherAppend(flare);
             }
             addTint("radial-gradient(ellipse at 80% 0%, rgba(228,255,26,0.05) 0%, transparent 45%)");
         }
@@ -349,14 +353,14 @@
                 ray.style.transform = "rotate(" + rand(-15, 5) + "deg)";
                 ray.style.animationDelay = (i * 1.5) + "s";
                 ray.style.animationDuration = rand(6, 12) + "s";
-                document.body.appendChild(ray);
+                weatherAppend(ray);
             }
         }
 
         function buildHeatShimmer() {
             var shimmer = document.createElement("div");
             shimmer.className = "weather-heat-shimmer";
-            document.body.appendChild(shimmer);
+            weatherAppend(shimmer);
             var mirage = document.createElement("div");
             mirage.className = "weather-mirage";
             for (var i = 0; i < 6; i++) {
@@ -367,7 +371,7 @@
                 line.style.animationDuration = (2 + i * 0.3) + "s";
                 mirage.appendChild(line);
             }
-            document.body.appendChild(mirage);
+            weatherAppend(mirage);
         }
 
         function buildDustMotes() {
@@ -382,7 +386,7 @@
                 d.style.boxShadow = "0 0 " + rand(3, 6) + "px rgba(228,255,26,0.15)";
                 d.style.animationDuration = rand(6, 12) + "s";
                 d.style.animationDelay = rand(0, 10) + "s";
-                document.body.appendChild(d);
+                weatherAppend(d);
             }
         }
 
@@ -392,16 +396,16 @@
             var glow = document.createElement("div");
             glow.className = "weather-dawn-glow";
             glow.style.opacity = "0";
-            document.body.appendChild(glow);
+            weatherAppend(glow);
             fadeIn(glow, 1500);
             var sun = document.createElement("div");
             sun.className = "weather-dawn-sun";
             sun.style.opacity = "0";
-            document.body.appendChild(sun);
+            weatherAppend(sun);
             fadeIn(sun, 2000);
             var horizon = document.createElement("div");
             horizon.className = "weather-horizon";
-            document.body.appendChild(horizon);
+            weatherAppend(horizon);
             addTint("linear-gradient(180deg, transparent 0%, rgba(245,158,11,0.04) 60%, rgba(255,107,53,0.05) 100%)");
         }
 
@@ -415,7 +419,7 @@
                 ray.style.transform = "rotate(" + rand(-20, 20) + "deg)";
                 ray.style.animationDelay = (i * 0.8) + "s";
                 ray.style.animationDuration = rand(5, 9) + "s";
-                document.body.appendChild(ray);
+                weatherAppend(ray);
             }
         }
 
@@ -430,7 +434,7 @@
                 m.style.boxShadow = "0 0 " + rand(4, 8) + "px rgba(245,158,11,0.4)";
                 m.style.animationDuration = rand(5, 12) + "s";
                 m.style.animationDelay = rand(0, 14) + "s";
-                document.body.appendChild(m);
+                weatherAppend(m);
             }
         }
 
@@ -443,7 +447,7 @@
                 bird.style.fontSize = rand(10, 16) + "px";
                 bird.style.animationDuration = rand(15, 30) + "s";
                 bird.style.animationDelay = rand(0, 20) + "s";
-                document.body.appendChild(bird);
+                weatherAppend(bird);
             }
         }
 
@@ -456,7 +460,7 @@
                 p.style.background = "linear-gradient(90deg, transparent, " + color + ", transparent)";
                 p.style.animationDuration = rand(3, 6) + "s";
                 p.style.animationDelay = rand(0, 10) + "s";
-                document.body.appendChild(p);
+                weatherAppend(p);
             }
             var leafEmojis = ["\u{1F343}", "\u{1F342}", "\u{1F341}", "\u{1F33F}"];
             for (var i = 0; i < 5; i++) {
@@ -466,7 +470,7 @@
                 leaf.style.top = rand(10, 70) + "%";
                 leaf.style.animationDuration = rand(6, 12) + "s";
                 leaf.style.animationDelay = rand(0, 14) + "s";
-                document.body.appendChild(leaf);
+                weatherAppend(leaf);
             }
         }
 
@@ -482,7 +486,7 @@
                 s.style.fontSize = rand(8, 20) + "px";
                 s.style.animationDuration = rand(4, 8) + "s";
                 s.style.animationDelay = rand(0, 10) + "s";
-                document.body.appendChild(s);
+                weatherAppend(s);
             }
             addTint("linear-gradient(180deg, rgba(180,200,220,0.07) 0%, rgba(148,163,184,0.03) 30%, transparent 50%)");
         }
@@ -491,14 +495,14 @@
             var frost = document.createElement("div");
             frost.className = "weather-frost";
             frost.style.opacity = "0";
-            document.body.appendChild(frost);
+            weatherAppend(frost);
             fadeIn(frost, 2000);
         }
 
         function buildFogLayer() {
             var fog = document.createElement("div");
             fog.className = "weather-fog";
-            document.body.appendChild(fog);
+            weatherAppend(fog);
         }
 
         function buildBreath() {
@@ -511,7 +515,7 @@
                 b.style.width = b.style.height = size + "px";
                 b.style.animationDelay = (i * 2.5) + "s";
                 b.style.animationDuration = rand(5, 8) + "s";
-                document.body.appendChild(b);
+                weatherAppend(b);
             }
         }
 
@@ -532,7 +536,7 @@
                 e.style.boxShadow = "0 0 " + rand(5, 10) + "px " + (isHot ? "rgba(255,100,50,0.5)" : "rgba(245,158,11,0.4)");
                 e.style.animationDuration = rand(2.5, 5) + "s";
                 e.style.animationDelay = rand(0, 6) + "s";
-                document.body.appendChild(e);
+                weatherAppend(e);
             }
             addTint("radial-gradient(ellipse at 50% 100%, rgba(239,68,68,0.06) 0%, rgba(245,158,11,0.03) 30%, transparent 55%)");
         }
@@ -546,14 +550,14 @@
                 f.style.animationDuration = rand(1.5, 3) + "s";
                 f.style.width = rand(40, 80) + "px";
                 f.style.height = rand(60, 120) + "px";
-                document.body.appendChild(f);
+                weatherAppend(f);
             }
         }
 
         function buildScreenPulse() {
             var pulse = document.createElement("div");
             pulse.className = "weather-screen-pulse";
-            document.body.appendChild(pulse);
+            weatherAppend(pulse);
         }
 
         function buildBurstExplosions() {
@@ -572,7 +576,7 @@
                     var dist = rand(30, 80);
                     p.style.setProperty("--bx", Math.cos(angle) * dist + "px");
                     p.style.setProperty("--by", Math.sin(angle) * dist + "px");
-                    document.body.appendChild(p);
+                    weatherAppend(p);
                     setTimeout(function(el) { el.remove(); }.bind(null, p), 800);
                 }
             }, 3000 + rand(0, 4000));
@@ -584,7 +588,7 @@
             var ribbon = document.createElement("div");
             ribbon.className = "weather-aurora-ribbon";
             ribbon.style.opacity = "0";
-            document.body.appendChild(ribbon);
+            weatherAppend(ribbon);
             fadeIn(ribbon, 2000);
         }
 
@@ -599,7 +603,7 @@
                 p.style.animationDuration = rand(12, 25) + "s";
                 p.style.animationDelay = rand(0, 15) + "s";
                 p.style.fontSize = rand(12, 20) + "px";
-                document.body.appendChild(p);
+                weatherAppend(p);
             }
         }
 
@@ -611,7 +615,7 @@
                 r.style.width = r.style.height = size + "px";
                 r.style.left = rand(10, 90) + "%";
                 r.style.top = rand(20, 80) + "%";
-                document.body.appendChild(r);
+                weatherAppend(r);
                 setTimeout(function() { r.remove(); }, 4000);
             }, 2000 + rand(0, 3000));
         }
@@ -619,7 +623,7 @@
         function buildZenBreathe() {
             var b = document.createElement("div");
             b.className = "weather-zen-breathe";
-            document.body.appendChild(b);
+            weatherAppend(b);
         }
 
         // ── CREATIVE ───────────────────────────
@@ -633,7 +637,7 @@
                 band.className = "weather-aurora-band";
                 container.appendChild(band);
             }
-            document.body.appendChild(container);
+            weatherAppend(container);
             fadeIn(container, 2000);
             addTint("linear-gradient(180deg, rgba(20,10,40,0.25) 0%, rgba(15,5,30,0.1) 30%, transparent 55%)");
         }
@@ -656,7 +660,7 @@
                 d.style.width = d.style.height = size + "px";
                 d.style.animationDuration = rand(5, 12) + "s";
                 d.style.animationDelay = rand(0, 12) + "s";
-                document.body.appendChild(d);
+                weatherAppend(d);
             }
         }
 
@@ -676,7 +680,7 @@
                 n.style.animationDelay = (i * 4) + "s";
                 n.style.animationDuration = (18 + i * 5) + "s";
                 n.style.opacity = "0";
-                document.body.appendChild(n);
+                weatherAppend(n);
                 fadeIn(n, 3000);
             });
         }
@@ -698,7 +702,7 @@
                 s.style.background = "radial-gradient(ellipse, " + splashColors[i] + ", transparent 60%)";
                 s.style.animationDelay = (i * 2) + "s";
                 s.style.animationDuration = rand(8, 15) + "s";
-                document.body.appendChild(s);
+                weatherAppend(s);
             }
         }
 
@@ -711,7 +715,7 @@
                 p.style.width = rand(200, 400) + "px";
                 p.style.animationDelay = (i * 3) + "s";
                 p.style.animationDuration = rand(6, 12) + "s";
-                document.body.appendChild(p);
+                weatherAppend(p);
             }
         }
 
@@ -721,7 +725,7 @@
             var sky = document.createElement("div");
             sky.className = "weather-dusk-sky";
             sky.style.opacity = "0";
-            document.body.appendChild(sky);
+            weatherAppend(sky);
             fadeIn(sky, 1500);
         }
 
@@ -751,7 +755,7 @@
                         "opacity:0",
                         "animation:lavaFall " + (3 + Math.random() * 5) + "s " + (Math.random() * 8) + "s ease-in infinite"
                     ].join(";");
-                    document.body.appendChild(drop);
+                    weatherAppend(drop);
                 })(i);
             }
         }
@@ -772,7 +776,7 @@
                         "top:-10px",
                         "animation:ashFall " + (4 + Math.random() * 6) + "s " + (Math.random() * 5) + "s linear infinite"
                     ].join(";");
-                    document.body.appendChild(ash);
+                    weatherAppend(ash);
                 })();
             }
         }
@@ -781,7 +785,7 @@
             var sky = document.createElement("div");
             sky.className = "weather-lava-sky";
             sky.style.cssText = "position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 120%, rgba(255,69,0,0.18) 0%, rgba(139,0,0,0.08) 50%, transparent 70%);animation:lavaPulse 3s ease-in-out infinite;";
-            document.body.appendChild(sky);
+            weatherAppend(sky);
         }
 
         function buildEruptionBurst() {
@@ -789,7 +793,7 @@
                 var flash = document.createElement("div");
                 flash.className = "weather-lava-sky";
                 flash.style.cssText = "position:fixed;inset:0;z-index:4;pointer-events:none;background:rgba(255,100,0,0.12);animation:eruptFlash 0.6s ease-out forwards;";
-                document.body.appendChild(flash);
+                weatherAppend(flash);
                 // Spawn burst particles from bottom center
                 for (var i = 0; i < 16; i++) {
                     (function(i) {
@@ -801,7 +805,7 @@
                         var dx = Math.sin(angle * Math.PI / 180) * dist;
                         var dy = -Math.cos(angle * Math.PI / 180) * dist;
                         p.style.cssText = "position:fixed;z-index:4;pointer-events:none;border-radius:50%;width:" + size + "px;height:" + size + "px;background:radial-gradient(circle, #FFA500, #FF4500);left:calc(50% + " + dx + "px);bottom:" + Math.max(0, -dy) + "px;opacity:0;animation:eruptParticle 1s " + (Math.random() * 0.3) + "s ease-out forwards;";
-                        document.body.appendChild(p);
+                        weatherAppend(p);
                         setTimeout(function() { p.remove(); }, 1400);
                     })(i);
                 }
@@ -831,7 +835,7 @@
                         "animation:blizzardFall " + speed + "s " + (Math.random() * 4) + "s linear infinite",
                         "--drift:" + drift + "vw"
                     ].join(";");
-                    document.body.appendChild(flake);
+                    weatherAppend(flake);
                 })();
             }
         }
@@ -852,7 +856,7 @@
                     "animation:icicleGrow 2s " + (Math.random() * 3) + "s ease-out forwards",
                     "transform:scaleY(0)", "transform-origin:top"
                 ].join(";");
-                document.body.appendChild(icicle);
+                weatherAppend(icicle);
             }
         }
 
@@ -865,7 +869,7 @@
                     (isTop ? "top:0" : "bottom:0") + ";" + (isLeft ? "left:0" : "right:0") + ";" +
                     "background:radial-gradient(circle at " + (isLeft?"0%":"100%") + " " + (isTop?"0%":"100%") + ", rgba(186,230,253,0.35) 0%, transparent 70%);" +
                     "animation:freezeIn 3s " + (i * 0.5) + "s ease-out forwards;opacity:0;";
-                document.body.appendChild(frost);
+                weatherAppend(frost);
             });
         }
 
@@ -874,7 +878,7 @@
                 var w = document.createElement("div");
                 w.className = "weather-blizzard-snow";
                 w.style.cssText = "position:fixed;inset:0;z-index:4;pointer-events:none;background:rgba(220,240,255,0.15);animation:whiteoutFlash 1.2s ease-in-out forwards;";
-                document.body.appendChild(w);
+                weatherAppend(w);
                 setTimeout(function() { w.remove(); }, 1300);
             }
             setTimeout(flash, 2000);
@@ -908,7 +912,7 @@
                         "filter:blur(" + (4 + Math.random() * 8) + "px)",
                         "animation:dustRise " + (4 + Math.random() * 5) + "s " + (Math.random() * 6) + "s ease-out infinite"
                     ].join(";");
-                    document.body.appendChild(dust);
+                    weatherAppend(dust);
                 })();
             }
         }
@@ -929,7 +933,7 @@
                         "top:-20px",
                         "animation:debrisFall " + (1.5 + Math.random() * 3) + "s " + (Math.random() * 8) + "s ease-in infinite"
                     ].join(";");
-                    document.body.appendChild(rock);
+                    weatherAppend(rock);
                 })();
             }
         }
@@ -939,7 +943,7 @@
             var vortex = document.createElement("div");
             vortex.className = "weather-vortex";
             vortex.style.cssText = "position:fixed;bottom:-60px;left:50%;transform:translateX(-50%);z-index:3;pointer-events:none;width:120px;height:400px;background:conic-gradient(from 0deg, transparent 0%, rgba(148,163,184,0.08) 25%, transparent 50%, rgba(148,163,184,0.06) 75%, transparent 100%);clip-path:polygon(40% 0%,60% 0%,85% 100%,15% 100%);animation:vortexSpin 2s linear infinite;filter:blur(2px);";
-            document.body.appendChild(vortex);
+            weatherAppend(vortex);
         }
 
         function buildExtremeWind() {
@@ -958,7 +962,7 @@
                         "top:" + (Math.random() * 100) + "%",
                         "animation:windSlash " + (0.3 + Math.random() * 0.5) + "s " + (Math.random() * 4) + "s linear infinite"
                     ].join(";");
-                    document.body.appendChild(streak);
+                    weatherAppend(streak);
                 })();
             }
         }
@@ -979,7 +983,7 @@
                         "top:" + (Math.random() * 100) + "%",
                         "animation:debrisWind " + (0.8 + Math.random() * 1.2) + "s " + (Math.random() * 4) + "s linear infinite"
                     ].join(";");
-                    document.body.appendChild(chunk);
+                    weatherAppend(chunk);
                 })();
             }
         }
@@ -1005,7 +1009,7 @@
                     "background:" + hue + opacity + ")",
                     "animation:cosmicStarTwinkle " + dur + "s " + delay + "s ease-in-out infinite alternate"
                 ].join(";");
-                document.body.appendChild(star);
+                weatherAppend(star);
             }
         }
 
@@ -1029,7 +1033,7 @@
                     "filter:drop-shadow(0 0 3px rgba(167,139,250,0.8))",
                     "animation:cosmicMeteorFly " + speed + "s ease-in forwards"
                 ].join(";");
-                document.body.appendChild(wrap);
+                weatherAppend(wrap);
                 setTimeout(function() { if (wrap.parentNode) wrap.remove(); }, (speed + 0.1) * 1000);
             }
             spawnMeteor();
@@ -1051,7 +1055,7 @@
                 "radial-gradient(ellipse at 80% 70%, rgba(139,92,246,0.1) 0%, transparent 40%)," +
                 "radial-gradient(ellipse at 50% 50%, rgba(30,0,60,0.3) 0%, transparent 65%);" +
                 "animation:nebulaBreath 8s ease-in-out infinite alternate;";
-            document.body.appendChild(overlay);
+            weatherAppend(overlay);
 
             // Floating nebula blobs
             var colors = ["rgba(124,58,237,", "rgba(139,92,246,", "rgba(196,181,253,", "rgba(67,56,202,"];
@@ -1070,7 +1074,7 @@
                     "filter:blur(30px)",
                     "animation:nebulaFloat " + (12 + Math.random() * 10) + "s " + (Math.random() * 5) + "s ease-in-out infinite alternate"
                 ].join(";");
-                document.body.appendChild(blob);
+                weatherAppend(blob);
             }
         }
 
@@ -1088,7 +1092,7 @@
                 "filter:blur(20px)",
                 "animation:galaxyRotate 60s linear infinite"
             ].join(";");
-            document.body.appendChild(ring);
+            weatherAppend(ring);
         }
 
         function buildSpaceships() {
@@ -1135,7 +1139,7 @@
                     el.style.transform = "scaleX(-1)";
                 }
 
-                document.body.appendChild(el);
+                weatherAppend(el);
                 setTimeout(function() { el.remove(); }, (speed + 5) * 1000);
             }
 
