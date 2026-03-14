@@ -3816,7 +3816,7 @@ function showElementArena(C, onDone) {
     const iconSize = isMobile ? "28px" : "40px";
     const labelSize = isMobile ? "11px" : "13px";
     const subtitleDisplay = isMobile ? "none" : "block";
-    const hintText = isMobile ? "TAP TO PREVIEW \u00b7 TAP AGAIN TO CHOOSE" : "HOVER TO PREVIEW \u00b7 CLICK TO CHOOSE";
+    const hintText = isMobile ? "TAP TO CHOOSE YOUR ELEMENT" : "HOVER TO PREVIEW \u00b7 CLICK TO CHOOSE";
 
     // Build entire UI with inline styles — no external CSS
     arena.style.cssText = "position:fixed;inset:0;z-index:10000;background:#050508;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.6s ease;font-family:Inter,sans-serif;overflow:hidden;";
@@ -3942,18 +3942,12 @@ function showElementArena(C, onDone) {
             resetPreview();
         });
 
-        // Touch support: tap to preview, tap again to select
+        // Touch support: single tap to select directly
         card.addEventListener("touchstart", (e) => {
             e.preventDefault();
             hasTouched = true;
             if (picked) return;
-            if (previewedCard === card) {
-                // Second tap = select
-                selectElement(el, card);
-            } else {
-                // First tap = preview
-                previewCard(el, card);
-            }
+            selectElement(el, card);
         }, { passive: false });
 
         // Desktop click
@@ -4146,12 +4140,13 @@ function initBalloonSounds() {
         });
     });
 
-    // Physics constants
-    const SIZE = 80;
-    const GRAVITY = -0.04;
-    const BOUNCE = 0.7;
-    const FRICTION = 0.997;
-    const DRIFT = 0.025;
+    // Physics constants — smoother on mobile
+    const isMobile = window.innerWidth <= 768;
+    const SIZE = isMobile ? 56 : 80;
+    const GRAVITY = isMobile ? -0.02 : -0.04;
+    const BOUNCE = isMobile ? 0.4 : 0.7;
+    const FRICTION = isMobile ? 0.99 : 0.997;
+    const DRIFT = isMobile ? 0.012 : 0.025;
 
     // State — will be initialized on first visible frame
     let balloons = null;
@@ -4169,8 +4164,8 @@ function initBalloonSounds() {
                 el,
                 x: spacing * (i + 1) - SIZE / 2,
                 y: 40 + Math.random() * (h - 160),
-                vx: (Math.random() - 0.5) * 3,
-                vy: -1 - Math.random() * 2, // Start moving up
+                vx: (Math.random() - 0.5) * (isMobile ? 1.5 : 3),
+                vy: -(isMobile ? 0.5 : 1) - Math.random() * (isMobile ? 1 : 2),
                 rot: (Math.random() - 0.5) * 8,
                 vr: (Math.random() - 0.5) * 0.8,
                 hovered: false,
@@ -4235,11 +4230,14 @@ function initBalloonSounds() {
             b.vy *= FRICTION;
             b.vr *= 0.992;
 
-            // Wall bounces
-            if (b.x < 0)           { b.x = 0;              b.vx =  Math.abs(b.vx) * BOUNCE + 0.3; b.vr += 1.5; playBounce(); }
-            if (b.x > w - SIZE)    { b.x = w - SIZE;       b.vx = -Math.abs(b.vx) * BOUNCE - 0.3; b.vr -= 1.5; playBounce(); }
-            if (b.y < 0)           { b.y = 0;              b.vy =  Math.abs(b.vy) * BOUNCE + 0.5; playBounce(); }
-            if (b.y > h - SIZE - 30) { b.y = h - SIZE - 30; b.vy = -Math.abs(b.vy) * BOUNCE - 1.2; playBounce(); }
+            // Wall bounces — gentler on mobile
+            const wallKick = isMobile ? 0.1 : 0.3;
+            const floorKick = isMobile ? 0.4 : 1.2;
+            const rotKick = isMobile ? 0.6 : 1.5;
+            if (b.x < 0)           { b.x = 0;              b.vx =  Math.abs(b.vx) * BOUNCE + wallKick; b.vr += rotKick; playBounce(); }
+            if (b.x > w - SIZE)    { b.x = w - SIZE;       b.vx = -Math.abs(b.vx) * BOUNCE - wallKick; b.vr -= rotKick; playBounce(); }
+            if (b.y < 0)           { b.y = 0;              b.vy =  Math.abs(b.vy) * BOUNCE + wallKick; playBounce(); }
+            if (b.y > h - SIZE - 30) { b.y = h - SIZE - 30; b.vy = -Math.abs(b.vy) * BOUNCE - floorKick; playBounce(); }
 
             // Clamp rotation
             if (b.rot >  20) { b.rot =  20; b.vr *= -0.5; }
@@ -4266,8 +4264,8 @@ function initBalloonSounds() {
                 }
             }
 
-            // Apply
-            b.el.style.transform = `translate(${Math.round(b.x)}px, ${Math.round(b.y)}px) rotate(${b.rot.toFixed(1)}deg)`;
+            // Apply — use sub-pixel for smoother motion on mobile
+            b.el.style.transform = `translate3d(${b.x.toFixed(1)}px, ${b.y.toFixed(1)}px, 0) rotate(${b.rot.toFixed(1)}deg)`;
         }
 
         requestAnimationFrame(tick);
