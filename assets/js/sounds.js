@@ -25,6 +25,20 @@ function initSoundSystem() {
             try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
         }
     });
+
+    // Safari: unlock AudioContext on first user interaction
+    function unlockAudio() {
+        if (!audioCtx) {
+            try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); window._audioCtx = audioCtx; } catch(e) {}
+        }
+        if (audioCtx && audioCtx.state === "suspended") {
+            audioCtx.resume().catch(function() {});
+        }
+        document.removeEventListener("touchstart", unlockAudio);
+        document.removeEventListener("click", unlockAudio);
+    }
+    document.addEventListener("touchstart", unlockAudio, { once: true });
+    document.addEventListener("click", unlockAudio, { once: true });
 }
 
 // Element sound profiles — modifies base frequencies/waveforms/timing
@@ -44,6 +58,10 @@ function playSound(type) {
     if (!soundEnabled) return;
     if (!audioCtx) {
         try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); window._audioCtx = audioCtx; window._soundEnabled = soundEnabled; } catch(e) { return; }
+    }
+    // Safari requires resume on user gesture — audio stays suspended otherwise
+    if (audioCtx.state === "suspended") {
+        audioCtx.resume().catch(function() {});
     }
     const t = audioCtx.currentTime;
     const elProfile = getElementSoundProfile();

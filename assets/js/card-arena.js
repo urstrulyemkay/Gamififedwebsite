@@ -608,12 +608,23 @@ function initCardArena(C) {
         if (emojiCursor) emojiCursor.style.display = "";
     }
 
-    // Wire hero card
+    // Wire hero card — tap only, not scroll
+    let _heroTouchStartY = 0;
+    let _heroTouchStartX = 0;
     heroCard.addEventListener("click", (e) => { if (!e.target.closest("a")) openArena(e); });
     if (heroWrapper) heroWrapper.addEventListener("click", (e) => { if (!e.target.closest("a")) openArena(e); });
+    heroCard.addEventListener("touchstart", (e) => {
+        _heroTouchStartY = e.touches[0].clientY;
+        _heroTouchStartX = e.touches[0].clientX;
+    }, { passive: true });
     heroCard.addEventListener("touchend", (e) => {
         if (e.target.closest("a")) return;
-        e.preventDefault(); openArena(e);
+        const dy = Math.abs(e.changedTouches[0].clientY - _heroTouchStartY);
+        const dx = Math.abs(e.changedTouches[0].clientX - _heroTouchStartX);
+        // Only open if finger moved less than 10px (true tap, not scroll)
+        if (dy < 10 && dx < 10) {
+            e.preventDefault(); openArena(e);
+        }
     });
 
     // Close handlers
