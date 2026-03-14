@@ -42,6 +42,7 @@ a { color: inherit; text-decoration: none; }
     display: flex; align-items: center; justify-content: center;
     transition: opacity 1s cubic-bezier(0.16,1,0.3,1), visibility 1s;
     overflow-x: hidden; overflow-y: auto;
+    max-width: 100vw;
 }
 .game-boot.dismissed { opacity: 0; visibility: hidden; pointer-events: none; }
 .boot-canvas {
@@ -92,6 +93,7 @@ a { color: inherit; text-decoration: none; }
     position: relative; z-index: 2;
     display: flex; flex-direction: column; align-items: center;
     text-align: center; max-width: 760px; padding: 40px 32px; width: 100%;
+    box-sizing: border-box; overflow-x: hidden;
 }
 .boot-logo {
     display: flex; flex-direction: column; align-items: center; gap: 20px;
@@ -344,63 +346,65 @@ a { color: inherit; text-decoration: none; }
 
 /* Tablet boot screen */
 @media (max-width: 768px) {
-    .boot-content { padding: 24px 20px; }
-    .boot-logo { margin-bottom: 32px; }
-    .element-orbit { width: 320px; height: 320px; }
-    .boot-emblem-wrap { width: 160px; height: 160px; }
-    .boot-emblem { font-size: 36px; }
-    .element-orb .orb-icon { font-size: 24px; }
+    .game-boot { padding: 0 16px; }
+    .boot-content { padding: 20px 16px; max-width: 100%; }
+    .boot-logo { margin-bottom: 24px; }
+    .element-orbit { width: 280px; height: 280px; }
+    .boot-emblem-wrap { width: 140px; height: 140px; }
+    .boot-emblem { font-size: 32px; }
+    .element-orb .orb-icon { font-size: 22px; }
     .element-orb .orb-label { font-size: 8px; }
-    .element-glow { width: 300px; height: 300px; }
-    .element-glow--ether { width: 400px; height: 400px; }
-    .mission-title { font-size: clamp(28px, 7vw, 44px); margin-bottom: 16px; min-height: auto; }
-    .mission-brief { font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
-    .mission-header { margin-bottom: 14px; }
-    .mission-tag { font-size: 12px; padding: 5px 12px; }
-    .mission-chapter { font-size: 12px; }
-    .mission-stats { gap: 12px; margin-bottom: 20px; }
-    .mission-stat { padding: 10px 16px; }
-    .stat-key { font-size: 10px; }
-    .stat-value { font-size: 15px; }
-    .element-bar { gap: 8px; margin-bottom: 20px; }
-    .ebar-item { padding: 4px 10px; gap: 4px; }
-    .ebar-name { font-size: 9px; }
-    .ebar-val { font-size: 13px; }
-    .boot-progress-wrap { margin-bottom: 24px; }
-    .boot-start-btn { padding: 16px 48px; }
-    .btn-text { font-size: 15px; }
+    .element-glow { width: 250px; height: 250px; }
+    .element-glow--ether { width: 300px; height: 300px; }
+    .mission-title { font-size: clamp(24px, 6vw, 40px); margin-bottom: 14px; min-height: auto; }
+    .mission-brief { font-size: 14px; line-height: 1.6; margin-bottom: 16px; max-width: 100%; }
+    .mission-header { margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+    .mission-tag { font-size: 11px; padding: 4px 10px; }
+    .mission-chapter { font-size: 11px; }
+    .mission-stats { gap: 8px; margin-bottom: 16px; justify-content: center; }
+    .mission-stat { padding: 8px 12px; min-width: 0; flex: 1 1 auto; }
+    .stat-key { font-size: 9px; }
+    .stat-value { font-size: 14px; }
+    .element-bar { gap: 6px; margin-bottom: 16px; justify-content: center; }
+    .ebar-item { padding: 3px 8px; gap: 3px; }
+    .ebar-name { font-size: 8px; }
+    .ebar-val { font-size: 12px; }
+    .boot-progress-wrap { margin-bottom: 20px; max-width: 280px; }
+    .boot-start-btn { padding: 14px 40px; }
+    .btn-text { font-size: 14px; }
     .btn-hint { font-size: 10px; }
 }
 
 /* Phone boot screen */
 @media (max-width: 480px) {
-    .boot-content { padding: 16px 12px; }
-    .boot-logo { margin-bottom: 20px; gap: 12px; }
-    .element-orbit { width: 220px; height: 220px; }
-    .boot-emblem-wrap { width: 110px; height: 110px; }
-    .boot-emblem { font-size: 28px; }
-    .element-orb .orb-icon { font-size: 18px; }
-    .element-orb .orb-label { font-size: 7px; letter-spacing: 0.08em; }
-    .boot-studio { font-size: 10px; letter-spacing: 0.15em; }
-    .element-glow { width: 200px; height: 200px; }
-    .element-glow--ether { width: 280px; height: 280px; }
-    .mission-title { font-size: clamp(22px, 6.5vw, 32px); margin-bottom: 12px; }
-    .mission-brief { font-size: 13px; line-height: 1.5; margin-bottom: 16px; max-width: 100%; }
-    .mission-header { margin-bottom: 10px; }
-    .mission-tag { font-size: 11px; padding: 4px 10px; }
-    .mission-chapter { font-size: 11px; }
-    .mission-stats { gap: 8px; margin-bottom: 16px; }
-    .mission-stat { padding: 8px 12px; border-radius: 8px; }
-    .stat-key { font-size: 9px; }
-    .stat-value { font-size: 14px; }
-    .element-bar { gap: 6px; margin-bottom: 16px; }
-    .ebar-item { padding: 3px 8px; gap: 3px; border-radius: 6px; }
-    .ebar-name { font-size: 8px; }
-    .ebar-val { font-size: 11px; }
-    .boot-progress-wrap { margin-bottom: 16px; max-width: 280px; }
-    .boot-progress-text { font-size: 11px; }
-    .boot-start-btn { padding: 14px 36px; border-radius: 12px; }
-    .btn-text { font-size: 14px; letter-spacing: 0.08em; }
+    .game-boot { padding: 0 10px; }
+    .boot-content { padding: 12px 8px; max-width: 100%; }
+    .boot-logo { margin-bottom: 16px; gap: 8px; }
+    .element-orbit { width: 200px; height: 200px; }
+    .boot-emblem-wrap { width: 100px; height: 100px; }
+    .boot-emblem { font-size: 24px; letter-spacing: 0.1em; }
+    .element-orb .orb-icon { font-size: 16px; }
+    .element-orb .orb-label { font-size: 6px; letter-spacing: 0.06em; }
+    .boot-studio { font-size: 9px; letter-spacing: 0.12em; }
+    .element-glow { width: 160px; height: 160px; }
+    .element-glow--ether { width: 220px; height: 220px; }
+    .mission-title { font-size: clamp(20px, 5.5vw, 28px); margin-bottom: 10px; }
+    .mission-brief { font-size: 12px; line-height: 1.5; margin-bottom: 12px; max-width: 100%; }
+    .mission-header { margin-bottom: 8px; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .mission-tag { font-size: 10px; padding: 3px 8px; }
+    .mission-chapter { font-size: 10px; }
+    .mission-stats { gap: 6px; margin-bottom: 12px; }
+    .mission-stat { padding: 6px 10px; border-radius: 8px; flex: 1 1 28%; min-width: 0; }
+    .stat-key { font-size: 8px; letter-spacing: 0.06em; }
+    .stat-value { font-size: 12px; }
+    .element-bar { gap: 4px; margin-bottom: 12px; }
+    .ebar-item { padding: 2px 6px; gap: 2px; border-radius: 5px; }
+    .ebar-name { font-size: 7px; letter-spacing: 0.04em; }
+    .ebar-val { font-size: 10px; }
+    .boot-progress-wrap { margin-bottom: 12px; max-width: 240px; }
+    .boot-progress-text { font-size: 10px; }
+    .boot-start-btn { padding: 12px 32px; border-radius: 10px; }
+    .btn-text { font-size: 13px; letter-spacing: 0.06em; }
     .btn-hint { font-size: 9px; }
 }
 
