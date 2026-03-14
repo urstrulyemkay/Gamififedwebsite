@@ -351,63 +351,62 @@ a { color: inherit; text-decoration: none; }
 
 /* Tablet boot screen */
 @media (max-width: 768px) {
-    .boot-content { padding: 16px 16px; max-width: 100%; }
-    /* Give boot-logo explicit height so orbit stays contained */
-    .boot-logo { margin-bottom: 28px; min-height: 200px; }
-    .element-orbit { width: 260px; height: 260px; }
-    .boot-emblem-wrap { width: 130px; height: 130px; }
-    .boot-emblem { font-size: 28px; }
-    .element-orb .orb-icon { font-size: 18px; }
+    .boot-content { padding: 10px 16px; max-width: 100%; }
+    .boot-logo { margin-bottom: 8px; gap: 6px; min-height: 180px; }
+    .element-orbit { width: 240px; height: 240px; }
+    .boot-emblem-wrap { width: 120px; height: 120px; }
+    .boot-emblem { font-size: 26px; }
+    .element-orb .orb-icon { font-size: 16px; }
     .element-orb .orb-label { display: none; }
     .element-glow { display: none; }
-    .mission-title { font-size: clamp(22px, 5.5vw, 36px); margin-bottom: 12px; min-height: auto; }
-    .mission-brief { font-size: 13px; line-height: 1.6; margin-bottom: 14px; max-width: 100%; }
-    .mission-header { margin-bottom: 10px; flex-wrap: wrap; gap: 8px; justify-content: center; }
-    .mission-tag { font-size: 11px; padding: 4px 10px; }
-    .mission-chapter { font-size: 11px; }
-    .mission-stats { gap: 8px; margin-bottom: 14px; justify-content: center; width: 100%; }
-    .mission-stat { padding: 8px 12px; min-width: 0; flex: 1 1 auto; text-align: center; }
-    .stat-key { font-size: 9px; }
-    .stat-value { font-size: 13px; }
-    .element-bar { gap: 6px; margin-bottom: 14px; justify-content: center; width: 100%; }
-    .ebar-item { padding: 3px 8px; gap: 3px; }
+    .boot-studio { font-size: 10px; margin-bottom: 0; }
+    .mission-header { margin-bottom: 6px; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .mission-tag { font-size: 10px; padding: 3px 8px; }
+    .mission-chapter { font-size: 10px; }
+    .mission-title { font-size: clamp(20px, 5vw, 32px); margin-bottom: 6px; min-height: auto; }
+    .mission-brief { font-size: 12px; line-height: 1.5; margin-bottom: 8px; max-width: 100%; }
+    .element-bar { gap: 5px; margin-bottom: 8px; justify-content: center; width: 100%; }
+    .ebar-item { padding: 3px 7px; gap: 3px; }
     .ebar-name { font-size: 8px; }
     .ebar-val { font-size: 11px; }
-    .boot-progress-wrap { margin-bottom: 16px; max-width: 260px; }
-    .boot-start-btn { padding: 14px 40px; }
-    .btn-text { font-size: 14px; }
-    .btn-hint { font-size: 10px; }
-    .boot-studio { font-size: 11px; }
+    .mission-stats { gap: 6px; margin-bottom: 8px; justify-content: center; width: 100%; }
+    .mission-stat { padding: 7px 10px; min-width: 0; flex: 1 1 auto; text-align: center; }
+    .stat-key { font-size: 8px; }
+    .stat-value { font-size: 12px; }
+    .boot-progress-wrap { margin-bottom: 10px; max-width: 240px; }
+    .boot-start-btn { padding: 12px 36px; }
+    .btn-text { font-size: 13px; }
+    .btn-hint { font-size: 9px; }
 }
 
 /* Phone boot screen */
 @media (max-width: 480px) {
-    .boot-content { padding: 12px 12px; max-width: 100%; }
-    .boot-logo { margin-bottom: 20px; gap: 8px; min-height: 160px; }
-    .element-orbit { width: 210px; height: 210px; }
-    .boot-emblem-wrap { width: 100px; height: 100px; }
-    .boot-emblem { font-size: 22px; letter-spacing: 0.08em; }
-    .element-orb .orb-icon { font-size: 14px; }
+    .boot-content { padding: 8px 10px; max-width: 100%; }
+    .boot-logo { margin-bottom: 4px; gap: 4px; min-height: 150px; }
+    .element-orbit { width: 200px; height: 200px; }
+    .boot-emblem-wrap { width: 95px; height: 95px; }
+    .boot-emblem { font-size: 20px; letter-spacing: 0.08em; }
+    .element-orb .orb-icon { font-size: 13px; }
     .element-orb .orb-label { display: none; }
-    .boot-studio { font-size: 9px; letter-spacing: 0.12em; }
-    .mission-title { font-size: clamp(18px, 5vw, 26px); margin-bottom: 8px; }
-    .mission-brief { font-size: 12px; line-height: 1.5; margin-bottom: 10px; max-width: 100%; }
-    .mission-header { margin-bottom: 8px; flex-wrap: wrap; gap: 6px; justify-content: center; }
-    .mission-tag { font-size: 10px; padding: 3px 8px; }
-    .mission-chapter { font-size: 10px; }
-    .mission-stats { gap: 6px; margin-bottom: 10px; width: 100%; }
-    .mission-stat { padding: 6px 8px; border-radius: 8px; flex: 1 1 28%; min-width: 0; text-align: center; }
-    .stat-key { font-size: 8px; letter-spacing: 0.04em; }
-    .stat-value { font-size: 11px; }
-    .element-bar { gap: 4px; margin-bottom: 10px; width: 100%; }
-    .ebar-item { padding: 2px 6px; gap: 2px; border-radius: 5px; }
-    .ebar-name { font-size: 7px; letter-spacing: 0.04em; }
-    .ebar-val { font-size: 10px; }
-    .boot-progress-wrap { margin-bottom: 10px; max-width: 220px; }
-    .boot-progress-text { font-size: 10px; }
-    .boot-start-btn { padding: 12px 32px; border-radius: 10px; }
-    .btn-text { font-size: 13px; letter-spacing: 0.06em; }
-    .btn-hint { font-size: 9px; }
+    .boot-studio { font-size: 8px; letter-spacing: 0.1em; }
+    .mission-header { margin-bottom: 4px; flex-wrap: wrap; gap: 4px; justify-content: center; }
+    .mission-tag { font-size: 9px; padding: 2px 7px; }
+    .mission-chapter { font-size: 9px; }
+    .mission-title { font-size: clamp(17px, 4.5vw, 24px); margin-bottom: 4px; }
+    .mission-brief { font-size: 11px; line-height: 1.45; margin-bottom: 6px; max-width: 100%; }
+    .element-bar { gap: 3px; margin-bottom: 6px; width: 100%; }
+    .ebar-item { padding: 2px 5px; gap: 2px; border-radius: 5px; }
+    .ebar-name { font-size: 7px; letter-spacing: 0.03em; }
+    .ebar-val { font-size: 9px; }
+    .mission-stats { gap: 4px; margin-bottom: 6px; width: 100%; }
+    .mission-stat { padding: 5px 6px; border-radius: 7px; flex: 1 1 28%; min-width: 0; text-align: center; }
+    .stat-key { font-size: 7px; letter-spacing: 0.03em; }
+    .stat-value { font-size: 10px; }
+    .boot-progress-wrap { margin-bottom: 6px; max-width: 200px; }
+    .boot-progress-text { font-size: 9px; }
+    .boot-start-btn { padding: 10px 28px; border-radius: 10px; }
+    .btn-text { font-size: 12px; letter-spacing: 0.06em; }
+    .btn-hint { font-size: 8px; }
 }
 
 /* ── TERRITORY HUD ────────────────────────── */
