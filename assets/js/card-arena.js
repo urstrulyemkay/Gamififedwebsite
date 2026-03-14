@@ -97,7 +97,10 @@ function initCardArena(C) {
 
         function resize() { canvas.width = arena.offsetWidth; canvas.height = arena.offsetHeight; }
         resize();
-        window.addEventListener("resize", resize);
+        // Store ref so we can remove on close — prevents listener leak
+        if (window._arenaResizeHandler) window.removeEventListener("resize", window._arenaResizeHandler);
+        window._arenaResizeHandler = resize;
+        window.addEventListener("resize", resize, { passive: true });
 
         for (let i = 0; i < PARTICLE_COUNT; i++) {
             particles.push({

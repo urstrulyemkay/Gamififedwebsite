@@ -542,16 +542,18 @@ function initResourceHUD() {
         scrollTimer = setTimeout(function() { scrolling = false; }, 200);
     });
 
+    // Cache doc height — only recalculate on resize
+    let _docH = document.documentElement.scrollHeight - window.innerHeight;
+    window.addEventListener("resize", () => { _docH = document.documentElement.scrollHeight - window.innerHeight; }, { passive: true });
     setInterval(() => {
         if (scrolling || document.hasFocus()) {
             intel += 1;
             intelEl.textContent = intel;
         }
-        // XP from scroll
-        const progress = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+        const progress = _docH > 0 ? window.scrollY / _docH : 0;
         const xp = Math.round(progress * 74500);
         xpEl.textContent = xp.toLocaleString();
-    }, 1000);
+    }, 2000);
 
     // Territory tracking
     const sections = document.querySelectorAll("section[id]");
@@ -1598,15 +1600,17 @@ function initSaveGame() {
    ============================================ */
 
 function initParticles() {
+    // Skip on mobile — too expensive (O(n^2) connection lines at 60fps)
+    if (window.innerWidth <= 768) return;
     const canvas = document.getElementById("particles");
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     let particles = [];
     let mouse = { x: -1000, y: -1000 };
     function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    resize(); window.addEventListener("resize", resize);
-    document.addEventListener("mousemove", e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-    const COUNT = Math.min(80, Math.floor(window.innerWidth / 20));
+    resize(); window.addEventListener("resize", resize, { passive: true });
+    document.addEventListener("mousemove", e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+    const COUNT = Math.min(50, Math.floor(window.innerWidth / 30));
     class P { constructor() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.vx = (Math.random()-0.5)*0.3; this.vy = (Math.random()-0.5)*0.3; this.r = Math.random()*1.5+0.5; this.o = Math.random()*0.3+0.1; }
         update() { this.x += this.vx; this.y += this.vy; const dx=this.x-mouse.x, dy=this.y-mouse.y, d=Math.sqrt(dx*dx+dy*dy); if(d<150){const f=(150-d)/150; this.x+=(dx/d)*f*2; this.y+=(dy/d)*f*2;} if(this.x<0)this.x=canvas.width; if(this.x>canvas.width)this.x=0; if(this.y<0)this.y=canvas.height; if(this.y>canvas.height)this.y=0; }
         draw() { ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=`rgba(228,255,26,${this.o})`; ctx.fill(); } }
@@ -2561,6 +2565,7 @@ function initDialogueTyping() {
    FOOTER SPARKLE — sparkles trail on footer hover
    ============================================ */
 function initFooterSparkle() {
+    if (window.innerWidth <= 768) return; // No sparkle on mobile — no mouse
     const footer = document.querySelector(".footer");
     if (!footer) return;
 
@@ -2794,25 +2799,37 @@ function initStoryBar(C) {
     // Track visited sections
     const visited = new Set();
 
-    function updateStoryBar() {
+    // Cache section offsets — recalculate on resize, not every frame
+    let sectionOffsets = [];
+    function cacheSectionOffsets() {
         const scrollY = window.scrollY;
+        sectionOffsets = sections.map(s => ({ id: s.id, top: s.el.offsetTop - scrollY + s.el.getBoundingClientRect().top }));
+    }
+    cacheSectionOffsets();
+    window.addEventListener("resize", cacheSectionOffsets, { passive: true });
+
+    // Throttle story bar updates — every 3rd scroll frame is enough
+    let _storyBarFrame = 0;
+    function updateStoryBar(scrollY) {
+        _storyBarFrame++;
+        if (_storyBarFrame % 3 !== 0) return;
+
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const pct = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
         fill.style.width = pct + "%";
 
-        // Show bar after scrolling past hero
         if (scrollY > 300) {
             bar.classList.add("visible");
         } else {
             bar.classList.remove("visible");
         }
 
-        // Update current chapter
+        // Use cached offsets instead of getBoundingClientRect per frame
         let currentId = null;
-        sections.forEach(s => {
-            const rect = s.el.getBoundingClientRect();
-            if (rect.top <= window.innerHeight / 2) currentId = s.id;
-        });
+        const halfVH = window.innerHeight / 2;
+        for (let i = 0; i < sections.length; i++) {
+            if (sections[i].el.offsetTop - scrollY <= halfVH) currentId = sections[i].id;
+        }
 
         chapterEls.forEach(ch => {
             ch.classList.remove("current");
@@ -2825,7 +2842,7 @@ function initStoryBar(C) {
     }
 
     ScrollManager.on(updateStoryBar);
-    updateStoryBar();
+    updateStoryBar(window.scrollY);
 }
 
 /* ============================================
@@ -2844,30 +2861,34 @@ function initDynamicDifficulty() {
         lastScrollTime: Date.now(),
     };
 
+    // Throttle — only update every 10th scroll frame, cache DOM query
+    let _diffFrame = 0;
+    let _cachedVisited = 0;
     function updateDifficulty() {
-        const visited = document.querySelectorAll("section.fog-revealed").length;
-        state.sectionsVisited = visited;
+        _diffFrame++;
+        if (_diffFrame % 10 !== 0 && _diffFrame > 1) return;
+
+        _cachedVisited = document.querySelectorAll("section.fog-revealed").length;
+        state.sectionsVisited = _cachedVisited;
 
         let diff = "NORMAL";
         let cls = "normal";
 
-        if (visited <= 2 && state.clickCount < 5) { diff = "EASY"; cls = "easy"; }
-        else if (visited >= 8 && state.clickCount > 20) { diff = "LEGENDARY"; cls = "legendary"; }
-        else if (visited >= 5 || state.clickCount > 10) { diff = "HARD"; cls = "hard"; }
+        if (_cachedVisited <= 2 && state.clickCount < 5) { diff = "EASY"; cls = "easy"; }
+        else if (_cachedVisited >= 8 && state.clickCount > 20) { diff = "LEGENDARY"; cls = "legendary"; }
+        else if (_cachedVisited >= 5 || state.clickCount > 10) { diff = "HARD"; cls = "hard"; }
 
         label.textContent = diff;
         badge.className = "difficulty-badge visible " + cls;
     }
 
-    document.addEventListener("click", () => { state.clickCount++; updateDifficulty(); });
+    document.addEventListener("click", () => { state.clickCount++; _diffFrame = 0; updateDifficulty(); });
 
-    // Show after boot
     setTimeout(() => {
         badge.classList.add("visible");
         updateDifficulty();
     }, 3000);
 
-    // Update on scroll
     ScrollManager.on(updateDifficulty);
 }
 
@@ -4198,14 +4219,29 @@ function initBalloonSounds() {
         }
     }
 
+    // Only animate when balloon field is near viewport
+    let _balloonVisible = false;
+    const balloonObs = new IntersectionObserver(entries => {
+        _balloonVisible = entries[0].isIntersecting;
+        if (_balloonVisible && initialized) requestAnimationFrame(tick);
+    }, { rootMargin: "200px" });
+    balloonObs.observe(field);
+
+    // Cache field dimensions — only re-read on resize
+    let _fieldW = 0, _fieldH = 0;
+    function updateFieldSize() { _fieldW = field.offsetWidth; _fieldH = field.offsetHeight; }
+    window.addEventListener("resize", updateFieldSize, { passive: true });
+
     function tick() {
+        if (!_balloonVisible) return; // Stop loop when off-screen
         if (!initialized) {
             if (!initPositions()) { requestAnimationFrame(tick); return; }
+            updateFieldSize();
         }
 
-        const w = field.offsetWidth;
-        const h = field.offsetHeight;
-        if (w < 10) { requestAnimationFrame(tick); return; }
+        const w = _fieldW || field.offsetWidth;
+        const h = _fieldH || field.offsetHeight;
+        if (w < 10) { updateFieldSize(); requestAnimationFrame(tick); return; }
 
         for (let i = 0; i < balloons.length; i++) {
             const b = balloons[i];
