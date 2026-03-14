@@ -59,10 +59,10 @@ The entire website is an RPG character sheet. The visitor is "inspecting" Mani's
 Each element transforms the entire UI — colors, particles, sounds, weather mood.
 | Element | Color | RGB | Secondary | Default Mood |
 |---------|-------|-----|-----------|-------------|
-| Fire | #FF6B35 | 255,107,53 | #FFB347 | Hype |
+| Fire | #FF6B35 | 255,107,53 | #FFB347 | Day |
 | Water | #22D3EE | 34,211,238 | #67E8F9 | Chill |
 | Earth | #4ADE80 | 74,222,128 | #86EFAC | Zen |
-| Air | #E0E7FF | 224,231,255 | #C7D2FE | Creative |
+| Air | #E0E7FF | 224,231,255 | #C7D2FE | Dawn |
 | Ether | #A78BFA | 167,139,250 | #C4B5FD | Night |
 
 ### Element Selection Flow

@@ -3858,9 +3858,9 @@ function showElementArena(C, onDone) {
     const hintText = isMobile ? "TAP TO PREVIEW \u00b7 TAP AGAIN TO CHOOSE" : "HOVER TO PREVIEW \u00b7 CLICK TO CHOOSE";
 
     // Build entire UI with inline styles — no external CSS
-    arena.style.cssText = "position:fixed;inset:0;z-index:10000;background:#050508;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.6s ease;font-family:Inter,sans-serif;";
+    arena.style.cssText = "position:fixed;inset:0;z-index:10000;background:#050508;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.6s ease;font-family:Inter,sans-serif;overflow:hidden;";
     arena.innerHTML = `
-        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:${containerGap};padding:${containerPad};max-width:960px;width:100%;position:relative;z-index:2;">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:${containerGap};padding:${containerPad};max-width:960px;width:100%;position:relative;z-index:2;overflow-x:hidden;box-sizing:border-box;">
             <div style="font-size:${isMobile ? "11px" : "13px"};font-weight:700;letter-spacing:0.15em;color:rgba(255,255,255,0.35);text-transform:uppercase;">CHOOSE YOUR PATH</div>
             <div style="font-size:clamp(24px,5vw,48px);font-weight:800;color:#fff;letter-spacing:0.04em;">WHICH ELEMENT CALLS TO YOU?</div>
             <div id="arena-cards" style="${cardContainerStyle}"></div>
@@ -4095,11 +4095,25 @@ function initSubscribe(C) {
     if (btnText) btnText.textContent = sub.buttonText || "SUBSCRIBE";
 
     let submitting = false;
+    // Email validation
+    function isValidEmail(str) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(str);
+    }
+
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
         if (submitting) return;
         const val = email.value.trim();
         if (!val) return;
+
+        // Validate email format
+        if (!isValidEmail(val)) {
+            status.textContent = "Invalid email address.";
+            status.className = "subscribe-status error";
+            form.classList.add("shake");
+            setTimeout(() => form.classList.remove("shake"), 500);
+            return;
+        }
 
         submitting = true;
         btn.classList.add("loading");

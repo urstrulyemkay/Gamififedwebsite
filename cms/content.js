@@ -259,7 +259,7 @@ const CONTENT = {
                 secondaryColor: "#FFB347", secondaryRgb: "255,179,71",
                 tagline: "BURN THROUGH LIMITS",
                 description: "You lead with intensity. Revenue targets, P&L ownership, scaling teams \u2014 fire bends to your will.",
-                defaultMood: "volcano",
+                defaultMood: "day",
                 particleStyle: "ember",
                 particleColors: ["#FF6B35","#FF4500","#FFB347","#FF8C00","#FFA07A"],
                 soundProfile: { freqMult: 0.85, waveform: "sawtooth", attack: 0.01, decay: 0.15, detune: -50 },
@@ -273,7 +273,7 @@ const CONTENT = {
                 secondaryColor: "#67E8F9", secondaryRgb: "103,232,249",
                 tagline: "FLOW WITHOUT RESISTANCE",
                 description: "You solve deep technical puzzles. AI architectures, data pipelines, ML systems \u2014 water finds every path.",
-                defaultMood: "blizzard",
+                defaultMood: "chill",
                 particleStyle: "droplet",
                 particleColors: ["#22D3EE","#67E8F9","#06B6D4","#0EA5E9","#38BDF8"],
                 soundProfile: { freqMult: 1.0, waveform: "sine", attack: 0.03, decay: 0.3, detune: 0 },
@@ -287,7 +287,7 @@ const CONTENT = {
                 secondaryColor: "#86EFAC", secondaryRgb: "134,239,172",
                 tagline: "BUILD THINGS THAT LAST",
                 description: "You build foundations. Go-to-market, distribution, partnerships \u2014 earth holds everything together.",
-                defaultMood: "earthquake",
+                defaultMood: "zen",
                 particleStyle: "leaf",
                 particleColors: ["#4ADE80","#86EFAC","#22C55E","#16A34A","#A3E635"],
                 soundProfile: { freqMult: 0.7, waveform: "square", attack: 0.02, decay: 0.4, detune: -100 },
@@ -301,7 +301,7 @@ const CONTENT = {
                 secondaryColor: "#C7D2FE", secondaryRgb: "199,210,254",
                 tagline: "MOVE FAST, BREAK BARRIERS",
                 description: "You move at velocity. Zero-to-one launches, rapid prototyping, speed of execution \u2014 air clears every obstacle.",
-                defaultMood: "tornado",
+                defaultMood: "dawn",
                 particleStyle: "wisp",
                 particleColors: ["#E0E7FF","#C7D2FE","#A5B4FC","#818CF8","#F0F4FF"],
                 soundProfile: { freqMult: 1.3, waveform: "triangle", attack: 0.05, decay: 0.25, detune: 50 },
@@ -315,7 +315,7 @@ const CONTENT = {
                 secondaryColor: "#C4B5FD", secondaryRgb: "196,181,253",
                 tagline: "SEE THE BIGGER PICTURE",
                 description: "You see patterns others miss. Business strategy, cross-functional vision, connecting dots \u2014 ether transcends boundaries.",
-                defaultMood: "cosmos",
+                defaultMood: "night",
                 particleStyle: "star",
                 particleColors: ["#A78BFA","#C4B5FD","#8B5CF6","#7C3AED","#DDD6FE"],
                 soundProfile: { freqMult: 1.1, waveform: "sine", attack: 0.04, decay: 0.5, detune: 100 },
@@ -683,16 +683,12 @@ const CONTENT = {
     // ── MOOD SELECTOR — visitor picks vibe ──────
     moods: [
         { id: "auto",       label: "Auto",       icon: "\u{1F554}",       desc: "Changes as you scroll" },
-        { id: "storm",      label: "Storm",      icon: "\u26C8\uFE0F",    desc: "Thunder & lightning" },
         { id: "chill",      label: "Chill",      icon: "\u2744\uFE0F",    desc: "Snow & frost" },
-        { id: "hype",       label: "Hype",       icon: "\u26A1",          desc: "Fire & explosions" },
         { id: "zen",        label: "Zen",        icon: "\u{1F33F}",       desc: "Petals & ripples" },
-        { id: "creative",   label: "Creative",   icon: "\u{1F308}",       desc: "Aurora & nebula" },
-        { id: "volcano",    label: "Volcano",    icon: "\u{1F30B}",       desc: "Lava & eruption" },
-        { id: "blizzard",   label: "Blizzard",   icon: "\u{1F328}\uFE0F", desc: "Ice age & whiteout" },
-        { id: "earthquake", label: "Earthquake", icon: "\u{1F30D}",       desc: "Ground shakes" },
-        { id: "tornado",    label: "Tornado",    icon: "\u{1F32A}\uFE0F", desc: "Vortex & debris" },
-        { id: "cosmos",     label: "Cosmos",     icon: "\u{1F30C}",       desc: "Meteors & warp" },
+        { id: "night",      label: "Night",      icon: "\u{1F319}",       desc: "Stars & fireflies" },
+        { id: "day",        label: "Day",        icon: "\u2600\uFE0F",    desc: "Sun & golden dust" },
+        { id: "dawn",       label: "Dawn",       icon: "\u{1F305}",       desc: "Rising sun & birds" },
+        { id: "dusk",       label: "Dusk",       icon: "\u{1F307}",       desc: "Purple sky & rain" },
     ],
 
     // ── CARD ARENA — Trading Card Game ─────────
@@ -735,7 +731,7 @@ CONTENT.subscribe = {
     buttonText: "ENLIST NOW",
     successMsg: "Welcome to the guild, adventurer!",
     errorMsg: "Spell failed! Try again.",
-    url: "", // Google Apps Script web app URL
+    url: "https://script.google.com/macros/s/AKfycbzJyx0ehHj6H2t_mpEUwJDFCGvL4epZsOhR_POF8x3IdBjML7NA6tjddEZoDrUGJ4tj/exec",
 };
 
 window.CONTENT = CONTENT;

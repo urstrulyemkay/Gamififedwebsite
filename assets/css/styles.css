@@ -15,7 +15,7 @@
     --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-padding-top: 120px; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-padding-top: 120px; overflow-x: hidden; }
 body {
     font-family: 'Inter', system-ui, sans-serif;
     background: var(--bg); color: var(--text);
@@ -724,7 +724,7 @@ a { color: inherit; text-decoration: none; }
 .mobile-link:hover { color: var(--text); padding-left: 8px; }
 
 /* ── HERO ──────────────────────────────────── */
-.hero-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 120px 40px 80px; position: relative; overflow: hidden; }
+.hero-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 96px 40px 60px; position: relative; overflow: hidden; }
 .hero-content { width: 100%; max-width: 480px; position: relative; z-index: 2; }
 .hero-particle-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
@@ -835,17 +835,17 @@ a { color: inherit; text-decoration: none; }
 .hero-glow { position: absolute; top: 30%; left: 50%; transform: translate(-50%,-50%); width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(var(--element-rgb, 228,255,26),0.04) 0%, transparent 70%); pointer-events: none; z-index: 1; animation: glowPulse 4s ease-in-out infinite; }
 .hero-glow-secondary { position: absolute; bottom: 10%; right: 20%; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(34,211,238,0.03) 0%, transparent 70%); pointer-events: none; z-index: 1; animation: glowPulse 5s ease-in-out infinite reverse; }
 @keyframes glowPulse { 0%, 100% { opacity: 0.6; transform: translate(-50%,-50%) scale(1); } 50% { opacity: 1; transform: translate(-50%,-50%) scale(1.1); } }
-.scroll-hint { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.4; transition: opacity 0.5s; z-index: 2; }
+.scroll-hint { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.4; transition: opacity 0.5s; z-index: 2; }
 .scroll-hint span { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
 .scroll-arrow { width: 1px; height: 24px; background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent); animation: scrollPulse 2s ease-in-out infinite; }
 @keyframes scrollPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
 
 /* ── SECTIONS ──────────────────────────────── */
-.section { padding: 120px 40px; border-top: none; position: relative; z-index: 1; }
+.section { padding: 96px 40px; border-top: none; position: relative; z-index: 1; }
 .section-surface { background: var(--surface); }
 .section-container { max-width: 1200px; margin: 0 auto; }
-.section-header { margin-bottom: 60px; }
-.section-header-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px; gap: 24px; }
+.section-header { margin-bottom: 48px; }
+.section-header-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; gap: 24px; }
 .section-tag { font-size: 17px; font-weight: 700; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 24px; }
 .section-title { font-size: clamp(56px,10vw,96px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.02; background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
@@ -1392,10 +1392,10 @@ a { color: inherit; text-decoration: none; }
 /* ── BOUNCING BALLOON CTA ─────────────────── */
 .balloon-cta {
     position: relative;
-    padding: 80px 40px 60px;
+    padding: 64px 40px 48px;
     text-align: center;
     overflow: hidden;
-    min-height: 400px;
+    min-height: 360px;
 }
 .balloon-cta-label {
     font-size: 13px; font-weight: 700; letter-spacing: 0.15em;
@@ -1474,7 +1474,7 @@ a { color: inherit; text-decoration: none; }
     border-radius: 50%;
 }
 @media (max-width: 768px) {
-    .balloon-cta { padding: 60px 20px 40px; min-height: 300px; }
+    .balloon-cta { padding: 48px 20px 36px; min-height: 280px; }
     .balloon-field { gap: 28px; }
     .balloon-orb { width: 58px; height: 58px; }
     .balloon-orb svg { width: 20px; height: 20px; }
@@ -1482,7 +1482,7 @@ a { color: inherit; text-decoration: none; }
     .balloon-cta-label { margin-bottom: 32px; }
 }
 @media (max-width: 480px) {
-    .balloon-cta { min-height: auto; padding: 40px 16px 32px; }
+    .balloon-cta { min-height: auto; padding: 36px 14px 28px; }
     .balloon-field { gap: 20px; }
     .balloon-orb { width: 50px; height: 50px; }
     .balloon-orb svg { width: 18px; height: 18px; }
@@ -1492,7 +1492,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ── SUBSCRIBE / GUILD RECRUITMENT ────────── */
 .subscribe-section {
-    padding: 60px 24px 48px; text-align: center; position: relative;
+    padding: 48px 24px 40px; text-align: center; position: relative;
 }
 .subscribe-container {
     max-width: 520px; margin: 0 auto;
@@ -1556,7 +1556,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ── FOOTER ────────────────────────────────── */
-.footer { display: flex; justify-content: space-between; align-items: center; padding: 32px 40px; border-top: 1px solid var(--border); max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+.footer { display: flex; justify-content: space-between; align-items: center; padding: 28px 40px; border-top: 1px solid var(--border); max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
 .footer-top { display: flex; flex-direction: column; gap: 4px; }
 .footer-copy { font-size: 13px; color: rgba(255,255,255,0.3); }
 .footer-craft { font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 0.04em; }
@@ -1566,7 +1566,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ── RESPONSIVE ────────────────────────────── */
 @media (max-width: 1024px) {
-    .section { padding: 80px 32px; }
+    .section { padding: 72px 32px; }
     .xp-bar-track { width: 80px; }
     .inv-lane-scroll { --lane-speed: 40s; }
     .nav-links { gap: 16px; }
@@ -1575,6 +1575,8 @@ a { color: inherit; text-decoration: none; }
 
 @media (max-width: 768px) {
     body { cursor: auto; }
+    /* Prevent horizontal overflow on mobile */
+    main, section, .section-container, .hero-content { max-width: 100vw; overflow-x: hidden; }
     .emoji-cursor { display: none; }
     .minimap { display: none; }
     .combo-counter { display: none; }
@@ -1583,11 +1585,11 @@ a { color: inherit; text-decoration: none; }
     .territory-hud { display: none; }
     .nav-links { display: none; }
     .nav-hamburger { display: flex; }
-    .nav-inner { padding: 0 20px; }
-    .nav-left { gap: 12px; }
+    .nav-inner { padding: 0 16px; }
+    .nav-left { gap: 10px; }
     .element-reselect { padding: 4px 8px; }
     .element-reselect-label { display: none; }
-    .hero-section { padding: 90px 16px 50px; min-height: calc(100vh - 64px); min-height: calc(100dvh - 64px); }
+    .hero-section { padding: 80px 16px 40px; min-height: calc(100vh - 64px); min-height: calc(100dvh - 64px); }
     .hero-content { max-width: 100%; }
     .hero-card { border-radius: 16px; }
     .hcard-front { padding: 24px 20px; }
@@ -1606,7 +1608,7 @@ a { color: inherit; text-decoration: none; }
     .hcard-highlight { padding: 10px 12px; border-radius: 8px; }
     .hcard-hl-value { font-size: 18px; }
     .hcard-hl-label { font-size: 9px; }
-    .hcard-tags { gap: 4px; }
+    .hcard-tags { gap: 4px; flex-wrap: wrap; }
     .hcard-tag { font-size: 10px; padding: 3px 8px; }
     .scroll-hint { bottom: 20px; }
     .scroll-hint span { font-size: 10px; }
@@ -1614,16 +1616,22 @@ a { color: inherit; text-decoration: none; }
     .nav-hamburger { cursor: pointer; }
     .mobile-menu { padding: 16px 20px 24px; }
     .terminal-body { font-size: 12px; min-height: 320px; padding: 16px; }
-    .section { padding: 64px 20px; }
-    .section-header { margin-bottom: 40px; }
+    .section { padding: 56px 16px; }
+    .section-header { margin-bottom: 36px; }
     .section-header-row { flex-direction: column; align-items: flex-start; }
+    .section-title { font-size: clamp(36px, 9vw, 64px); }
+    #boss-battles .section-title { font-size: clamp(48px, 12vw, 84px); }
     .xp-counter { text-align: left; }
     .quest { gap: 16px; }
-    .quest-content { padding: 16px 20px; }
+    .quest-content { padding: 16px 16px; }
     .skill-row { padding: 12px 16px; gap: 12px; }
     .skill-icon { width: 36px; height: 36px; font-size: 16px; }
     .skill-rank { font-size: 9px; padding: 2px 6px; }
-    .card-large { min-width: 280px; max-width: 320px; }
+    .card-large { min-width: unset; max-width: 100%; }
+    .boss-grid { grid-template-columns: 1fr; }
+    .venture-grid { grid-template-columns: 1fr; }
+    .genai-grid { grid-template-columns: 1fr; }
+    .achievement-grid { grid-template-columns: 1fr; }
     .inv-vehicle { padding: 8px 14px; gap: 8px; }
     .inv-vehicle .inv-icon { font-size: 18px; }
     .inv-vehicle .inv-name { font-size: 12px; }
@@ -1640,34 +1648,49 @@ a { color: inherit; text-decoration: none; }
     .stats-legend { min-width: unset; gap: 8px; }
     .stat-row { padding: 8px 12px; }
     .stat-label { font-size: 13px; }
-    .cta-section { min-height: 60vh; padding: 64px 20px; }
-    .dialogue-box { padding: 20px; }
+    .cta-section { min-height: 55vh; padding: 56px 16px; }
+    .dialogue-box { padding: 20px; max-width: 100%; }
     .dialogue-text { font-size: 14px; }
     .dialogue-option { padding: 12px 16px; font-size: 14px; }
     .dialogue-choice-num { width: 20px; height: 20px; font-size: 12px; }
-    .cta-glow { width: 500px; height: 300px; }
+    .cta-glow { width: 100%; max-width: 500px; height: 300px; }
     .particle-canvas { display: none; }
-    .footer { flex-direction: column; gap: 16px; text-align: center; padding: 24px 20px; }
+    .footer { flex-direction: column; gap: 14px; text-align: center; padding: 24px 16px; }
     .footer-links { gap: 14px 20px; justify-content: center; }
-    .hero-glow { width: 400px; height: 400px; }
+    .hero-glow { width: 100%; max-width: 400px; height: 400px; }
     .hero-glow-secondary { display: none; }
-    .save-banner-inner { justify-content: center; text-align: center; }
+    .save-banner-inner { justify-content: center; text-align: center; flex-wrap: wrap; }
+    /* Fixed elements — constrain to viewport */
+    .idle-nudge { max-width: calc(100vw - 32px); white-space: normal; text-align: center; }
+    .loot-drop-toast { max-width: calc(100vw - 32px); }
+    .mascot-bubble { max-width: calc(100vw - 80px); right: -8px; }
+    .back-to-top { left: 16px; bottom: 16px; width: 36px; height: 36px; font-size: 14px; }
+    .balloon-cta { padding: 48px 16px 36px; min-height: 280px; }
+    .balloon-cta-label { margin-bottom: 24px; }
+    .subscribe-section { padding: 40px 16px 32px; }
+    .subscribe-container { max-width: 100%; }
+    .subscribe-input-wrap { flex-direction: column; gap: 10px; }
+    .subscribe-input { width: 100%; }
+    .subscribe-btn { width: 100%; justify-content: center; }
 }
 
 @media (max-width: 480px) {
     .xp-badge { display: none; }
-    .nav-left { gap: 10px; }
-    .nav-name { font-size: 16px; }
+    .nav-left { gap: 8px; }
+    .nav-name { font-size: 14px; }
+    .nav-inner { padding: 0 12px; }
     .element-reselect { padding: 3px 7px; }
+    .element-reselect-icon { font-size: 12px; }
+    .mood-toggle { padding: 4px 8px; }
     .quest-node { width: 12px; height: 12px; min-width: 12px; }
     .quest-line { left: 5px; }
-    .badge { font-size: 9px; padding: 3px 8px; }
+    .badge { font-size: 9px; padding: 3px 8px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
     .terminal-body { font-size: 11px; min-height: 300px; padding: 12px; }
     .skill-icon { width: 32px; height: 32px; font-size: 14px; }
     .skill-rank { display: none; }
-    .card-badge { font-size: 9px; padding: 3px 8px; top: 14px; right: 14px; }
-    .achievement-card { padding: 20px; gap: 12px; }
-    .card-icon { width: 44px; height: 44px; font-size: 22px; }
+    .card-badge { font-size: 9px; padding: 3px 8px; top: 10px; right: 10px; }
+    .achievement-card { padding: 16px; gap: 10px; }
+    .card-icon { width: 40px; height: 40px; font-size: 20px; }
     .inv-vehicle { padding: 6px 10px; gap: 5px; }
     .inv-vehicle .inv-icon { font-size: 16px; }
     .inv-vehicle .inv-name { font-size: 10px; }
@@ -1686,11 +1709,11 @@ a { color: inherit; text-decoration: none; }
     .inventory-grid { padding: 4px 0; gap: 0; }
     #radar-chart { max-width: 220px; height: 220px; }
     .stat-row { padding: 6px 10px; font-size: 13px; }
-    .dialogue-text { font-size: 13px; }
-    .dialogue-option { padding: 10px 14px; font-size: 13px; }
-    .hero-section { padding: 74px 12px 32px; }
-    .section { padding: 48px 12px; }
-    .hcard-front { padding: 18px 16px; }
+    .hero-section { padding: 72px 12px 28px; }
+    .section { padding: 40px 12px; }
+    .section-title { font-size: clamp(28px, 8vw, 48px); }
+    #boss-battles .section-title { font-size: clamp(36px, 10vw, 64px); }
+    .hcard-front { padding: 18px 14px; }
     .hcard-header { margin-bottom: 12px; }
     .hcard-name { font-size: clamp(24px, 7vw, 32px); }
     .hcard-tagline { font-size: 12px; }
@@ -1702,23 +1725,36 @@ a { color: inherit; text-decoration: none; }
     .hcard-tag { font-size: 9px; padding: 2px 6px; }
     .hcard-bars { margin-bottom: 12px; }
     .scroll-hint { bottom: 12px; }
-    .nav-name { font-size: 14px; }
-    .nav-inner { padding: 0 12px; }
     /* CTA / Footer mobile */
-    .cta-section { min-height: 50vh; padding: 48px 12px; }
-    .dialogue-box { padding: 16px; border-radius: 14px; }
+    .cta-section { min-height: 45vh; padding: 36px 12px; }
+    .dialogue-box { padding: 14px; border-radius: 14px; max-width: 100%; }
     .dialogue-header { margin-bottom: 10px; }
+    .dialogue-npc-icon { font-size: 24px; }
     .dialogue-npc-name { font-size: 13px; }
     .dialogue-text { font-size: 12px; line-height: 1.6; }
     .dialogue-option { padding: 10px 12px; font-size: 12px; border-radius: 8px; }
     .dialogue-choice-num { width: 18px; height: 18px; font-size: 10px; margin-right: 6px; }
-    .footer { padding: 20px 12px; gap: 12px; }
+    .balloon-cta { min-height: auto; padding: 32px 12px 24px; }
+    .balloon-field { height: 240px; }
+    .balloon-orb { width: 46px; height: 46px; }
+    .balloon-orb svg { width: 16px; height: 16px; }
+    .balloon-string { height: 20px; }
+    .balloon-label { font-size: 9px; }
+    .subscribe-section { padding: 32px 12px 24px; }
+    .footer { padding: 16px 12px; gap: 8px; }
     .footer-copy { font-size: 11px; }
     .footer-craft { font-size: 10px; }
-    .footer-links { gap: 10px 16px; }
+    .footer-links { gap: 8px 14px; }
     .footer-links a { font-size: 11px; }
     .save-banner-inner { flex-direction: column; padding: 12px; gap: 8px; font-size: 13px; }
     .save-resume-btn, .save-dismiss-btn { font-size: 12px; padding: 8px 14px; }
+    .mascot { bottom: 60px; right: 12px; }
+    .mascot-body { width: 40px; height: 40px; }
+    .mascot-bubble { display: none; }
+    .back-to-top { left: 12px; bottom: 12px; width: 32px; height: 32px; font-size: 12px; border-radius: 8px; }
+    .idle-nudge { padding: 10px 16px; gap: 8px; }
+    .nudge-text { font-size: 12px; }
+    .fog-gate-area { font-size: 10px; letter-spacing: 0.15em; padding: 8px 16px; }
 }
 
 /* ── ACADEMIC SECTION — violet accented timeline ── */
@@ -2481,6 +2517,7 @@ a { color: inherit; text-decoration: none; }
 .story-chapters {
     display: flex; gap: 0; height: 100%; align-items: stretch;
     width: 100%; max-width: 1200px; padding: 0 40px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
 }
 .story-chapter {
     flex: 1; display: flex; align-items: center; justify-content: center;
@@ -2734,7 +2771,13 @@ a { color: inherit; text-decoration: none; }
     .mascot { bottom: 70px; right: 16px; }
     .mascot-body { width: 44px; height: 44px; }
     .cmd-palette-overlay { padding-top: 10vh; }
-    .journey-summary { padding: 28px 20px; }
+    .cmd-palette { max-width: calc(100vw - 32px); }
+    .journey-summary { padding: 28px 20px; max-width: calc(100vw - 32px); }
+    .quiz-box { padding: 24px 16px; max-width: calc(100vw - 32px); }
+    .story-hero { padding: 60px 16px; }
+    .story-stage { padding: 60px 16px; }
+    .story-footer { padding: 60px 16px 80px; }
+    .story-chapters { padding: 0 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

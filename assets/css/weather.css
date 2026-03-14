@@ -1290,11 +1290,28 @@ body.mood-cosmos::before {
     .mood-toggle { padding: 4px 8px; font-size: 10px; gap: 4px; }
     .mood-toggle-icon { font-size: 12px; }
     .mood-toggle-label { display: none; }
-    .mood-dropdown { left: 0; transform: translateX(0) translateY(-8px); }
+    .mood-dropdown { left: 0; transform: translateX(0) translateY(-8px); min-width: 180px; }
     .mood-selector.open .mood-dropdown { transform: translateX(0) translateY(0); }
     .weather-moon { width: 55px; height: 55px; right: 30px; top: 40px; }
     .weather-sun-orb { width: 140px; height: 140px; }
     .weather-aurora { height: 50%; }
     .weather-fire-lick { width: 40px; height: 50px; }
     .weather-godray { display: none; }
+    /* Prevent weather elements from causing horizontal scroll */
+    .weather-milkyway { left: 0; width: 100%; }
+    .weather-nebula { max-width: 100vw; }
+    .weather-spaceship { display: none; }
+    .weather-galaxy-glow { width: 100vw; height: 100vw; max-width: 500px; max-height: 500px; }
+}
+
+@media (max-width: 480px) {
+    .weather-sun-orb { width: 100px; height: 100px; }
+    .weather-moon { width: 40px; height: 40px; right: 20px; top: 60px; }
+    .weather-fire-lick { width: 30px; height: 40px; }
+    .weather-paint-splash { display: none; }
+    .weather-prism { display: none; }
+    .mood-dropdown { min-width: 160px; }
+    .mood-option { padding: 8px 12px; }
+    .mood-option-name { font-size: 12px; }
+    .mood-option-desc { font-size: 10px; }
 }
