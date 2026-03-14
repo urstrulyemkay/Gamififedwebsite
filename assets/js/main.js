@@ -3416,11 +3416,13 @@ function initStoryOverlay(C) {
     }
     panel.addEventListener("scroll", onStoryScroll, { passive: true });
 
-    // Tap hint on hero card
-    const hint = document.createElement("div");
-    hint.className = "hcard-tap-hint";
-    hint.textContent = "Tap to enter card arena";
-    heroCard.querySelector(".hcard-front")?.appendChild(hint);
+    // Tap hint on hero card — only add once
+    if (!heroCard.querySelector(".hcard-tap-hint")) {
+        const hint = document.createElement("div");
+        hint.className = "hcard-tap-hint";
+        hint.textContent = "TAP TO ENTER CARD ARENA";
+        heroCard.querySelector(".hcard-front")?.appendChild(hint);
+    }
 
     // Hero card click now opens Card Arena (see initCardArena)
     // Story overlay can still be opened programmatically
@@ -3806,7 +3808,7 @@ function showElementArena(C, onDone) {
 
     // Responsive sizing
     const vw = window.innerWidth;
-    const isMobile = vw <= 480;
+    const isMobile = vw <= 768;
 
     const containerPad = isMobile ? "16px" : "24px";
     const containerGap = isMobile ? "14px" : "20px";
