@@ -3126,47 +3126,8 @@ function startSkillQuiz(C) {
    MOBILE SWIPE GESTURES
    ============================================ */
 function initMobileSwipe() {
-    if (window.innerWidth > 768) return;
-
-    let touchStartY = 0;
-    let touchStartX = 0;
-    const sections = Array.from(document.querySelectorAll("section[id]"));
-    let currentSectionIndex = 0;
-
-    // Show swipe hint once
-    const hint = document.createElement("div");
-    hint.className = "swipe-hint";
-    hint.textContent = "Swipe left/right to navigate sections";
-    document.body.appendChild(hint);
-
-    setTimeout(() => { hint.classList.add("visible"); }, 3000);
-    setTimeout(() => { hint.classList.remove("visible"); }, 7000);
-
-    document.addEventListener("touchstart", (e) => {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-    }, { passive: true });
-
-    document.addEventListener("touchend", (e) => {
-        const dx = e.changedTouches[0].clientX - touchStartX;
-        const dy = e.changedTouches[0].clientY - touchStartY;
-
-        // Only trigger on horizontal swipes (not vertical scroll)
-        if (Math.abs(dx) > 80 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-            // Find current section based on scroll position
-            sections.forEach((s, i) => {
-                if (s.getBoundingClientRect().top <= window.innerHeight / 3) currentSectionIndex = i;
-            });
-
-            if (dx < 0 && currentSectionIndex < sections.length - 1) {
-                // Swipe left = next section
-                sections[currentSectionIndex + 1].scrollIntoView({ behavior: "smooth" });
-            } else if (dx > 0 && currentSectionIndex > 0) {
-                // Swipe right = previous section
-                sections[currentSectionIndex - 1].scrollIntoView({ behavior: "smooth" });
-            }
-        }
-    }, { passive: true });
+    // Disabled — vertical scroll site, horizontal swipe nav is confusing
+    return;
 }
 
 /* ============================================
@@ -4122,20 +4083,31 @@ function initSubscribe(C) {
 
         try {
             if (sub.url) {
-                await fetch(sub.url, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email: val, timestamp: new Date().toISOString() }),
-                    mode: "no-cors",
-                });
+                // Use GET with query params — most reliable for Google Apps Script cross-origin
+                const params = new URLSearchParams({ email: val, timestamp: new Date().toISOString() });
+                await fetch(sub.url + "?" + params.toString(), { mode: "no-cors" });
             } else {
                 console.warn("Subscribe: No Google Apps Script URL configured in content.js");
             }
-            // Show success
-            status.textContent = sub.successMsg || "Subscribed!";
-            status.classList.add("success");
+            // Show success — clear, visible confirmation
             email.value = "";
+            status.textContent = "";
+            status.className = "subscribe-status success";
+            status.innerHTML = "\u2705 " + (sub.successMsg || "Subscribed!");
+            status.style.fontSize = "15px";
+            status.style.fontWeight = "700";
+            if (btnText) btnText.textContent = "ENLISTED \u2694\uFE0F";
+            btn.style.opacity = "0.7";
+            btn.style.pointerEvents = "none";
             try { playSound("questUnlock"); } catch(e2) {}
+            // Reset button after 5s
+            setTimeout(() => {
+                if (btnText) btnText.textContent = sub.buttonText || "ENLIST NOW";
+                btn.style.opacity = "";
+                btn.style.pointerEvents = "";
+                status.style.fontSize = "";
+                status.style.fontWeight = "";
+            }, 5000);
         } catch (err) {
             status.textContent = sub.errorMsg || "Error. Try again.";
             status.classList.add("error");
