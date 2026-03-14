@@ -4221,9 +4221,13 @@ function initBalloonSounds() {
 
     // Only animate when balloon field is near viewport
     let _balloonVisible = false;
+    let _balloonLoopRunning = false;
     const balloonObs = new IntersectionObserver(entries => {
         _balloonVisible = entries[0].isIntersecting;
-        if (_balloonVisible && initialized) requestAnimationFrame(tick);
+        if (_balloonVisible && !_balloonLoopRunning) {
+            _balloonLoopRunning = true;
+            requestAnimationFrame(tick);
+        }
     }, { rootMargin: "200px" });
     balloonObs.observe(field);
 
@@ -4233,7 +4237,7 @@ function initBalloonSounds() {
     window.addEventListener("resize", updateFieldSize, { passive: true });
 
     function tick() {
-        if (!_balloonVisible) return; // Stop loop when off-screen
+        if (!_balloonVisible) { _balloonLoopRunning = false; return; }
         if (!initialized) {
             if (!initPositions()) { requestAnimationFrame(tick); return; }
             updateFieldSize();
