@@ -1631,7 +1631,7 @@ a { color: inherit; text-decoration: none; }
     .section-header { margin-bottom: 36px; }
     .section-header-row { flex-direction: column; align-items: flex-start; }
     .section-title { font-size: clamp(32px, 8vw, 56px); word-break: break-word; }
-    #boss-battles .section-title { font-size: clamp(40px, 10vw, 72px); }
+    #boss-battles .section-title { font-size: clamp(28px, 6vw, 48px); }
     .xp-counter { text-align: left; }
     .quest { gap: 16px; }
     .quest-content { padding: 16px 16px; }
@@ -1723,7 +1723,7 @@ a { color: inherit; text-decoration: none; }
     .hero-section { padding: 72px 12px 28px; }
     .section { padding: 68px 12px; }
     .section-title { font-size: clamp(24px, 7vw, 40px); }
-    #boss-battles .section-title { font-size: clamp(32px, 8.5vw, 52px); }
+    #boss-battles .section-title { font-size: clamp(22px, 5.5vw, 36px); }
     .hcard-front { padding: 18px 14px; }
     .hcard-header { margin-bottom: 12px; }
     .hcard-name { font-size: clamp(24px, 7vw, 32px); }
@@ -1867,7 +1867,7 @@ a { color: inherit; text-decoration: none; }
 #boss-battles { background: linear-gradient(180deg, var(--surface) 0%, rgba(255,95,87,0.04) 40%, rgba(255,45,45,0.02) 70%, var(--surface) 100%); }
 #boss-battles::before { background: radial-gradient(ellipse at center, rgba(255,95,87,0.18) 0%, transparent 70%); }
 #boss-battles .section-tag { color: #FF5F57; }
-#boss-battles .section-title { font-size: clamp(84px, 15vw, 144px); }
+#boss-battles .section-title { font-size: clamp(42px, 7.5vw, 72px); }
 
 /* Skill Tree — Diablo RPG (lime, keep default but add glow) */
 #skill-tree { background: linear-gradient(180deg, var(--surface) 0%, rgba(var(--element-rgb, 228,255,26),0.02) 50%, var(--surface) 100%); }
